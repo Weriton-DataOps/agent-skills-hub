@@ -1,0 +1,12 @@
+# lixo de SO / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+
+# nunca versionar dependências ou zips de origem
+node_modules/
+*.zip
+
+# git aninhado acidental dentro de skills/agents
+**/.git/
