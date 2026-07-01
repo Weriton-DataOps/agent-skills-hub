@@ -28,8 +28,9 @@ contributions/inbox/*
 !contributions/inbox/.gitkeep
 contributions/processed/
 
-# SafeGate = setup local do agente de segurança (NUNCA subir; contém .env com segredo)
-SafeGate/
+# SafeGate = setup local (raiz) do agente de segurança (NUNCA subir; contém .env com segredo)
+# barra inicial = só a pasta da RAIZ (não pega agents/safegate/, que é o agente publicável)
+/SafeGate/
 
 # nunca versionar segredos
 **/.env
