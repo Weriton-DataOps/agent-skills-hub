@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "overcore",
+  "displayName": "OverCore",
+  "version": "0.1.0",
+  "description": "Use skills do hub OverCore e contribua com fixes/atalhos via /overcore, em qualquer projeto.",
+  "author": {
+    "name": "Weriton — GR Group"
+  },
+  "homepage": "https://github.com/Weriton-DataOps/agent-skills-hub",
+  "repository": "https://github.com/Weriton-DataOps/agent-skills-hub",
+  "license": "MIT",
+  "keywords": ["skills", "agents", "orchestrator", "overcore"],
+  "commands": ["./commands/"]
+}
