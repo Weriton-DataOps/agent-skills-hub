@@ -10,3 +10,15 @@ node_modules/
 
 # git aninhado acidental dentro de skills/agents
 **/.git/
+
+# estado de runtime do curador (por máquina; não versionar)
+agents/curator/queue/
+agents/curator/runs/
+agents/curator/reports/parked-review.md
+
+# bytecode python
+__pycache__/
+*.pyc
+
+# config local do Claude Code (por máquina)
+.claude/settings.local.json

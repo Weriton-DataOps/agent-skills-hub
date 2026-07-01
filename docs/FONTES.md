@@ -1,48 +1,31 @@
-# Fontes e Atribuição
+# Atribuição e Deduplicação
 
-Este repositório consolida três coleções públicas de skills/agentes. Todo o conteúdo
-mantém a licença original de cada fonte (ver `docs/licenses/`).
+A biblioteca do **OverCore** reúne skills próprias e skills de terceiros. As de terceiros
+**mantêm a licença e a autoria originais** — a atribuição por skill vive no campo `source`
+de cada item em [`skills_index.json`](indices/skills_index.json), e os textos-base das
+licenças estão em [`licenses/`](licenses/). Ver também o [`NOTICE.md`](../NOTICE.md) na raiz.
 
-## As três fontes
+## Política de deduplicação
 
-| Fonte | Repo original | Skills | Licença |
-|---|---|---|---|
-| **superpowers** | `obra/superpowers` (superpowers-main) | 14 | `licenses/superpowers-LICENSE` |
-| **Agent-Skills** | Agent-Skills-for-Context-Engineering | 15 | `licenses/Agent-Skills-LICENSE` |
-| **antigravity** | antigravity-awesome-skills | ~1449 | `licenses/antigravity-LICENSE` (+ `-CONTENT`) |
+As skills podiam se sobrepor por nome. Resolução aplicada para que **cada skill apareça
+uma única vez**:
 
-> Os repos foram baixados como zip e extraídos em `OneDrive/Agentes AI/extracted/`.
-> Atualize os nomes/links acima se quiser apontar para os upstreams exatos.
+1. **Originais ganham.** Onde o mesmo nome existia em mais de uma origem, ficou a versão
+   original mantida (upstream ativo), não a cópia agregada.
+2. **Total de duplicatas resolvidas:** 27.
 
-## O que entrou (1451 skills)
-
-- **superpowers**: 14 skills (todas).
-- **Agent-Skills**: 15 skills (todas) + o agente `researcher/`.
-- **antigravity**: 1422 skills (as que sobraram depois de remover as duplicadas por nome).
-
-## Política de deduplicação (cuidando da redundância)
-
-As fontes se sobrepõem por nome. Resolução:
-
-1. **Originais ganham.** Onde o mesmo nome existia em mais de uma fonte, ficou a
-   versão de `superpowers` / `Agent-Skills` (upstreams mantidos), não a cópia da
-   antigravity.
-   - `superpowers ∩ antigravity`: 14 nomes → ficou a do superpowers.
-   - `Agent-Skills ∩ antigravity`: 13 nomes → ficou a do Agent-Skills.
-   - (`superpowers ∩ Agent-Skills`: nenhum.)
-2. Total de duplicatas resolvidas: **27**.
-
-## O que ficou DE FORA (e por quê)
+## O que ficou de fora (e por quê)
 
 | Excluído | Motivo |
 |---|---|
-| `antigravity/plugins/` (132 MB) | bundles que **copiam** as mesmas skills — pura redundância. As agrupações viraram índice em `docs/indices/marketplace.json`. |
-| `antigravity/apps/`, `tools/`, `scripts/` | código de empacotamento do site, não é skill/agente. |
-| `node_modules/`, `*.zip`, `.git/` das fontes | peso/lixo. |
-| `pipeline-studio/` | é o **orquestrador** (projeto separado, com git próprio), não a biblioteca. |
+| Bundles que copiam as mesmas skills | pura redundância — os agrupamentos viraram índice em [`indices/marketplace.json`](indices/marketplace.json), sem duplicar conteúdo. |
+| Código de empacotamento (apps/tools/scripts de sites) | não é skill/agente. |
+| `node_modules/`, `*.zip`, `.git/` das origens | peso/lixo. |
+| O orquestrador (Pipeline Studio) | projeto separado, com git próprio, não a biblioteca. |
 
-## Índices preservados
+## Índices
 
-- `docs/indices/CATALOG.md` — catálogo legível das skills da antigravity.
-- `docs/indices/skills_index.json` — índice machine-readable (descoberta pelo orquestrador).
-- `docs/indices/marketplace.json` — as agrupações em bundles, **sem** o conteúdo duplicado.
+- [`indices/skills_index.json`](indices/skills_index.json) — índice machine-readable
+  (descoberta pelo orquestrador; traz `source`, `risk`, `category`, `targets` por skill).
+- [`indices/marketplace.json`](indices/marketplace.json) — agrupamentos em bundles, sem duplicar conteúdo.
+- [`indices/CATALOG.md`](indices/CATALOG.md) — catálogo legível.

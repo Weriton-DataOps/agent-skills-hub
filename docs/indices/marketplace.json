@@ -1,7 +1,7 @@
 {
-  "name": "antigravity-awesome-skills",
+  "name": "overcore-skills",
   "interface": {
-    "displayName": "Antigravity Awesome Skills"
+    "displayName": "OverCore Skills"
   },
   "plugins": [
     {
