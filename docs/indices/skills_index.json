@@ -7572,6 +7572,31 @@
     }
   },
   {
+    "id": "claude-md-mode-activation",
+    "path": "skills/claude-md-mode-activation",
+    "category": "development",
+    "name": "claude-md-mode-activation",
+    "description": "Ao ligar um modo persistente via CLAUDE.md, auto-adote o comportamento na sessao atual E grave o bloco para as proximas (o CLAUDE.md so carrega no boot).",
+    "risk": "safe",
+    "source": "overcore:contribution",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "vscode-claude",
+    "author": "Weriton-DataOps",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/4"
+  },
+  {
     "id": "claude-monitor",
     "path": "skills/claude-monitor",
     "category": "ai-ml",
