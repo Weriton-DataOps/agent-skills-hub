@@ -24519,6 +24519,190 @@
     }
   },
   {
+    "id": "safegate-arquitetura",
+    "path": "skills/safegate-arquitetura",
+    "category": "security",
+    "name": "safegate-arquitetura",
+    "description": "Arquitetura de seguran\u00e7a PADR\u00c3O que TODO sistema/app da organiza\u00e7\u00e3o deve seguir \u2014 segredos centralizados em cofre, deploy por terceiros sem acesso a senhas, banco com least-privilege que impede dele\u00e7\u00f5",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
+    "id": "safegate-dev-seguro",
+    "path": "skills/safegate-dev-seguro",
+    "category": "security",
+    "name": "safegate-dev-seguro",
+    "description": "Pr\u00e1ticas de desenvolvimento seguro e ALERTAS DE RISCO durante a codifica\u00e7\u00e3o \u2014 red flags que exigem parada imediata, gates de \"pronto para produ\u00e7\u00e3o\" e regras por stack (Next.js, Python/Streamlit, SQL).",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
+    "id": "safegate-exposicao-externa",
+    "path": "skills/safegate-exposicao-externa",
+    "category": "security",
+    "name": "safegate-exposicao-externa",
+    "description": "Checklist de go-live para expor aplica\u00e7\u00e3o ao p\u00fablico externo sem expor a VPN, servidores e bancos internos. Use ao planejar, revisar ou publicar o app de clientes, configurar Cloudflare, reverse proxy",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
+    "id": "safegate-github",
+    "path": "skills/safegate-github",
+    "category": "security",
+    "name": "safegate-github",
+    "description": "Seguran\u00e7a no GitHub \u2014 segredos, supply chain, branch protection, CI/CD. Use ao configurar reposit\u00f3rios, GitHub Actions, revisar workflows, lidar com segredo commitado ou configurar Dependabot/CodeQL.",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
+    "id": "safegate-lgpd",
+    "path": "skills/safegate-lgpd",
+    "category": "security",
+    "name": "safegate-lgpd",
+    "description": "Obriga\u00e7\u00f5es t\u00e9cnicas da LGPD e regulamentos ANPD para sistemas que tratam CPF, RG, contatos e dados financeiros. Use ao modelar dados pessoais, criar formul\u00e1rios/cadastros, definir reten\u00e7\u00e3o, logs ou re",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
+    "id": "safegate-owasp",
+    "path": "skills/safegate-owasp",
+    "category": "security",
+    "name": "safegate-owasp",
+    "description": "Refer\u00eancia OWASP Top 10:2025, API Security Top 10 e padr\u00f5es de autentica\u00e7\u00e3o atuais (RFC 9700, JWT, MFA/passkeys). Use ao revisar ou escrever c\u00f3digo de aplica\u00e7\u00e3o web/API, autentica\u00e7\u00e3o, autoriza\u00e7\u00e3o ou s",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
+    "id": "safegate-postgres",
+    "path": "skills/safegate-postgres",
+    "category": "security",
+    "name": "safegate-postgres",
+    "description": "Hardening de PostgreSQL (e princ\u00edpios para SQL Server) \u2014 roles, least privilege, RLS, pgAudit, criptografia, backup/PITR. Use ao criar usu\u00e1rios de banco, escrever migra\u00e7\u00f5es/DDL, configurar conex\u00f5es de",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
+    "id": "safegate-vercel",
+    "path": "skills/safegate-vercel",
+    "category": "security",
+    "name": "safegate-vercel",
+    "description": "Seguran\u00e7a e produ\u00e7\u00e3o na Vercel \u2014 WAF, rate limiting, prote\u00e7\u00e3o de previews, vari\u00e1veis de ambiente, e como conectar a Vercel aos bancos internos atr\u00e1s da VPN sem exp\u00f4-los. Use ao criar, configurar ou fa",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
+  },
+  {
     "id": "saga-orchestration",
     "path": "skills/saga-orchestration",
     "category": "architecture",
@@ -24737,6 +24921,29 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "scan-claude-secrets",
+    "path": "skills/scan-claude-secrets",
+    "category": "security",
+    "name": "scan-claude-secrets",
+    "description": "Audita os configs do Claude Code (settings.json) atras de tokens/senhas vazados na allowlist de permissoes.",
+    "risk": "safe",
+    "source": "overcore:safegate",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "safegate"
   },
   {
     "id": "scanning-tools",
