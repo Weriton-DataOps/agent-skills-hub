@@ -33,7 +33,7 @@ def _extract_steps(text: str) -> list[str]:
 
 def draft(rec: dict, triage_info: dict | None = None) -> dict:
     triage_info = triage_info or {}
-    title = (rec.get("title") or "").strip()
+    title = re.sub(r"^\s*\[contrib[^\]]*\]\s*", "", (rec.get("title") or "").strip(), flags=re.IGNORECASE)
     raw = rec.get("raw_text", "") or ""
     name = slugify(title or _first_sentence(raw))
     description = (title or _first_sentence(raw)).strip()

@@ -75,6 +75,10 @@ def short_id(*parts: str) -> str:
 
 
 def slugify(text: str, max_len: int = 48) -> str:
+    import unicodedata
+    # tira o prefixo [contrib]/[contribution] e translitera acentos (ó->o, ã->a)
+    text = re.sub(r"^\s*\[contrib[^\]]*\]\s*", "", text, flags=re.IGNORECASE)
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
     text = text.strip().lower()
     text = re.sub(r"[^a-z0-9]+", "-", text)
     text = re.sub(r"-{2,}", "-", text).strip("-")
