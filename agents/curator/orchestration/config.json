@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "_doc": "Curator = internal-discovery twin of agents/researcher/. Ingests raw-text contributions from GitHub Issues (label 'contribution'), evaluates, dedups against the skills index, drafts SKILL.md, opens a PR. Humans decide the merge. No auto-merge anywhere.",
+  "mode": "dry-run",
+  "budgets": {
+    "max_active_runs": 3,
+    "max_runs_per_day": 6,
+    "max_parked": 12,
+    "max_failures_per_day": 5,
+    "max_inbox_size": 200
+  },
+  "intervals": {
+    "loop_step_minutes": 10,
+    "loop_discover_hours": 6,
+    "loop_daily_hour_utc": 6
+  },
+  "human_review": {
+    "park_on_verdicts": ["HUMAN_REVIEW", "REJECT"],
+    "park_on_dedup": ["human_review", "likely_duplicate"],
+    "notification_file": "agents/curator/reports/parked-review.md"
+  },
+  "gates": {
+    "require_dedup_pass": true,
+    "require_safety_scan": true,
+    "max_skill_lines": 500,
+    "forbid_secrets": true,
+    "require_author_watermark": true
+  },
+  "feeds": {
+    "issues_label": "contribution",
+    "github_repo": "Weriton-DataOps/agent-skills-hub",
+    "token_env": "CURATOR_ISSUES_TOKEN",
+    "enable_auto_pr": false
+  },
+  "models": {
+    "triage": "claude-haiku-4-5",
+    "draft_format": "claude-sonnet-4-6",
+    "judge": "claude-opus-4-8",
+    "pairwise_tiebreak": "claude-opus-4-8"
+  }
+}

@@ -1,0 +1,54 @@
+name: "Contribuição (texto bruto)"
+description: "Registre um fix, um atalho ou um jeito eficiente de fazer algo. O Curator avalia e, se fizer sentido, vira uma skill oficial."
+title: "[contrib] "
+labels: ["contribution"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Escreva **em texto bruto**, sem se preocupar com formato. O Curator lê, avalia
+        (rubric), deduplica contra as skills existentes e, se aprovado, rascunha um
+        `SKILL.md` e abre um PR para revisão humana. **Nada é publicado automaticamente.**
+  - type: input
+    id: what
+    attributes:
+      label: "O que você resolveu / descobriu (1 linha)"
+      placeholder: "Ex.: 500 silencioso em API route do Next.js por env var faltando em produção"
+    validations:
+      required: true
+  - type: textarea
+    id: raw
+    attributes:
+      label: "Texto bruto — contexto, causa, como diagnosticar, como resolver"
+      description: "Pode ser desorganizado. Quanto mais concreto (comandos, sintomas), melhor. NÃO cole segredos/senhas/tokens."
+      placeholder: |
+        Contexto: ...
+        Causa: ...
+        Como diagnosticar: ...
+        Como resolver: ...
+        Lição: ...
+    validations:
+      required: true
+  - type: dropdown
+    id: origin
+    attributes:
+      label: "Origem"
+      options:
+        - "vscode-claude"
+        - "pipeline-studio"
+        - "human"
+      default: 2
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: "Tags (opcional, separadas por vírgula)"
+      placeholder: "nextjs, vercel, env-vars, debugging"
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: "Confirmação"
+      options:
+        - label: "Não colei credenciais, tokens, senhas nem caminhos/nomes internos sensíveis."
+          required: true

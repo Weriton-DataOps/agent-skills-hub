@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "name": "overcore-hub",
+  "description": "OverCore — orquestrador multi-agente + hub vivo de skills de desenvolvimento",
+  "owner": {
+    "name": "Weriton — GR Group"
+  },
+  "plugins": [
+    {
+      "name": "overcore",
+      "displayName": "OverCore",
+      "source": "./plugin",
+      "description": "Use skills do hub e contribua com fixes/atalhos via /overcore, em qualquer projeto.",
+      "homepage": "https://github.com/Weriton-DataOps/agent-skills-hub",
+      "repository": "https://github.com/Weriton-DataOps/agent-skills-hub",
+      "license": "MIT",
+      "keywords": ["skills", "agents", "orchestrator", "overcore"],
+      "category": "productivity"
+    }
+  ]
+}
