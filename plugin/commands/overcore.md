@@ -24,7 +24,8 @@ Roteie pela **primeira palavra**:
 ### (vazio) ou `on` / `ativar` → LIGAR o modo orquestrador neste projeto
 1. Leia o `CLAUDE.md` na **raiz do projeto atual** (se existir).
 2. Se ele **não** contém `<!-- OVERCORE:START`, **acrescente ao final** o BLOCO abaixo (crie o arquivo se não existir). Se **já** contém, **não** duplique — apenas confirme que já está ativo.
-3. Responda a saudação premium + confirme: *"Modo orquestrador **ligado** neste projeto. A partir de agora eu trago skills/agentes sozinho, sem você digitar `/overcore`. Pra desligar: `/overcore off`."*
+3. **Adote o comportamento do bloco AGORA, nesta sessão** — não espere reload. O `CLAUDE.md` garante as **próximas** sessões (carrega no boot); para ESTA você já passa a operar como orquestrador imediatamente.
+4. Responda a saudação premium + confirme: *"Modo orquestrador **ligado** — e já valendo nesta sessão, sem recarregar. Daqui pra frente eu trago skills/agentes sozinho. Desligar: `/overcore off`."*
 
 BLOCO a gravar no `CLAUDE.md` (exatamente, com os marcadores):
 
