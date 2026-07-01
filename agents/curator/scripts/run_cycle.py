@@ -60,8 +60,9 @@ def main() -> None:
     ap.add_argument("--live", action="store_true", help="materializa skill (--apply) e abre PR (--push)")
     args = ap.parse_args()
 
-    print("== 1) INGEST (GitHub Issues, se houver token) ==")
-    run("ingest_issues.py")
+    print("== 1) INGEST ==")
+    run("ingest_folder.py")            # pasta contributions/inbox/ (agentes com o repo)
+    run("ingest_issues.py")            # GitHub Issues (usuarios do plugin, se houver token)
 
     print("\n== 2) DRAFT (drena loop_step) ==")
     drain("loop_step.py", "nada pendente")
