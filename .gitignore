@@ -22,3 +22,16 @@ __pycache__/
 
 # config local do Claude Code (por máquina)
 .claude/settings.local.json
+
+# drop-zone de sugestões (transiente; o que vale vira skill commitada)
+contributions/inbox/*
+!contributions/inbox/.gitkeep
+contributions/processed/
+
+# SafeGate = setup local (raiz) do agente de segurança (NUNCA subir; contém .env com segredo)
+# barra inicial = só a pasta da RAIZ (não pega agents/safegate/, que é o agente publicável)
+/SafeGate/
+
+# nunca versionar segredos
+**/.env
+!**/.env.example
