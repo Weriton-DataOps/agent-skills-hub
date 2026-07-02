@@ -245,3 +245,75 @@ Evaluate your code against this matrix before outputting. This is the **last** f
 - [ ] Are empty, loading, and error states provided?
 - [ ] Are cards omitted in favor of spacing where possible?
 - [ ] Did you strictly isolate CPU-heavy perpetual animations in their own Client Components?
+
+## Absorvido de Impeccable (Apache-2.0, modificado)
+
+> Conteúdo derivado de `pbakaus/impeccable` (Apache-2.0) — arquivos `typeset.md`, `bolder.md` e `quieter.md` — e **modificado**: traduzido para PT-BR, desacoplado do produto original e adaptado ao vocabulário do Atelier (DESIGN.md, tokens herdados, registro LANDING/APP/DOCS, `/varrer`, `/subir`, `/baixar`), conforme exige a cláusula 4b da licença.
+
+### Dark mode tipográfico: compensar em 3 eixos
+
+Texto claro sobre fundo escuro perde peso percebido em três dimensões ao mesmo tempo; corrigir só uma não resolve. Corrija as três:
+
+| Eixo | Compensação sobre o valor do light mode |
+|---|---|
+| Leading (line-height) | +0.05 a +0.1 |
+| Tracking (letter-spacing) | +0.01 a +0.02em |
+| Peso | um degrau acima (regular → medium; em fonte variável, alvo ~350) |
+
+### Fallback metric-matched (zero layout shift)
+
+`font-display: swap` sozinho não elimina o pulo de layout — o fallback precisa ter métricas casadas com a fonte web:
+
+```css
+@font-face {
+  font-family: 'FonteFallback';
+  src: local('Arial');
+  size-adjust: 105%;        /* casa o x-height */
+  ascent-override: 90%;
+  descent-override: 20%;
+  line-gap-override: 10%;
+}
+```
+
+- `swap` mostra o fallback e troca quando a fonte chega (FOUT); `optional` desiste da fonte web se ela estourar o budget (~100ms) e elimina o shift por completo. Prefira `optional` quando zero layout shift importa mais do que exibir a fonte da marca em rede lenta.
+- Pré-carregue SÓ o peso crítico (em geral, o regular do corpo acima da dobra); pré-carregar todos os pesos custa mais do que rende.
+- 3+ pesos ou estilos → fonte variável: um arquivo menor que três estáticos, peso fracionário e `font-optical-sizing: auto`. Para 1-2 pesos, estático basta. Ferramentas como Fontaine calculam os overrides automaticamente.
+
+### ALL-CAPS exige tracking
+
+Capitulares ficam coladas no espaçamento default. Todo label, eyebrow ou heading curto em caixa-alta recebe `letter-spacing: 0.05em` a `0.12em` (5-12%). Small caps reais (`font-variant-caps`) recebem o mesmo tratamento, um pouco mais suave. Caixa-alta sem tracking reprova no `/varrer`.
+
+### Fluid type: clamp bounded ≤2.5x, body sempre fixo
+
+- `clamp(min, preferido, max)` SÓ para headings/display em registro LANDING; inclua offset em `rem` no valor preferido (ex.: `5vw + 1rem`) para não colapsar em telas pequenas.
+- **Bounded:** `max ≤ 2.5 × min`. Razões maiores quebram zoom/reflow do navegador e fazem viewports grandes parecerem gritaria.
+- **Body é SEMPRE fixo** (`rem`), inclusive em landing — a diferença útil entre viewports é pequena demais para justificar fluid.
+- Registro APP/DASHBOARD: escala fixa em `rem`, com ajuste opcional em 1-2 breakpoints. Nenhum design system de produto relevante (Material, Polaris, Primer, Carbon) usa fluid type em UI — layouts densos dependem de previsibilidade espacial.
+- Escale container e font-size juntos para a medida efetiva permanecer na faixa 45-75ch em qualquer viewport; heading que alarga mais rápido que o container sai da medida confortável no topo.
+
+### Design-System Lock
+
+Com DESIGN.md, tokens ou tema estabelecido no projeto, o sistema existente é a fronteira. "Mais impacto" não autoriza inventar cor, gradiente, raio, sombra, fonte ou efeito novo. Se o sistema for genuinamente limitado demais para a direção pedida, PARE e peça **aprovação nominal**: nomeie exatamente cada adição, o papel que cada uma cumpre e por que o sistema atual não dá conta. Aprovada a expansão, o token novo entra no DESIGN.md junto com a implementação — nunca como valor inline (mesma disciplina da regra A18 do Atelier: herança nunca é sobrescrita).
+
+### Amplificar (`/subir`): hierarquia e proporção dentro do sistema
+
+"Bolder" via gradiente ciano/roxo, glassmorphism, neon em fundo escuro e texto-gradiente em métricas é o oposto de bold — é o default saturado de IA. Amplifique com o que o sistema já tem:
+
+- **Um ponto focal.** Escolha a única coisa que o usuário deve lembrar e faça o resto servir a ela.
+- Aumente o **contraste entre primário/secundário/terciário**, não o volume de tudo: se todo elemento fica mais alto, a composição fica mais plana, não mais bold.
+- Alavancas legítimas: peso, medida, quebra de linha, proporção, densidade vs respiro, sequência do layout, especificidade da copy e evidência real (dado, artefato, screenshot) — antes de qualquer efeito.
+- Scroll-fade-rise em toda seção não é bold; é o tique de IA mais saturado que existe.
+- Registro muda o significado: em LANDING, bolder = ponto de vista mais forte; em APP, bolder = hierarquia mais firme e priorização mais decisiva — teatro corrói confiança.
+- **Teste final:** se alguém olha o resultado e acredita na hora que "uma IA deixou isso mais bold", reprovou.
+
+### Aquietar (`/baixar`): dessaturar com precisão — quiet ≠ genérico
+
+Design quieto é mais difícil que design bold; sutileza sem intenção colapsa em genérico. Pense luxo, não preguiça:
+
+- **Dessaturação 70-85%:** cores saem do saturado pleno para 70-85% de saturação; brilhantes viram tons contidos.
+- **Regra dos 10%:** neutros dominam; cor vira acento em ~10% da superfície.
+- Cinzas tintados (quentes ou frios) no lugar de cinza puro — profundidade sem barulho.
+- Nunca cinza sobre fundo cromático: use shade mais escura da própria cor ou transparência.
+- Pesos descem um degrau estrutural: 900 → 600, 700 → 500; hierarquia por peso, tamanho e espaço — não por cor e negrito.
+- Motion: distâncias de 10-20px (não 40px), easing tipo ease-out-quart, nunca bounce/elastic; animação sem propósito claro é removida.
+- O que NÃO fazer: uniformizar tamanho/peso (hierarquia continua existindo), remover toda cor (quiet ≠ grayscale), apagar personalidade. O ponto de vista sobrevive aos cortes — restrained, não ausente.

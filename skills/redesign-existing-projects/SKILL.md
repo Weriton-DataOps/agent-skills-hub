@@ -197,3 +197,48 @@ Apply changes in this order for maximum visual impact with minimum risk:
 - If the project uses Tailwind, check the version (v3 vs v4) before modifying config.
 - If the project has no framework, use vanilla CSS.
 - Keep changes reviewable and focused. Small, targeted improvements over big rewrites.
+
+## Absorvido de Impeccable (Apache-2.0, modificado)
+
+> Derivado de [pbakaus/impeccable](https://github.com/pbakaus/impeccable) (Apache-2.0). Conteúdo **modificado**: traduzido para PT-BR, desacoplado do produto original e adaptado ao vocabulário do Atelier (`/varrer`, `/subir`, `DESIGN.md`, registros LANDING/APP/DOCS).
+
+No fluxo Scan → Diagnose → Fix desta skill: o **drift de IA** entra no Diagnose, o **Design-System Lock** governa o Fix, e o **teste de 2ª ordem** roda antes de fixar direção e de novo no `/varrer` final.
+
+### Drift de IA — inconsistência contra vizinhos é sinal de geração
+
+Polimento visual sobre um fluxo deformado é trabalho desperdiçado. Código gerado por IA se trai menos pelo que erra sozinho e mais pelo que faz *diferente das telas vizinhas* sem razão. Antes de corrigir superfície, compare a tela com as features adjacentes do mesmo produto:
+
+- **Divulgação progressiva** — uma tela de configurações expondo 40 campos quando o resto do app revela 5 por vez é drift, mesmo com cada campo perfeitamente estilizado.
+- **Forma dos fluxos** — ações de múltiplos passos seguem a mesma forma dos fluxos comparáveis: modal vs página inteira, edição inline vs rota separada, save-on-blur vs submit explícito, update otimista vs pessimista.
+- **Peso da hierarquia** — o mesmo peso conceitual recebe o mesmo peso visual em todo lugar; ação primária não vira terciária num canto do produto, e terciária não grita.
+- **Chegada e saída de conteúdo** — empty, loading e transições de chegada se comportam como nas features vizinhas.
+- **Modelo mental e nomes** — mesmos substantivos e verbos do resto do sistema; um "Workspace" aqui não pode ser "Projeto" três telas adiante.
+
+Todo desvio encontrado recebe uma **causa-raiz** antes do fix — cada categoria pede um fix diferente, e corrigir o sintoma sem nomear a causa é como o drift se acumula:
+
+| Causa | Diagnóstico | Fix |
+|---|---|---|
+| **Token faltante** | o valor deveria existir no sistema, mas não existe | criar o token — com aprovação nominal (ver Lock abaixo) — e usar |
+| **One-off** | componente/token compartilhado já existe, mas não foi usado | trocar pela versão compartilhada e apagar a cópia |
+| **Desalinhamento conceitual** | fluxo, arquitetura de informação ou hierarquia não batem com as vizinhas | retrabalhar o fluxo, não a superfície |
+
+Detector e QA automatizado valem só como evidência de *defeito*: **script limpo nunca é prova** de que o design está forte. A prova vem de renderizar, percorrer o caminho real de interação e observar.
+
+### Design-System Lock no redesign
+
+Quando o projeto tem `DESIGN.md`, tokens ou estilos de componente estabelecidos, esse sistema é a **fronteira** do redesign. "Deixar mais ousado" nunca é licença para gradiente ciano/roxo, glass, neon em fundo escuro ou gradiente em métrica — esse é o reflexo, o oposto de ousado. Fortaleça a linguagem existente antes de adicionar linguagem nova:
+
+- Amplifique via **ênfase, proporção, ritmo, densidade, contraste, copy e relações de layout** — dentro do sistema documentado. É o mandato de `/subir`: contraste/escala/posição, zero decoração nova.
+- **Se todo elemento fica mais alto, a composição não fica mais ousada; fica mais chapada.** Eleja UM ponto focal que o usuário deve lembrar e faça o resto sustentá-lo.
+- O registro dita o significado: em **LANDING**, "ousado" = ponto de vista mais forte (hierarquia, pacing, uma ideia visual comprometida); em **APP/DASHBOARD**, "ousado" quase nunca é teatro — é hierarquia mais firme, contraste de peso mais claro, densidade de informação mais nítida. Amplificação em clareza, não em drama.
+- **Token novo = aprovação nominal.** Se o sistema existente for genuinamente limitado demais para a direção, pare e peça aprovação ANTES de expandir: nomeie cada adição exata (cor, gradiente, sombra, raio, fonte, efeito), o papel que cada uma cumprirá e por que o sistema atual não dá conta. Aprovado, o token entra no `DESIGN.md` junto com a implementação — nunca inline. É a regra A18 do Atelier aplicada ao redesign: herança nunca é sobrescrita.
+- Verificação ao final do passe: o resultado é **fiel ao sistema** (a linguagem existente ficou mais forte antes de qualquer coisa nova?) e **sem drift não-documentado** (toda cor, sombra, raio, fonte ou efeito novo está ausente ou explicitamente aprovado e registrado?).
+
+### Teste anti-reflexo de 2ª ordem
+
+O teste de slop roda em duas altitudes; a segunda pega o que a primeira deixa passar:
+
+- **1ª ordem** — se alguém consegue adivinhar tema + paleta só pela categoria do produto, é o primeiro reflexo do dado de treino. Retrabalhe direção e estratégia de cor até a resposta deixar de ser óbvia a partir do domínio.
+- **2ª ordem** — se alguém consegue adivinhar a família estética a partir de **categoria + anti-referências** ("ferramenta de IA que *não* é creme-SaaS → editorial-tipográfico"; "fintech que *não* é navy-e-dourado → dark mode estilo terminal"), caiu na armadilha um andar abaixo: o primeiro reflexo foi evitado, o segundo não. **Se categoria + anti-referências ainda predizem a estética resultante, ainda é slop.**
+
+Retrabalhe até as DUAS respostas serem não-óbvias. Na prática do Atelier: antes de fixar a direção do redesign, declare por escrito o que a categoria prediria (1ª ordem) e o que a categoria-menos-o-clichê prediria (2ª ordem); no `/varrer`, confira se o resultado escapa das duas previsões.

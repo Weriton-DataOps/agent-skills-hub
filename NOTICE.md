@@ -25,6 +25,22 @@ Parte das skills desta biblioteca foi originada de projetos open-source de terce
 - **Creative Commons Attribution 4.0 (CC BY 4.0)** — conteúdo não-código
 - **Apache License 2.0** — algumas skills
 
+## Derivações de pbakaus/impeccable (Apache-2.0)
+
+Parte do agente **Atelier** e um conjunto de skills derivam de
+[`pbakaus/impeccable`](https://github.com/pbakaus/impeccable) (Copyright Paul Bakaus,
+Apache License 2.0 — texto em https://www.apache.org/licenses/LICENSE-2.0). Os arquivos
+foram **modificados** (Apache-2.0 §4b): traduzidos para PT-BR, desacoplados dos scripts
+e comandos do produto original, e adaptados ao pipeline do Atelier/OverCore.
+
+- Skills derivadas: `design-register`, `hardening-ui`, `onboarding-first-run`,
+  `design-critique`, `modern-interaction`, `responsive-adaptation`,
+  `high-impact-moments`, `asset-producer` (atribuição também no frontmatter de cada uma).
+- Enxertos derivados (seção "Absorvido de Impeccable" ou crédito em rodapé):
+  `agents/design/CLAUDE.md` (regras A19–A30 e refinamentos), `design-taste-frontend`,
+  `baseline-ui`, `fixing-motion-performance`, `loading-states`, `ux-copy`, `design-md`,
+  `redesign-existing-projects`.
+
 > Nenhuma atribuição de autor foi removida: ela vive no `source` de cada skill e nos
 > textos em `docs/licenses/`. O OverCore rebranda apenas a sua própria identidade,
 > preservando o crédito de quem escreveu cada skill de terceiros.
