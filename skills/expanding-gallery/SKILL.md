@@ -2,9 +2,9 @@
 name: expanding-gallery
 description: "Accordion expansível com carrossel aninhado, de produção: painéis flex que expandem (rótulo rotacionado nos fechados), setas de foto só no painel ativo com crossfade+scale, outline de acento e scrim de legibilidade. Exploração E narrativa no mesmo componente."
 risk: safe
-source: "overcore:producao (Hub do Proprietario)"
+source: "overcore:producao"
 date_added: "2026-07-02"
-origin: producao:hub-proprietario
+origin: producao
 author: "Weriton — GR Group"
 contributed_via: https://github.com/Weriton-DataOps/agent-skills-hub/issues/10
 ---
@@ -14,8 +14,7 @@ contributed_via: https://github.com/Weriton-DataOps/agent-skills-hub/issues/10
 ## Quando usar
 **N itens, cada um com M fotos** (empreendimentos, imóveis, destinos, produtos com
 galeria): o accordion mostra o conjunto; o carrossel aninhado conta a história de UM
-item. Padrão extraído de **produção** (seção "Nossos empreendimentos" do Hub do
-Proprietário).
+item. Padrão extraído de **produção** (seletor de itens com galeria de um portal de reservas real).
 
 ## As 5 regras do ofício
 

@@ -2,9 +2,9 @@
 name: center-stage-carousel
 description: "Carrossel center-stage arrastável de produção: palco central com vizinhos em peek, arrasto 1:1 (0ms) com snap suave (800ms), arrasto≠clique, autoplay que pausa em hover/foco/reduced-motion e touch que não sequestra o scroll."
 risk: safe
-source: "overcore:producao (Portal GR)"
+source: "overcore:producao"
 date_added: "2026-07-02"
-origin: producao:portal-gr
+origin: producao
 author: "Weriton — GR Group"
 contributed_via: https://github.com/Weriton-DataOps/agent-skills-hub/issues/9
 ---
@@ -14,7 +14,7 @@ contributed_via: https://github.com/Weriton-DataOps/agent-skills-hub/issues/9
 ## Quando usar
 Cards de destaque com narrativa guiada (comunicados, cases, ofertas) onde o item central
 é o protagonista e os vizinhos convidam à navegação. Padrão extraído de **produção**
-(landing do Portal GR) — não de tutorial.
+(landing de um portal corporativo real) — não de tutorial.
 
 ## As 8 regras do ofício
 

@@ -7192,7 +7192,7 @@
       },
       "reasons": []
     },
-    "origin": "producao:portal-gr",
+    "origin": "producao",
     "author": "Weriton - GR Group",
     "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/9"
   },
@@ -11922,7 +11922,7 @@
       },
       "reasons": []
     },
-    "origin": "producao:hub-proprietario",
+    "origin": "producao",
     "author": "Weriton - GR Group",
     "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/10"
   },
