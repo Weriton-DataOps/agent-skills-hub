@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A Sede da OverCore — teste de terreno (chão + córregos)</title>
+<title>A Sede da OverCore — chão plano com textura pintada (técnica do folio)</title>
 <style>
   :root{--bg:#0b0d12; --line:#242a36; --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d}
   *{box-sizing:border-box}
@@ -27,13 +27,13 @@
 </head>
 <body>
 <nav>
-  <a class="logo" href="index.html">Over<b>Core</b> <span class="tag2">· experimento 002 — a sede · teste 01: terreno + córregos</span></a>
+  <a class="logo" href="index.html">Over<b>Core</b> <span class="tag2">· a sede · teste 02: chão PLANO, tudo pintado em textura</span></a>
   <span class="tag2">arraste pra orbitar · role pra aproximar</span>
 </nav>
 <main>
-  <span class="badge">teste de fundação — só o chão e a água</span>
-  <canvas id="cv" aria-label="terreno da vila com córregos"></canvas>
-  <div class="hud">arraste pra orbitar · a água corre — repare no encontro dos dois córregos</div>
+  <span class="badge">técnica do folio: geometria plana + pintura</span>
+  <canvas id="cv" aria-label="chão plano da vila com córregos pintados"></canvas>
+  <div class="hud">o chão é 100% plano — lago, margens e ladrilhos são pintura · espuma viaja nos córregos</div>
 </main>
 
 <script src="../agents/design/showcase/vendor/three.min.js"></script>
@@ -42,193 +42,160 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv=document.getElementById('cv');
 let renderer;
 try{ renderer=new THREE.WebGLRenderer({canvas:cv, antialias:true}) }
-catch(e){ cv.replaceWith(Object.assign(document.createElement('p'),{textContent:'Sem WebGL — o terreno fica pra próxima.',style:'text-align:center;color:#8b93a7;padding:60px'})) }
+catch(e){ cv.replaceWith(Object.assign(document.createElement('p'),{textContent:'Sem WebGL — fica pra próxima.',style:'text-align:center;color:#8b93a7;padding:60px'})) }
 
 if(renderer){
   const main=cv.parentElement;
   const W=()=>main.clientWidth, H=()=>main.clientHeight;
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setSize(W(),H(),false);
-  renderer.setClearColor(0xf2c894);                      // horizonte de fim de tarde
+  renderer.setClearColor(0xf2c894);
   const scene=new THREE.Scene();
-  scene.fog=new THREE.Fog(0xf2c894, 30, 78);
+  scene.fog=new THREE.Fog(0xf2c894, 34, 85);
   const cam=new THREE.PerspectiveCamera(45, W()/H(), .1, 200);
 
-  /* luz de fim de tarde (o clima do folio) */
-  scene.add(new THREE.HemisphereLight(0xffe6c0, 0x7a6a4a, .65));
-  const sun=new THREE.DirectionalLight(0xffd9a0, 1.15); sun.position.set(14,20,8); scene.add(sun);
-  const counter=new THREE.DirectionalLight(0x9db7e8,.25); counter.position.set(-10,8,-12); scene.add(counter);
-
-  /* ===== ruído (value noise fractal, sem lib) ===== */
-  function fract(x){ return x-Math.floor(x) }
-  function hash(ix,iz){ return fract(Math.sin(ix*127.1+iz*311.7)*43758.5453) }
-  function smooth(t){ return t*t*(3-2*t) }
-  function vnoise(x,z){
-    const ix=Math.floor(x), iz=Math.floor(z), fx=smooth(fract(x)), fz=smooth(fract(z));
-    const a=hash(ix,iz), b=hash(ix+1,iz), c=hash(ix,iz+1), d=hash(ix+1,iz+1);
-    return a+(b-a)*fx+(c-a)*fz+(a-b-c+d)*fx*fz;
-  }
-  function fbm(x,z){
-    return vnoise(x,z)*.55 + vnoise(x*2.1,z*2.1)*.27 + vnoise(x*4.3,z*4.3)*.13 + vnoise(x*8.9,z*8.9)*.05;
-  }
-
-  /* ===== córregos: polilinhas no plano (rio principal + afluente que deságua) ===== */
+  /* ===== mundo plano: 64×64, tudo desenhado numa textura 2048² ===== */
+  const SIZE=64, RES=2048;
   const RIO=[[-34,-10],[-24,-6],[-14,-8],[-6,-4],[2,-1],[9,3],[16,4],[24,8],[34,13]];
   const AFLUENTE=[[-8,-34],[-6,-24],[-5,-16],[-3,-9],[0,-4],[2,-1]];
-  function dSeg(px,pz,ax,az,bx,bz){
-    const abx=bx-ax, abz=bz-az;
-    const t=Math.max(0,Math.min(1,((px-ax)*abx+(pz-az)*abz)/(abx*abx+abz*abz)));
-    const cx=ax+abx*t, cz=az+abz*t;
-    return Math.hypot(px-cx,pz-cz);
-  }
-  function dRio(px,pz,poly){
-    let d=1e9;
-    for(let i=0;i<poly.length-1;i++)
-      d=Math.min(d,dSeg(px,pz,poly[i][0],poly[i][1],poly[i+1][0],poly[i+1][1]));
-    return d;
-  }
-  const distAgua=(x,z)=>Math.min(dRio(x,z,RIO), dRio(x,z,AFLUENTE));
+  const px=x=>(x+SIZE/2)/SIZE*RES, py=z=>(z+SIZE/2)/SIZE*RES;
 
-  /* ===== terreno: colinas suaves + leito cavado + cores por vértice ===== */
-  const SIZE=72, SEG=150;
-  const terr=new THREE.PlaneGeometry(SIZE,SIZE,SEG,SEG);
-  terr.rotateX(-Math.PI/2);
-  const pos=terr.attributes.position;
-  const cols=new Float32Array(pos.count*3);
-  const C={
-    relva1:new THREE.Color(0x7fae4e), relva2:new THREE.Color(0x9cc25e),
-    seca:  new THREE.Color(0xb9b063), terra: new THREE.Color(0xb08d5b),
-    areia: new THREE.Color(0xc9a86b), leito: new THREE.Color(0x6e5a3c),
-  };
-  const tmp=new THREE.Color();
-  function alturaBase(x,z){
-    let h=fbm(x*.055+7, z*.055+3)*3.1-1.1;          // colinas
-    const r=Math.hypot(x,z);
-    h-=Math.max(0,(r-27))*.35;                       // borda do diorama cai
-    return h;
+  const tex=document.createElement('canvas'); tex.width=tex.height=RES;
+  const g=tex.getContext('2d');
+
+  // base quente (o piso do folio)
+  const grad=g.createRadialGradient(RES/2,RES/2,RES*.12,RES/2,RES/2,RES*.72);
+  grad.addColorStop(0,'#f2a35e'); grad.addColorStop(1,'#e88f4b');
+  g.fillStyle=grad; g.fillRect(0,0,RES,RES);
+
+  // ladrilhos em losango (sutil, como no print)
+  g.save();
+  g.translate(RES/2,RES/2); g.rotate(Math.PI/4); g.translate(-RES/2,-RES/2);
+  const T=RES/26;
+  for(let i=-6;i<32;i++)for(let j=-6;j<32;j++){
+    const n=Math.sin(i*12.9898+j*78.233)*43758.5453;
+    const f=n-Math.floor(n);
+    if(f>.5){ g.fillStyle=`rgba(255,235,205,${(f-.5)*.10})` }
+    else    { g.fillStyle=`rgba(120,60,20,${(.5-f)*.08})` }
+    g.fillRect(i*T+1.5, j*T+1.5, T-3, T-3);
   }
-  window.alturaTerreno=(x,z)=>{                      // exposto pros próximos testes (bancas, árvores)
-    let h=alturaBase(x,z);
-    const d=distAgua(x,z);
-    h-=smooth(Math.max(0,Math.min(1,(2.1-d)/2.1)))*1.35;   // cava o leito
-    return h;
-  }
-  for(let i=0;i<pos.count;i++){
-    const x=pos.getX(i), z=pos.getZ(i);
-    const h=alturaTerreno(x,z);
-    pos.setY(i,h);
-    const d=distAgua(x,z);
-    const n=fbm(x*.2+40, z*.2+9);
-    if(d<1.15)      tmp.copy(C.leito);
-    else if(d<2.0)  tmp.copy(C.areia).lerp(C.terra, n*.7);
-    else{
-      tmp.copy(C.relva1).lerp(C.relva2, n);
-      if(n>.62) tmp.lerp(C.seca,(n-.62)*1.6);        // manchas secas
-      if(h>1.1) tmp.lerp(C.seca,Math.min(.5,(h-1.1)*.4)); // topos mais queimados
+  g.restore();
+
+  // caminho helper
+  function caminho(poly){
+    g.beginPath();
+    g.moveTo(px(poly[0][0]), py(poly[0][1]));
+    for(let i=1;i<poly.length;i++){
+      const [x0,z0]=poly[i-1], [x1,z1]=poly[i];
+      g.quadraticCurveTo(px(x0),py(z0), px((x0+x1)/2), py((z0+z1)/2));
     }
-    cols[i*3]=tmp.r; cols[i*3+1]=tmp.g; cols[i*3+2]=tmp.b;
+    const u=poly[poly.length-1];
+    g.lineTo(px(u[0]), py(u[1]));
+    g.lineCap='round'; g.lineJoin='round';
   }
-  terr.setAttribute('color', new THREE.BufferAttribute(cols,3));
-  terr.computeVertexNormals();
-  scene.add(new THREE.Mesh(terr, new THREE.MeshStandardMaterial({vertexColors:true, flatShading:true, roughness:1, metalness:0})));
+  function agua(poly, wWorld){
+    const w=wWorld/SIZE*RES;
+    // sombra da margem (transição suave pro chão)
+    g.filter='blur(26px)';
+    caminho(poly); g.strokeStyle='#b96b33'; g.lineWidth=w*1.55; g.stroke();
+    // corpo d'água em 3 profundidades (borda clara → fundo escuro no meio)
+    g.filter='blur(10px)';
+    caminho(poly); g.strokeStyle='#3f9aa6'; g.lineWidth=w*1.06; g.stroke();
+    g.filter='blur(6px)';
+    caminho(poly); g.strokeStyle='#2e7f8d'; g.lineWidth=w*.78; g.stroke();
+    caminho(poly); g.strokeStyle='#22626f'; g.lineWidth=w*.4; g.stroke();
+    g.filter='none';
+    // espuma da margem: risquinhos claros acompanhando a borda
+    g.strokeStyle='rgba(250,238,214,.85)'; g.lineWidth=Math.max(3,w*.045);
+    [-.5,.5].forEach(lado=>{
+      g.save();
+      g.setLineDash([w*.5, w*.55]);
+      g.lineDashOffset=lado>0? w*.3 : 0;
+      caminho(poly.map(([x,z],i)=>{
+        // desloca a linha pro lado, com onda leve
+        const j=Math.min(poly.length-2, Math.max(0,i));
+        const [ax,az]=poly[j], [bx,bz]=poly[j+1];
+        let tx=bx-ax, tz=bz-az; const tl=Math.hypot(tx,tz)||1; tx/=tl; tz/=tl;
+        const o=wWorld*.42*lado + Math.sin(i*2.7)*.14;
+        return [x-tz*o, z+tx*o];
+      }));
+      g.stroke();
+      g.restore();
+    });
+  }
+  agua(RIO, 3.0);
+  agua(AFLUENTE, 2.1);
 
-  /* ===== água: fita que segue cada córrego, com ondulação e correnteza ===== */
-  function fitaAgua(poly, largura){
-    // reamostra a polilinha em pontos suaves
+  // detalhinhos do piso (losangos vermelhos espalhados, como no folio)
+  for(let i=0;i<26;i++){
+    const n1=Math.sin(i*91.7)*43758.5453, n2=Math.sin(i*45.3)*24634.63;
+    const fx=(n1-Math.floor(n1))*RES, fz=(n2-Math.floor(n2))*RES;
+    // longe da água? (aprox: evita faixa central diagonal)
+    g.save();
+    g.translate(fx,fz); g.rotate(Math.PI/4);
+    g.fillStyle=`rgba(150,40,30,${.25+(i%3)*.12})`;
+    const s=7+(i%4)*4;
+    g.fillRect(-s/2,-s/2,s,s);
+    g.restore();
+  }
+
+  const texture=new THREE.CanvasTexture(tex);
+  texture.anisotropy=8;
+  const chao=new THREE.Mesh(
+    new THREE.PlaneGeometry(SIZE,SIZE),
+    new THREE.MeshBasicMaterial({map:texture}));   // basic = look "baked", sem depender de luz
+  chao.rotation.x=-Math.PI/2;
+  scene.add(chao);
+  window.alturaTerreno=()=>0;                       // mundo plano: tudo senta em y=0
+
+  /* ===== espuma viva viajando nos córregos ===== */
+  function amostra(poly){
     const pts=[];
     for(let i=0;i<poly.length-1;i++){
       const [ax,az]=poly[i],[bx,bz]=poly[i+1];
-      const passos=Math.ceil(Math.hypot(bx-ax,bz-az)/0.9);
-      for(let s=0;s<passos;s++){
-        const t=s/passos;
-        pts.push([ax+(bx-ax)*t, az+(bz-az)*t]);
-      }
+      const n=Math.ceil(Math.hypot(bx-ax,bz-az)/.8);
+      for(let s=0;s<n;s++){ const t=s/n; pts.push([ax+(bx-ax)*t, az+(bz-az)*t]) }
     }
-    pts.push(poly[poly.length-1].slice());
-    // suaviza (média móvel)
-    for(let r=0;r<2;r++)
-      for(let i=1;i<pts.length-1;i++){
-        pts[i][0]=(pts[i-1][0]+pts[i][0]*2+pts[i+1][0])/4;
-        pts[i][1]=(pts[i-1][1]+pts[i][1]*2+pts[i+1][1])/4;
-      }
-    const n=pts.length;
-    const geo=new THREE.BufferGeometry();
-    const vp=new Float32Array(n*2*3);
-    const uu=new Float32Array(n*2);                  // distância ao longo do rio (pra onda)
-    let acc=0;
-    for(let i=0;i<n;i++){
-      const [x,z]=pts[i];
-      const [px,pz]=pts[Math.max(0,i-1)], [nx,nz]=pts[Math.min(n-1,i+1)];
-      let tx=nx-px, tz=nz-pz; const tl=Math.hypot(tx,tz)||1; tx/=tl; tz/=tl;
-      const ox=-tz*largura/2, oz=tx*largura/2;
-      if(i>0) acc+=Math.hypot(x-pts[i-1][0], z-pts[i-1][1]);
-      const y=alturaTerreno(x,z)+.42;                // lâmina d'água acima do leito
-      vp[(i*2)*3]=x-ox;  vp[(i*2)*3+1]=y;  vp[(i*2)*3+2]=z-oz;
-      vp[(i*2+1)*3]=x+ox; vp[(i*2+1)*3+1]=y; vp[(i*2+1)*3+2]=z+oz;
-      uu[i*2]=acc; uu[i*2+1]=acc;
-    }
-    const idx=[];
-    for(let i=0;i<n-1;i++){
-      const a=i*2,b=i*2+1,c=i*2+2,d=i*2+3;
-      idx.push(a,b,c, b,d,c);
-    }
-    geo.setIndex(idx);
-    geo.setAttribute('position', new THREE.BufferAttribute(vp,3));
-    geo.computeVertexNormals();
-    const mat=new THREE.MeshStandardMaterial({color:0x3f9fb8, transparent:true, opacity:.88,
-      roughness:.25, metalness:.1, flatShading:true});
-    const mesh=new THREE.Mesh(geo,mat);
-    scene.add(mesh);
-    return {geo, uu, baseY:Float32Array.from({length:n*2},(_,i)=>vp[i*3+1]), pts};
+    return pts;
   }
-  const rios=[fitaAgua(RIO,2.1), fitaAgua(AFLUENTE,1.5)];
-
-  /* espuma: pontinhos que viajam rio abaixo */
-  function espuma(rio, qtd){
+  function espuma(poly, qtd, wWorld){
+    const pts=amostra(poly);
     const geo=new THREE.BufferGeometry();
     const pp=new Float32Array(qtd*3), prog=new Float32Array(qtd);
     for(let i=0;i<qtd;i++) prog[i]=Math.random();
     geo.setAttribute('position', new THREE.BufferAttribute(pp,3));
-    const pts2=rio.pts;
-    const p2=new THREE.Points(geo, new THREE.PointsMaterial({color:0xeaf6f2, size:.14, transparent:true, opacity:.85}));
-    scene.add(p2);
-    return {geo, prog, pts2, pp};
+    scene.add(new THREE.Points(geo, new THREE.PointsMaterial({color:0xfaeed6, size:.16, transparent:true, opacity:.9})));
+    return {geo,pp,prog,pts,wWorld};
   }
-  const espumas=[espuma(rios[0],46), espuma(rios[1],26)];
+  const espumas=[espuma(RIO,40,3.0), espuma(AFLUENTE,22,2.1)];
 
   /* ===== câmera orbital ===== */
-  let camA=.6, camEl=.55, camR=30, dragging=false, lx2=0, ly2=0;
+  let camA=.5, camEl=.62, camR=26, dragging=false, lx2=0, ly2=0;
   cv.addEventListener('pointerdown',e=>{dragging=true; lx2=e.clientX; ly2=e.clientY; cv.classList.add('grab')});
   window.addEventListener('pointermove',e=>{
     if(!dragging)return;
-    camA+=(e.clientX-lx2)*.005; camEl=Math.min(1.25,Math.max(.18,camEl+(e.clientY-ly2)*.003));
+    camA+=(e.clientX-lx2)*.005; camEl=Math.min(1.3,Math.max(.2,camEl+(e.clientY-ly2)*.003));
     lx2=e.clientX; ly2=e.clientY;
   });
   window.addEventListener('pointerup',()=>{dragging=false; cv.classList.remove('grab')});
-  cv.addEventListener('wheel',e=>{e.preventDefault(); camR=Math.min(52,Math.max(12,camR+e.deltaY*.02))},{passive:false});
+  cv.addEventListener('wheel',e=>{e.preventDefault(); camR=Math.min(48,Math.max(8,camR+e.deltaY*.02))},{passive:false});
   addEventListener('resize',()=>{cam.aspect=W()/H(); cam.updateProjectionMatrix(); renderer.setSize(W(),H(),false)});
 
   function frame(tms){
     const tt=tms*.001;
     if(!dragging && !reduced) camA+=.0009;
-    cam.position.set(Math.sin(camA)*camR*Math.cos(camEl), Math.sin(camEl)*camR+2, Math.cos(camA)*camR*Math.cos(camEl));
-    cam.lookAt(0,-.5,0);
-    // ondulação da lâmina + correnteza
-    rios.forEach(r=>{
-      const a=r.geo.attributes.position;
-      for(let i=0;i<a.count;i++)
-        a.array[i*3+1]=r.baseY[i]+Math.sin(r.uu[i]*1.4-tt*2.6)*.06;
-      a.needsUpdate=true;
-    });
+    cam.position.set(Math.sin(camA)*camR*Math.cos(camEl), Math.sin(camEl)*camR+1.5, Math.cos(camA)*camR*Math.cos(camEl));
+    cam.lookAt(0,0,0);
     espumas.forEach(e=>{
-      const n=e.prog.length, m=e.pts2.length;
-      for(let i=0;i<n;i++){
-        e.prog[i]=(e.prog[i]+.0011+ (reduced?0:0))%1;
+      const m=e.pts.length;
+      for(let i=0;i<e.prog.length;i++){
+        if(!reduced) e.prog[i]=(e.prog[i]+.0012)%1;
         const f=e.prog[i]*(m-1), i0=Math.floor(f), t=f-i0;
-        const p0=e.pts2[i0], p1=e.pts2[Math.min(m-1,i0+1)];
+        const p0=e.pts[i0], p1=e.pts[Math.min(m-1,i0+1)];
         const x=p0[0]+(p1[0]-p0[0])*t, z=p0[1]+(p1[1]-p0[1])*t;
-        const desvio=Math.sin(i*37.3)* .5;
-        e.pp[i*3]=x+desvio*.6; e.pp[i*3+1]=alturaTerreno(x,z)+.52; e.pp[i*3+2]=z+Math.cos(i*17.7)*.4;
+        e.pp[i*3]=x+Math.sin(i*37.3)*e.wWorld*.18;
+        e.pp[i*3+1]=.06;
+        e.pp[i*3+2]=z+Math.cos(i*17.7)*e.wWorld*.15;
       }
       e.geo.attributes.position.needsUpdate=true;
     });
