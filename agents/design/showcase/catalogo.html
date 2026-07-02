@@ -368,7 +368,7 @@
     color:var(--cInk); display:grid; place-items:center; font-size:13px; cursor:pointer; opacity:0; transform:scale(.4); pointer-events:none;
     transition:transform .3s var(--snap), opacity .3s var(--ease)}
   .fabwrap.open .mini{opacity:1; transform:scale(1); pointer-events:auto}
-  .fabwrap .m1{left:calc(50% - 76px)} .fabwrap .m2{top:-8px} .fabwrap .m3{left:calc(50% + 42px)}
+  .fabwrap .m1{left:calc(50% - 76px)} .fabwrap .m2{top:-8px; left:calc(50% - 17px)} .fabwrap .m3{left:calc(50% + 42px)}
   /* 18 copy */
   .bt-copy{background:transparent; color:var(--cInk); box-shadow:inset 0 0 0 1.5px var(--cDim); font-family:"JetBrains Mono",monospace; font-size:12.5px}
   .bt-copy.ok{box-shadow:inset 0 0 0 1.5px var(--acc); color:var(--acc)}
@@ -489,7 +489,7 @@
   .t-wave span{display:inline-block; animation:twv 1.8s var(--ease) infinite; animation-delay:calc(var(--i)*70ms)}
   @keyframes twv{0%,100%{transform:none}30%{transform:translateY(-7px)}}
   /* 12 rotativas */
-  .t-rot .win{display:inline-block; overflow:hidden; height:1.35em; vertical-align:bottom}
+  .win.t-rot{display:inline-block; overflow:hidden; height:1.35em; vertical-align:bottom}
   .t-rot .roll{display:block; transition:transform .5s var(--snap)}
   .t-rot .roll span{display:block; height:1.35em; color:var(--acc)}
   /* 13 letreiro */
@@ -1038,13 +1038,15 @@ const SWATCHES=[
   ['#9F5697','#ffffff'],['#4C3D8D','#ffffff'],['#516CB1','#ffffff'],['#6AB0A0','#0b0d12'],
 ];
 document.querySelectorAll('.controls').forEach(ctrl=>{
-  const canvas=document.getElementById(ctrl.dataset.target);
+  const canvas=document.getElementById(ctrl.dataset.target||'');
+  if(!canvas) return; // barras com switcher próprio (linguagens/loading) não entram aqui
   ctrl.querySelectorAll('.th-pk').forEach(b=>b.addEventListener('click',()=>{
     ctrl.querySelectorAll('.th-pk').forEach(x=>x.setAttribute('aria-pressed','false'));
     b.setAttribute('aria-pressed','true');
     canvas.className=canvas.className.replace(/th-\w+/,'th-'+b.dataset.th);
   }));
   const grp=ctrl.querySelectorAll('.grp')[1];
+  if(!grp) return;
   SWATCHES.forEach(([c,ink],k)=>{
     const s=document.createElement('button');
     s.className='sw'; s.style.background=c; s.setAttribute('aria-pressed',k===0?'true':'false');
