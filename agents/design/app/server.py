@@ -80,6 +80,19 @@ def estado() -> dict:
         [{"skill": x["id"], "via": f"#{k}", "data": x.get("date_added", "")} for k, x in promoted.items()],
         key=lambda p: p["data"], reverse=True)[:6]
 
+    # curva real de crescimento do índice (cumulativo por mês, últimos 10 meses)
+    meses: dict[str, int] = {}
+    for x in idx:
+        m = str(x.get("date_added", ""))[:7]
+        if m:
+            meses[m] = meses.get(m, 0) + 1
+    serie = sorted(meses.items())
+    acumulado, curva = 0, []
+    for m, n in serie:
+        acumulado += n
+        curva.append(acumulado)
+    curva = curva[-10:]
+
     prs = _gh("pr", "list", "--repo", REPO, "--state", "open", "--json", "number,title") or []
     ciclo = "nunca"
     if INBOX.exists():
@@ -91,6 +104,7 @@ def estado() -> dict:
         "stats": {"abertas": abertas, "aguardando": aguardando,
                   "promovidas": len(promoted), "indice": len(idx)},
         "fila": fila,
+        "curva_indice": curva,
         "promovidas": promovidas,
         "saude": {"ultimo_ciclo": ciclo, "prs": [{"n": p["number"], "titulo": p["title"]} for p in prs],
                   "pr_count": len(prs)},

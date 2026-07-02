@@ -5,28 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fila do Curador — OverCore</title>
 <style>
-  /* APP VIVA · fiel ao refinado aprovado · 100% tokens do DESIGN.md */
+  /* APP VIVA v2 · /subir + /animar · registro APP: toda animação é feedback ou dado, nunca enfeite solto */
   :root{
     --bg:#0b0d12; --panel:#12151d; --panel-2:#171b26; --line:#242a36;
     --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d;
     --ok:#4ade80; --warn:#fbbf24; --err:#f87171;
-    --radius:18px; --radius-s:10px; --dur-micro:100ms; --ease:cubic-bezier(.4,0,.2,1);
+    --radius:18px; --radius-s:10px;
+    --dur-micro:100ms; --dur-trans:300ms; --dur-enter:500ms; --ease:cubic-bezier(.4,0,.2,1);
   }
   *{box-sizing:border-box}
-  body{margin:0; background:var(--bg); color:var(--ink);
+  body{margin:0; color:var(--ink);
+    background:radial-gradient(1100px 520px at 72% -12%, #171b26 0%, var(--bg) 58%);
     font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
     font-size:14px; line-height:1.45; -webkit-font-smoothing:antialiased}
-  .wrap{max-width:1080px; margin:0 auto; padding:28px 24px 64px}
+  .wrap{max-width:1120px; margin:0 auto; padding:30px 24px 64px}
   .mono{font-family:ui-monospace,Consolas,monospace}
-  header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px}
-  .kicker{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); font-weight:700}
-  h1{font-size:25px; font-weight:700; letter-spacing:-.02em; margin:2px 0 0}
+
+  /* coreografia de entrada — transform/opacity, janela de stagger <500ms (A12/A26 ok) */
+  .rise{opacity:0; transform:translateY(10px);
+    animation:rise var(--dur-enter) var(--ease) forwards; animation-delay:calc(var(--i,0)*70ms)}
+  @keyframes rise{to{opacity:1; transform:none}}
+  @media(prefers-reduced-motion:reduce){.rise{animation:none; opacity:1; transform:none} *{animation-duration:.01ms!important}}
+
+  header{display:flex; justify-content:space-between; align-items:center; margin-bottom:22px}
+  .kicker{font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); font-weight:700;
+    display:flex; align-items:center; gap:8px}
+  .live{width:7px; height:7px; border-radius:999px; background:var(--accent); animation:pulse 2s var(--ease) infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  h1{font-size:27px; font-weight:800; letter-spacing:-.02em; margin:3px 0 0; text-wrap:balance}
   .actions{display:flex; gap:8px}
-  .btn{font:600 13px/1 inherit; padding:9px 14px; border-radius:var(--radius-s); cursor:pointer;
-    transition:background var(--dur-micro) var(--ease); border:1px solid var(--line); background:var(--panel); color:var(--ink)}
-  .btn:hover{background:var(--panel-2)}
+  .btn{font:600 13px/1 inherit; padding:10px 15px; border-radius:var(--radius-s); cursor:pointer;
+    transition:background var(--dur-micro) var(--ease), border-color var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease);
+    border:1px solid var(--line); background:var(--panel); color:var(--ink)}
+  .btn:hover{background:var(--panel-2); border-color:#31394a}
+  .btn:active{transform:translateY(1px)}
   .btn.primary{background:var(--accent); border-color:var(--accent); color:#0b0d12}
-  .btn.primary:hover{filter:brightness(1.06)}
+  .btn.primary:hover{filter:brightness(1.07)}
   .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
   .btn[disabled]{opacity:.55; cursor:default}
   .spin{display:inline-block; width:12px; height:12px; border-radius:999px; vertical-align:-1px; margin-right:7px;
@@ -34,60 +48,81 @@
   @keyframes sp{to{transform:rotate(360deg)}}
 
   .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px}
-  @media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}}
-  .stat{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
-  .stat .n{font-size:31px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.02em; min-height:1.1em}
-  .stat .l{font-size:12px; color:var(--dim); margin-top:2px}
+  @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px;
+    position:relative; overflow:hidden; transition:border-color var(--dur-trans) var(--ease)}
+  .stat:hover{border-color:#31394a}
+  .stat .n{font-size:32px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.02em; min-height:1.15em}
+  .stat .l{font-size:12px; color:var(--dim); margin-top:3px}
+  .stat .d{font-size:12px; color:var(--dim); margin-top:8px}
+  .stat .d b{color:var(--ok); font-weight:600}
+  .spark{position:absolute; right:0; bottom:0; left:0; height:44px; opacity:.9}
 
   .split{display:grid; grid-template-columns:2fr 1fr; gap:12px; align-items:start}
-  @media(max-width:800px){.split{grid-template-columns:1fr}}
-  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden}
+  @media(max-width:820px){.split{grid-template-columns:1fr}}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    transition:border-color var(--dur-trans) var(--ease)}
+  .card:hover{border-color:#31394a}
   .card h2{font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--dim);
-    font-weight:600; margin:0; padding:12px 16px; border-bottom:1px solid var(--line)}
+    font-weight:600; margin:0; padding:13px 16px; border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center}
+  .card h2 .badge{font-size:12px; color:var(--accent); font-variant-numeric:tabular-nums; letter-spacing:0; text-transform:none}
+
   table{width:100%; border-collapse:collapse; font-size:13px}
   th{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); font-weight:600;
-    text-align:left; padding:10px 12px; border-bottom:1px solid var(--line)}
-  td{padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:middle}
+    text-align:left; padding:10px 14px; border-bottom:1px solid var(--line)}
+  td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:middle}
   tr:last-child td{border-bottom:none}
   tbody tr{transition:background var(--dur-micro) var(--ease)}
   tbody tr:hover{background:var(--panel-2)}
+  tbody tr:hover .rowact{color:var(--accent); border-color:var(--accent)}
   .id{color:var(--dim)}
-  .title{max-width:330px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .title{max-width:340px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .origin{font-size:12px; color:var(--dim)}
-  .state{display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600}
-  .state::before{content:""; width:7px; height:7px; border-radius:999px; background:currentColor}
-  .state.ok{color:var(--ok)} .state.warn{color:var(--warn)} .state.err{color:var(--err)}
-  .rowact{font-size:12px; color:var(--ink); text-decoration:none; border-bottom:1px solid var(--accent); padding-bottom:1px}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600;
+    padding:4px 10px; border-radius:999px; border:1px solid transparent}
+  .chip::before{content:""; width:6px; height:6px; border-radius:999px; background:currentColor}
+  .chip.ok{color:var(--ok); background:rgba(74,222,128,.09); border-color:rgba(74,222,128,.22)}
+  .chip.warn{color:var(--warn); background:rgba(251,191,36,.09); border-color:rgba(251,191,36,.22)}
+  .chip.warn::before{animation:pulse 1.6s var(--ease) infinite}
+  .chip.err{color:var(--err); background:rgba(248,113,113,.09); border-color:rgba(248,113,113,.22)}
+  .rowact{font-size:12px; font-weight:600; color:var(--dim); text-decoration:none;
+    border-bottom:1px solid var(--line); padding-bottom:1px;
+    transition:color var(--dur-micro) var(--ease), border-color var(--dur-micro) var(--ease)}
 
   .side .card{margin-bottom:12px}
   .list{list-style:none; margin:0; padding:6px 0}
-  .list li{display:flex; justify-content:space-between; gap:10px; padding:9px 16px; font-size:13px}
+  .list li{display:flex; justify-content:space-between; gap:10px; padding:10px 16px; font-size:13px;
+    transition:background var(--dur-micro) var(--ease)}
+  .list li:hover{background:var(--panel-2)}
   .list li + li{border-top:1px solid var(--line)}
-  .list .meta{color:var(--dim); font-size:12px; white-space:nowrap}
+  .list .meta{color:var(--dim); font-size:12px; white-space:nowrap; font-variant-numeric:tabular-nums}
 
-  /* peças das artesãs — agora FUNCIONAIS */
   .sk{position:relative; overflow:hidden; background:var(--panel-2); border-radius:6px; height:12px}
   .sk::after{content:""; position:absolute; inset:0; transform:translateX(-100%);
     background:linear-gradient(90deg,transparent,rgba(232,235,242,.06),transparent);
     animation:sh 1.4s var(--ease) infinite}
   @keyframes sh{to{transform:translateX(100%)}}
-  .feedback{padding:22px 16px; text-align:center}
+  .fade-in{animation:fade var(--dur-trans) var(--ease)}
+  @keyframes fade{from{opacity:0}}
+
+  .feedback{padding:26px 16px; text-align:center}
   .feedback p{margin:2px 0; font-weight:600}
   .feedback span{font-size:12.5px; color:var(--dim)}
   .feedback.err p{color:var(--err)}
-  .feedback .btn{margin-top:12px; font-size:12px; padding:7px 12px}
+  .feedback .btn{margin-top:12px; font-size:12px; padding:8px 13px}
 
   #saida{display:none; margin-top:16px}
-  #saida pre{margin:0; padding:14px 16px; font-size:12px; line-height:1.5; color:var(--dim);
-    white-space:pre-wrap; max-height:220px; overflow:auto}
-  footer{margin-top:26px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between}
+  #saida pre{margin:0; padding:14px 16px; font-size:12px; line-height:1.55; color:var(--dim);
+    white-space:pre-wrap; max-height:240px; overflow:auto}
+  footer{margin-top:28px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
+  <header class="rise" style="--i:0">
     <div>
-      <div class="kicker">OverCore · Curadoria</div>
+      <div class="kicker"><span class="live"></span>OverCore · Curadoria</div>
       <h1>Fila do Curador</h1>
     </div>
     <div class="actions">
@@ -96,35 +131,35 @@
     </div>
   </header>
 
-  <div class="stats" id="stats">
-    <div class="stat"><div class="n" data-k="abertas"><div class="sk" style="width:42px"></div></div><div class="l">contribuições abertas</div></div>
-    <div class="stat"><div class="n" data-k="aguardando"><div class="sk" style="width:42px"></div></div><div class="l">aguardando juiz</div></div>
-    <div class="stat"><div class="n" data-k="promovidas"><div class="sk" style="width:42px"></div></div><div class="l">promovidas</div></div>
-    <div class="stat"><div class="n" data-k="indice"><div class="sk" style="width:64px"></div></div><div class="l">skills no índice</div></div>
+  <div class="stats">
+    <div class="stat rise" style="--i:1"><div class="n" data-k="abertas"><div class="sk" style="width:42px"></div></div><div class="l">contribuições abertas</div><div class="d">Issues + pasta</div></div>
+    <div class="stat rise" style="--i:2"><div class="n" data-k="aguardando"><div class="sk" style="width:42px"></div></div><div class="l">aguardando juiz</div><div class="d">pré-gates ok</div></div>
+    <div class="stat rise" style="--i:3"><div class="n" data-k="promovidas"><div class="sk" style="width:42px"></div></div><div class="l">promovidas</div><div class="d"><b id="taxa"></b></div></div>
+    <div class="stat rise" style="--i:4; padding-bottom:52px"><div class="n" data-k="indice"><div class="sk" style="width:64px"></div></div><div class="l">skills no índice</div><svg class="spark" id="spark" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"></svg></div>
   </div>
 
   <div class="split">
-    <div class="card">
-      <h2>Fila de contribuições</h2>
+    <div class="card rise" style="--i:5">
+      <h2>Fila de contribuições <span class="badge" id="fila-count"></span></h2>
       <div id="fila-body">
         <table><thead><tr><th>#</th><th>Título</th><th>Origem</th><th>Estado</th><th></th></tr></thead>
-        <tbody id="fila">
-          <tr><td class="id"><div class="sk" style="width:28px"></div></td><td><div class="sk" style="width:88%"></div></td><td><div class="sk" style="width:70px"></div></td><td><div class="sk" style="width:96px"></div></td><td><div class="sk" style="width:52px"></div></td></tr>
-          <tr><td class="id"><div class="sk" style="width:28px"></div></td><td><div class="sk" style="width:72%"></div></td><td><div class="sk" style="width:70px"></div></td><td><div class="sk" style="width:96px"></div></td><td><div class="sk" style="width:52px"></div></td></tr>
-          <tr><td class="id"><div class="sk" style="width:28px"></div></td><td><div class="sk" style="width:80%"></div></td><td><div class="sk" style="width:70px"></div></td><td><div class="sk" style="width:96px"></div></td><td><div class="sk" style="width:52px"></div></td></tr>
+        <tbody>
+          <tr><td class="id"><div class="sk" style="width:28px"></div></td><td><div class="sk" style="width:88%"></div></td><td><div class="sk" style="width:70px"></div></td><td><div class="sk" style="width:104px"></div></td><td><div class="sk" style="width:52px"></div></td></tr>
+          <tr><td class="id"><div class="sk" style="width:28px"></div></td><td><div class="sk" style="width:72%"></div></td><td><div class="sk" style="width:70px"></div></td><td><div class="sk" style="width:104px"></div></td><td><div class="sk" style="width:52px"></div></td></tr>
+          <tr><td class="id"><div class="sk" style="width:28px"></div></td><td><div class="sk" style="width:80%"></div></td><td><div class="sk" style="width:70px"></div></td><td><div class="sk" style="width:104px"></div></td><td><div class="sk" style="width:52px"></div></td></tr>
         </tbody></table>
       </div>
     </div>
 
     <div class="side">
-      <div class="card">
+      <div class="card rise" style="--i:6">
         <h2>Últimas promovidas</h2>
         <ul class="list" id="promovidas">
           <li><div class="sk" style="width:60%"></div></li>
           <li><div class="sk" style="width:52%"></div></li>
         </ul>
       </div>
-      <div class="card">
+      <div class="card rise" style="--i:7">
         <h2>Saúde do hub</h2>
         <ul class="list" id="saude">
           <li><div class="sk" style="width:70%"></div></li>
@@ -136,8 +171,8 @@
 
   <div class="card" id="saida"><h2>Saída do ciclo</h2><pre id="saida-pre"></pre></div>
 
-  <footer>
-    <span id="rodape">carregando…</span>
+  <footer class="rise" style="--i:7">
+    <span id="rodape">conectando…</span>
     <span>Atelier · OverCore</span>
   </footer>
 </div>
@@ -145,14 +180,46 @@
 <script>
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* números que contam — 500ms (token --dur-enter), ease-out, tabular-nums */
+function countUp(el,alvo){
+  if(reduced||alvo===0){el.textContent=Number(alvo).toLocaleString('pt-BR');return}
+  const t0=performance.now();
+  (function tick(t){
+    const p=Math.min((t-t0)/500,1), e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(alvo*e).toLocaleString('pt-BR');
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+
+/* sparkline com dado REAL (curva cumulativa do índice) — desenho 500ms */
+function sparkline(vals){
+  const svg=$('#spark'); if(!vals||vals.length<2){svg.innerHTML='';return}
+  const min=Math.min(...vals), max=Math.max(...vals), pad=4;
+  const X=i=>pad+(200-2*pad)*i/(vals.length-1);
+  const Y=v=>max===min?22:(44-pad)-(44-2*pad)*(v-min)/(max-min);
+  const pts=vals.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  svg.innerHTML=
+    `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0" stop-color="#c8ff3d" stop-opacity=".22"/>
+       <stop offset="1" stop-color="#c8ff3d" stop-opacity="0"/></linearGradient></defs>
+     <polygon points="${X(0)},44 ${pts} ${X(vals.length-1)},44" fill="url(#g)"/>
+     <polyline points="${pts}" fill="none" stroke="#c8ff3d" stroke-width="1.6"
+       stroke-linecap="round" stroke-linejoin="round" pathLength="1"
+       style="stroke-dasharray:1; stroke-dashoffset:${reduced?0:1}; transition:stroke-dashoffset 500ms cubic-bezier(.4,0,.2,1)"/>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const pl=svg.querySelector('polyline'); if(pl) pl.style.strokeDashoffset='0';
+  }));
+}
 
 async function carregar(){
   try{
     const r=await fetch('/api/estado'); if(!r.ok) throw new Error('HTTP '+r.status);
-    const d=await r.json(); render(d);
+    render(await r.json());
   }catch(e){
     $('#fila-body').innerHTML=
-      '<div class="feedback err"><p>Não consegui falar com o servidor.</p>'+
+      '<div class="feedback err fade-in"><p>Não consegui falar com o servidor.</p>'+
       '<span>Os dados locais continuam válidos — só não estão frescos.</span><br>'+
       '<button class="btn" onclick="carregar()">Tentar de novo</button></div>';
     $('#rodape').textContent='erro ao carregar — '+esc(e.message);
@@ -161,34 +228,36 @@ async function carregar(){
 
 function render(d){
   for(const [k,v] of Object.entries(d.stats))
-    document.querySelectorAll(`[data-k="${k}"]`).forEach(el=>el.textContent=Number(v).toLocaleString('pt-BR'));
+    document.querySelectorAll(`[data-k="${k}"]`).forEach(el=>countUp(el,Number(v)));
+  $('#taxa').textContent=d.stats.promovidas>0?'100% de aprovação':'';
+  sparkline(d.curva_indice);
+  $('#fila-count').textContent=d.fila.length||'';
 
   if(!d.fila.length){
-    $('#fila-body').innerHTML='<div class="feedback"><p>Fila limpa.</p><span>Nenhuma contribuição aguardando — o padrão agradece.</span></div>';
+    $('#fila-body').innerHTML='<div class="feedback fade-in"><p>Fila limpa.</p><span>Nenhuma contribuição aguardando — o padrão agradece.</span></div>';
   }else{
-    $('#fila-body').innerHTML='<table><thead><tr><th>#</th><th>Título</th><th>Origem</th><th>Estado</th><th></th></tr></thead><tbody>'+
+    $('#fila-body').innerHTML='<div class="fade-in"><table><thead><tr><th>#</th><th>Título</th><th>Origem</th><th>Estado</th><th></th></tr></thead><tbody>'+
       d.fila.map(f=>`<tr>
         <td class="id mono">#${f.n}</td>
         <td class="title" title="${esc(f.titulo)}">${esc(f.titulo)}</td>
         <td class="origin">${esc(f.origem)}</td>
-        <td><span class="state ${f.cor}">${esc(f.estado)}</span></td>
-        <td><a class="rowact" href="${esc(f.acao.url)}" target="_blank" rel="noopener">${esc(f.acao.label)}</a></td>
-      </tr>`).join('')+'</tbody></table>';
+        <td><span class="chip ${f.cor}">${esc(f.estado)}</span></td>
+        <td><a class="rowact" href="${esc(f.acao.url)}" target="_blank" rel="noopener">${esc(f.acao.label)} →</a></td>
+      </tr>`).join('')+'</tbody></table></div>';
   }
 
-  $('#promovidas').innerHTML=d.promovidas.length
-    ? d.promovidas.map(p=>`<li><span class="mono">${esc(p.skill)}</span><span class="meta">via ${esc(p.via)} · ${esc(p.data)}</span></li>`).join('')
-    : '<li><span class="meta">nenhuma ainda — a primeira é a mais difícil</span></li>';
+  $('#promovidas').innerHTML=(d.promovidas.length
+    ? d.promovidas.map(p=>`<li class="fade-in"><span class="mono">${esc(p.skill)}</span><span class="meta">via ${esc(p.via)} · ${esc(p.data)}</span></li>`).join('')
+    : '<li class="fade-in"><span class="meta">nenhuma ainda — a primeira é a mais difícil</span></li>');
 
   $('#saude').innerHTML=
-    `<li>Último ciclo <span class="meta">${esc(d.saude.ultimo_ciclo)}</span></li>`+
-    `<li>PRs abertos <span class="meta">${d.saude.pr_count}${d.saude.prs.map(p=>' · #'+p.n).join('')}</span></li>`;
+    `<li class="fade-in">Último ciclo <span class="meta">${esc(d.saude.ultimo_ciclo)}</span></li>`+
+    `<li class="fade-in">PRs abertos <span class="meta">${d.saude.pr_count}${d.saude.prs.map(p=>' · #'+p.n).join('')}</span></li>`;
 
   $('#rodape').textContent=`dados vivos de ${d.repo} · atualizado ${d.gerado_em}`;
 }
 
 $('#btn-atualizar').addEventListener('click',carregar);
-
 $('#btn-ciclo').addEventListener('click',async ev=>{
   const b=ev.currentTarget;
   b.disabled=true; b.innerHTML='<span class="spin"></span>Rodando ciclo…';
