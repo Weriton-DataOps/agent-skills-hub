@@ -17729,6 +17729,31 @@
     }
   },
   {
+    "id": "loading-states",
+    "path": "skills/loading-states",
+    "category": "design",
+    "name": "loading-states",
+    "description": "O oficio das telas de carregamento: padrao escolhido pelo tempo da espera (<300ms nada, 300ms-3s skeleton fiel, >3s progresso determinado com escape), tokens herdados, zero slop.",
+    "risk": "safe",
+    "source": "overcore:atelier",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "pipeline-studio:atelier",
+    "author": "Atelier",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/7"
+  },
+  {
     "id": "local-legal-seo-audit",
     "path": "skills/local-legal-seo-audit",
     "category": "marketing",
