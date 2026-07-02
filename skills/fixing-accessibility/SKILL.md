@@ -140,3 +140,11 @@ Reference these guidelines when:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Absorvido (mobile + processo de auditoria)
+
+Conteúdo consolidado de `ui-a11y` e `accessibility-compliance-accessibility-audit` (skills removidas na curadoria):
+
+- **Alvos de toque ≥ 44×44px** — falha de touch target é defeito de usabilidade real, não "polimento".
+- Ênfase mobile: foco visível, contraste, labels e `prefers-reduced-motion` valem também dentro de gestos/sheets.
+- **Processo de auditoria**: confirmar escopo (plataformas, nível WCAG, páginas-chave e jornadas) → mapear cada achado a **critério WCAG + severidade + impacto no usuário** → remediação + prática contínua (não one-off).
