@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artesã de Loading — demo do Atelier</title>
+<style>
+  /* HERANÇA: tokens do OverCore (style-gallery.html) — nada inventado (A18) */
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --line:#242a36; --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d;
+    --radius:18px; --radius-s:10px;            /* A4: 2 raios, ambos token */
+    --dur:1.4s; --ease:cubic-bezier(.4,0,.2,1); /* A12: um ritmo só na tela */
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px; margin:0 auto; padding:52px 24px 90px}
+  .kicker{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  h1{font-size:clamp(26px,4.5vw,44px); letter-spacing:-.02em; margin:.3em 0 .15em; font-weight:800}
+  .sub{color:var(--dim); max-width:64ch; margin:0 0 30px}
+
+  .mandato{border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:var(--radius-s);
+    background:var(--panel); padding:18px 20px; margin-bottom:40px; font-size:14px}
+  .mandato b{color:var(--accent)}
+  .mandato ol{margin:10px 0 0 18px; padding:0; color:var(--dim)}
+  .mandato li{margin:4px 0}
+  .mandato li::marker{color:var(--accent); font-weight:700}
+
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .piece{border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); overflow:hidden; display:flex; flex-direction:column}
+  .stage{height:300px; padding:22px; display:flex; flex-direction:column; justify-content:center; position:relative}
+  .meta{border-top:1px solid var(--line); padding:14px 18px}
+  .meta .name{font-weight:700; font-size:14px}
+  .meta .when{color:var(--dim); font-size:12.5px; margin-top:3px}
+  .meta .rule{display:inline-block; margin-top:8px; font-size:11px; color:var(--accent); border:1px solid var(--line); border-radius:999px; padding:2px 9px}
+
+  /* ---- Peça 1 · SKELETON (300ms–3s) — a forma EXATA do conteúdo que vem ---- */
+  .sk-row{display:flex; gap:12px; align-items:center; margin-bottom:16px}
+  .sk{position:relative; overflow:hidden; background:#1a1f2b; border-radius:var(--radius-s)}
+  .sk::after{content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, rgba(232,235,242,.07), transparent);
+    transform:translateX(-100%); animation:shimmer var(--dur) var(--ease) infinite}
+  @keyframes shimmer{to{transform:translateX(100%)}}   /* A12: só transform */
+  .sk.avatar{width:44px; height:44px; border-radius:999px}  /* pill: permitido em avatar (A4) */
+  .sk.t1{height:13px; width:62%} .sk.t2{height:13px; width:38%; margin-top:8px}
+  .sk.card{height:74px; margin-bottom:12px}
+  .sk.line{height:11px; width:88%; margin:7px 0}
+
+  /* ---- Peça 2 · SPLASH DETERMINADO (>3s) — marca + verdade do progresso ---- */
+  .splash{align-items:center; text-align:center}
+  .mark{font-weight:800; letter-spacing:-.02em; font-size:20px; margin-bottom:26px}
+  .mark span{color:var(--accent)}
+  .bar{width:78%; height:4px; border-radius:999px; background:#1a1f2b; overflow:hidden}
+  .bar i{display:block; height:100%; width:40%; border-radius:999px; background:var(--accent);
+    transform-origin:left; animation:fill 6s var(--ease) infinite}
+  @keyframes fill{0%{transform:scaleX(.05)} 45%{transform:scaleX(.55)} 75%{transform:scaleX(.82)} 100%{transform:scaleX(.97)}}
+  .status{margin-top:14px; font-size:12.5px; color:var(--dim); min-height:1.2em}
+  .status i{font-style:normal; animation:cycle 6s steps(1) infinite; opacity:.9}
+  .status i::before{content:"Conectando ao servidor…"}
+  @keyframes cycle{0%{}
+    33%{}
+    100%{}}
+  .escape{margin-top:22px; font-size:12px; color:var(--dim); opacity:0; animation:reveal 6s var(--ease) infinite}
+  .escape u{color:var(--ink); text-decoration-color:var(--accent); cursor:pointer}
+  @keyframes reveal{0%,70%{opacity:0} 85%,100%{opacity:1}}  /* A12: só opacity */
+
+  /* ---- Peça 3 · INLINE (<300ms de espera nada; espera curta = local) ---- */
+  .inline-demo{gap:12px}
+  .btn{display:inline-flex; align-items:center; gap:10px; align-self:center;
+    background:var(--accent); color:#0b0d12; font-weight:700; font-size:14px;
+    border:none; border-radius:var(--radius-s); padding:12px 22px; cursor:default}
+  .dot{width:14px; height:14px; border-radius:999px; border:2px solid rgba(11,13,18,.35); border-top-color:#0b0d12;
+    animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .hint{text-align:center; margin-top:16px; font-size:12.5px; color:var(--dim)}
+  .table-mini{margin-top:22px; border:1px solid var(--line); border-radius:var(--radius-s); overflow:hidden}
+  .table-mini .tr{display:flex; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line); align-items:center}
+  .table-mini .tr:last-child{border-bottom:none}
+  .cell{height:10px; border-radius:6px}
+
+  footer{margin-top:42px; color:var(--dim); font-size:13px; text-align:center}
+  footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Atelier · artesã efêmera № 1</div>
+  <h1>A bloqueira de telas de carregamento.</h1>
+  <p class="sub">Convocada porque o hub não tinha dona deste ofício (match parcial: <code>ux-feedback</code>). Ela só faz isto — e herda os tokens do projeto sem inventar um pixel.</p>
+
+  <div class="mandato">
+    <b>Mandato:</b> você SÓ desenha estados de carregamento. Suas regras de ofício:
+    <ol>
+      <li><b>Nunca minta a forma</b> — skeleton tem a geometria exata do conteúdo que vem (mesma grade, mesmos tamanhos).</li>
+      <li><b>Respeite os tempos</b> — &lt;300ms: nada aparece; 300ms–3s: skeleton; &gt;3s: progresso determinado + o que está acontecendo.</li>
+      <li><b>Um ritmo só</b> — mesma duração/easing na tela inteira; shimmer numa direção única; só transform/opacity.</li>
+      <li><b>Palco da marca, não circo</b> — um elemento de identidade no splash; logo não pulsa gigante.</li>
+      <li><b>Sempre uma saída</b> — passou de ~8s, ofereça "continuar / tentar de novo". Loading sem escape é beco.</li>
+    </ol>
+  </div>
+
+  <div class="grid">
+
+    <section class="piece">
+      <div class="stage">
+        <div class="sk-row"><div class="sk avatar"></div><div style="flex:1"><div class="sk t1"></div><div class="sk t2"></div></div></div>
+        <div class="sk card"></div>
+        <div class="sk line"></div><div class="sk line" style="width:74%"></div><div class="sk line" style="width:81%"></div>
+      </div>
+      <div class="meta">
+        <div class="name">Skeleton fiel</div>
+        <div class="when">300ms–3s · listas, cards, perfis — a página "já chegou", só falta a tinta.</div>
+        <span class="rule">regra 1 · nunca minta a forma</span>
+      </div>
+    </section>
+
+    <section class="piece">
+      <div class="stage splash">
+        <div class="mark">Over<span>Core</span></div>
+        <div class="bar"><i></i></div>
+        <div class="status"><i></i></div>
+        <div class="escape">Demorando mais que o normal — <u>continuar esperando</u> · <u>tentar de novo</u></div>
+      </div>
+      <div class="meta">
+        <div class="name">Splash determinado</div>
+        <div class="when">&gt;3s · boot do app, importação, build — progresso real + status honesto + saída aos 8s.</div>
+        <span class="rule">regras 2 · 4 · 5</span>
+      </div>
+    </section>
+
+    <section class="piece">
+      <div class="stage inline-demo">
+        <button class="btn"><span class="dot"></span>Salvando…</button>
+        <div class="hint">A ação carrega <b>onde foi disparada</b> — a tela não congela nem vira splash.</div>
+        <div class="table-mini">
+          <div class="tr"><div class="sk cell" style="width:34%"></div><div class="sk cell" style="width:18%"></div><div class="sk cell" style="width:12%"></div></div>
+          <div class="tr"><div class="sk cell" style="width:28%"></div><div class="sk cell" style="width:22%"></div><div class="sk cell" style="width:12%"></div></div>
+          <div class="tr"><div class="sk cell" style="width:38%"></div><div class="sk cell" style="width:15%"></div><div class="sk cell" style="width:12%"></div></div>
+        </div>
+      </div>
+      <div class="meta">
+        <div class="name">Inline &amp; local</div>
+        <div class="when">Espera curta e contextual · botões, linhas de tabela, refetch — o resto da UI continua vivo.</div>
+        <span class="rule">regras 2 · 3</span>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>Peças auditadas contra <b>A1–A18</b>: zero gradiente-roxo, zero glass não-eleito, animação só transform/opacity, todo valor vindo de token herdado. · <b>Atelier</b>, OverCore</footer>
+</div>
+</body>
+</html>

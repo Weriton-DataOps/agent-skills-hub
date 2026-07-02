@@ -198,28 +198,6 @@
     }
   },
   {
-    "id": "accessibility-compliance-accessibility-audit",
-    "path": "skills/accessibility-compliance-accessibility-audit",
-    "category": "design",
-    "name": "accessibility-compliance-accessibility-audit",
-    "description": "You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers, and provide remediation guidance.",
-    "risk": "safe",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "active-directory-attacks",
     "path": "skills/active-directory-attacks",
     "category": "security",
@@ -6334,28 +6312,6 @@
     }
   },
   {
-    "id": "brand-guidelines-community",
-    "path": "skills/brand-guidelines-community",
-    "category": "marketing",
-    "name": "brand-guidelines-community",
-    "description": "To access Anthropic's official brand identity and style resources, use this skill.",
-    "risk": "unknown",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "brand-perception-psychologist",
     "path": "skills/brand-perception-psychologist",
     "category": "uncategorized",
@@ -7570,6 +7526,31 @@
         "target_specific_home_path"
       ]
     }
+  },
+  {
+    "id": "claude-md-mode-activation",
+    "path": "skills/claude-md-mode-activation",
+    "category": "development",
+    "name": "claude-md-mode-activation",
+    "description": "Ao ligar um modo persistente via CLAUDE.md, auto-adote o comportamento na sessao atual E grave o bloco para as proximas (o CLAUDE.md so carrega no boot).",
+    "risk": "safe",
+    "source": "overcore:contribution",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "vscode-claude",
+    "author": "Weriton-DataOps",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/4"
   },
   {
     "id": "claude-monitor",
@@ -10375,28 +10356,6 @@
     "description": "Analyze Stitch projects and synthesize a semantic design system into DESIGN.md files",
     "risk": "safe",
     "source": "https://github.com/google-labs-code/stitch-skills/tree/main/skills/design-md",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "design-orchestration",
-    "path": "skills/design-orchestration",
-    "category": "design",
-    "name": "design-orchestration",
-    "description": "Orchestrates design workflows by routing work through brainstorming, multi-agent review, and execution readiness in the correct order.",
-    "risk": "unknown",
-    "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
       "targets": {
@@ -13320,50 +13279,6 @@
     }
   },
   {
-    "id": "frontend-developer",
-    "path": "skills/frontend-developer",
-    "category": "front-end",
-    "name": "frontend-developer",
-    "description": "Build React components, implement responsive layouts, and handle client-side state management. Masters React 19, Next.js 15, and modern frontend architecture.",
-    "risk": "unknown",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "frontend-mobile-development-component-scaffold",
-    "path": "skills/frontend-mobile-development-component-scaffold",
-    "category": "app-builder",
-    "name": "frontend-mobile-development-component-scaffold",
-    "description": "You are a React component architecture expert specializing in scaffolding production-ready, accessible, and performant components. Generate complete component implementations with TypeScript, tests, s",
-    "risk": "unknown",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "frontend-mobile-security-xss-scan",
     "path": "skills/frontend-mobile-security-xss-scan",
     "category": "web-development",
@@ -13416,28 +13331,6 @@
     "risk": "safe",
     "source": "https://github.com/zarazhangrui/frontend-slides",
     "date_added": "2026-03-07",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "frontend-ui-dark-ts",
-    "path": "skills/frontend-ui-dark-ts",
-    "category": "web-development",
-    "name": "frontend-ui-dark-ts",
-    "description": "A modern dark-themed React UI system using Tailwind CSS and Framer Motion. Designed for dashboards, admin panels, and data-rich applications with glassmorphism effects and tasteful animations.",
-    "risk": "unknown",
-    "source": "community",
-    "date_added": "2026-02-27",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -15618,28 +15511,6 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "iconsax-library",
-    "path": "skills/iconsax-library",
-    "category": "web-development",
-    "name": "iconsax-library",
-    "description": "Extensive icon library and AI-driven icon generation skill for premium UI/UX design.",
-    "risk": "safe",
-    "source": "community",
-    "date_added": "2026-03-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17858,6 +17729,31 @@
     }
   },
   {
+    "id": "loading-states",
+    "path": "skills/loading-states",
+    "category": "design",
+    "name": "loading-states",
+    "description": "O oficio das telas de carregamento: padrao escolhido pelo tempo da espera (<300ms nada, 300ms-3s skeleton fiel, >3s progresso determinado com escape), tokens herdados, zero slop.",
+    "risk": "safe",
+    "source": "overcore:atelier",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "pipeline-studio:atelier",
+    "author": "Atelier",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/7"
+  },
+  {
     "id": "local-legal-seo-audit",
     "path": "skills/local-legal-seo-audit",
     "category": "marketing",
@@ -18129,28 +18025,6 @@
     "category": "uncategorized",
     "name": "magic-animator",
     "description": "AI-powered animation tool for creating motion in logos, UI, icons, and social media assets.",
-    "risk": "safe",
-    "source": "community",
-    "date_added": "2026-03-07",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "magic-ui-generator",
-    "path": "skills/magic-ui-generator",
-    "category": "web-development",
-    "name": "magic-ui-generator",
-    "description": "Utilizes Magic by 21st.dev to generate, compare, and integrate multiple production-ready UI component variations.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-07",
@@ -24079,28 +23953,6 @@
     }
   },
   {
-    "id": "remotion",
-    "path": "skills/remotion",
-    "category": "media",
-    "name": "remotion",
-    "description": "Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays",
-    "risk": "unknown",
-    "source": "community",
-    "date_added": null,
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "remotion-best-practices",
     "path": "skills/remotion-best-practices",
     "category": "media",
@@ -28392,28 +28244,6 @@
     }
   },
   {
-    "id": "tailwind-design-system",
-    "path": "skills/tailwind-design-system",
-    "category": "web-development",
-    "name": "tailwind-design-system",
-    "description": "Build production-ready design systems with Tailwind CSS, including design tokens, component variants, responsive patterns, and accessibility.",
-    "risk": "safe",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "tailwind-patterns",
     "path": "skills/tailwind-patterns",
     "category": "frontend",
@@ -29912,28 +29742,6 @@
     }
   },
   {
-    "id": "ui-a11y",
-    "path": "skills/ui-a11y",
-    "category": "design",
-    "name": "ui-a11y",
-    "description": "Audit a StyleSeed-based component or page for WCAG 2.2 AA issues and apply practical accessibility fixes where the code makes them safe.",
-    "risk": "safe",
-    "source": "community",
-    "date_added": "2026-04-08",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "ui-component",
     "path": "skills/ui-component",
     "category": "design",
@@ -29961,28 +29769,6 @@
     "category": "design",
     "name": "ui-page",
     "description": "Scaffold a new mobile-first page using StyleSeed Toss layout patterns, section rhythm, and existing shell components.",
-    "risk": "safe",
-    "source": "community",
-    "date_added": "2026-04-08",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "ui-pattern",
-    "path": "skills/ui-pattern",
-    "category": "design",
-    "name": "ui-pattern",
-    "description": "Generate reusable UI patterns such as card sections, grids, lists, forms, and chart wrappers using StyleSeed Toss primitives.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-08",
@@ -30044,28 +29830,6 @@
     }
   },
   {
-    "id": "ui-skills",
-    "path": "skills/ui-skills",
-    "category": "ai-ml",
-    "name": "ui-skills",
-    "description": "Opinionated, evolving constraints to guide agents when building interfaces",
-    "risk": "safe",
-    "source": "https://github.com/ibelick/ui-skills",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "ui-tokens",
     "path": "skills/ui-tokens",
     "category": "design",
@@ -30088,55 +29852,11 @@
     }
   },
   {
-    "id": "ui-ux-designer",
-    "path": "skills/ui-ux-designer",
-    "category": "web-development",
-    "name": "ui-ux-designer",
-    "description": "Create interface designs, wireframes, and design systems. Masters user research, accessibility standards, and modern design tools.",
-    "risk": "unknown",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "ui-ux-pro-max",
     "path": "skills/ui-ux-pro-max",
     "category": "front-end",
     "name": "ui-ux-pro-max",
     "description": "Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewing code for UX issues.",
-    "risk": "unknown",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "ui-visual-validator",
-    "path": "skills/ui-visual-validator",
-    "category": "design",
-    "name": "ui-visual-validator",
-    "description": "Rigorous visual validation expert specializing in UI testing, design system compliance, and accessibility verification.",
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",

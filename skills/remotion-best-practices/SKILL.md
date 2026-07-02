@@ -47,3 +47,5 @@ Read individual rule files for detailed explanations and code examples:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> Para gerar vídeos walkthrough de projetos **Stitch** com Remotion, ver [references/stitch-walkthrough-videos.md](references/stitch-walkthrough-videos.md) (absorvido da skill `remotion`).
