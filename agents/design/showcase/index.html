@@ -396,6 +396,81 @@
     filter:grayscale(45%) brightness(.85); transition:filter var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
   .strip2 img:hover{filter:none; transform:translateY(-5px)}
 
+  /* 5 · center-stage arrastável (produção Portal GR) */
+  .cs{position:relative; height:340px; overflow:hidden; touch-action:pan-y; cursor:grab; background:var(--panel-2)}
+  .cs.grab{cursor:grabbing}
+  .csl{position:absolute; top:26px; bottom:56px; left:50%; width:min(440px,72%); margin-left:calc(min(440px,72%) / -2);
+    border-radius:var(--radius-s); overflow:hidden; user-select:none; -webkit-user-select:none}
+  .csl img{width:100%; height:100%; object-fit:cover; display:block; pointer-events:none}
+  .cscap{position:absolute; left:12px; bottom:10px; font-size:12px; font-weight:600; color:var(--ink);
+    background:rgba(11,13,18,.72); padding:5px 10px; border-radius:7px}
+  .csdots{position:absolute; bottom:16px; left:0; right:0; display:flex; justify-content:center; gap:7px; z-index:40}
+  .csdots i{width:7px; height:7px; border-radius:999px; background:rgba(232,235,242,.35); cursor:pointer; transition:all var(--dur-trans) var(--ease)}
+  .csdots i.on{background:var(--accent); width:20px}
+  /* 6 · expansível com carrossel aninhado (produção Hub) */
+  .xp{display:flex; gap:10px; height:330px; padding:14px}
+  .xpp{position:relative; flex:1; min-width:52px; overflow:hidden; border-radius:var(--radius-s); cursor:pointer;
+    outline:3px solid transparent; outline-offset:-3px;
+    transition:flex .7s var(--ease), outline-color .5s var(--ease)}
+  .xpp.on{flex:7; outline-color:var(--accent)}
+  .xpp img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.07);
+    transition:opacity .55s var(--ease), transform .55s var(--ease)}
+  .xpp img.cur{opacity:1; transform:scale(1)}
+  .xpp .scrim{position:absolute; inset:0; z-index:2; pointer-events:none;
+    background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.08) 45%, transparent)}
+  .xpp .xlbl{position:absolute; z-index:3; left:16px; bottom:14px; color:#fff; font-weight:700; font-size:13px;
+    white-space:nowrap; text-shadow:0 1px 8px rgba(0,0,0,.85); transform-origin:left bottom; transition:transform .5s var(--ease)}
+  .xpp:not(.on) .xlbl{transform:rotate(-90deg) translateX(10px)}
+  .xarr{position:absolute; top:50%; transform:translateY(-50%); z-index:4; width:32px; height:32px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.3); background:rgba(0,0,0,.45); color:#fff; font-size:14px; display:grid;
+    place-items:center; cursor:pointer; opacity:0; transition:opacity var(--dur-trans) var(--ease)}
+  .xpp.on .xarr{opacity:1}
+  .xarr.l{left:10px} .xarr.r{right:10px}
+  /* 7 · bento mosaico */
+  .bento{display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:92px; gap:10px; padding:14px}
+  .bento figure{position:relative; overflow:hidden; border-radius:var(--radius-s); margin:0; cursor:pointer}
+  .bento .b1{grid-column:span 2; grid-row:span 2}
+  .bento .b4{grid-row:span 2}
+  .bento img{width:100%; height:100%; object-fit:cover; transition:transform .45s var(--ease)}
+  .bento figure:hover img{transform:scale(1.07)}
+  .bento figcaption{position:absolute; left:10px; bottom:8px; z-index:2; font-size:12px; font-weight:600; color:#fff;
+    background:rgba(11,13,18,.7); padding:4px 9px; border-radius:6px; opacity:0; transform:translateY(6px);
+    transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
+  .bento figure:hover figcaption{opacity:1; transform:none}
+  /* 8 · deck de cartas */
+  .deck{position:relative; height:330px; display:grid; place-items:center; cursor:pointer}
+  .dcard{position:absolute; width:min(320px,68%); aspect-ratio:4/2.9; border-radius:var(--radius-s); overflow:hidden;
+    box-shadow:0 12px 26px rgba(0,0,0,.4); transition:transform .5s var(--ease), opacity .45s var(--ease)}
+  .dcard img{width:100%; height:100%; object-fit:cover; display:block}
+  .dcard .dcap{position:absolute; left:12px; bottom:10px; font-size:12px; font-weight:600; color:#fff;
+    background:rgba(11,13,18,.7); padding:4px 10px; border-radius:7px}
+  .deckhint{position:absolute; bottom:12px; left:0; right:0; text-align:center; font-size:12px; color:var(--dim)}
+  /* 9 · antes/depois */
+  .ba{position:relative; aspect-ratio:16/9.4; overflow:hidden; user-select:none; -webkit-user-select:none}
+  .ba img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none}
+  .ba .antes{filter:grayscale(1) contrast(.92) brightness(.9)}
+  .ba .depois{clip-path:inset(0 0 0 var(--bacut,50%))}
+  .ba .bal{position:absolute; top:0; bottom:0; width:2px; background:var(--accent); left:var(--bacut,50%); z-index:3; pointer-events:none}
+  .ba .bal::after{content:"⇔"; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:34px; height:34px;
+    border-radius:999px; background:var(--accent); color:#0b0d12; font-weight:800; display:grid; place-items:center; font-size:14px}
+  .ba .batag{position:absolute; top:12px; z-index:2; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    background:rgba(11,13,18,.72); color:#fff; padding:4px 10px; border-radius:999px}
+  .ba .batag.l{left:12px} .ba .batag.r{right:12px}
+  .ba input[type=range]{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:ew-resize; z-index:5; margin:0}
+  /* 10 · lightbox */
+  .lb{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:14px}
+  @media(max-width:720px){.lb{grid-template-columns:repeat(2,1fr)}}
+  .lb img{width:100%; height:124px; object-fit:cover; border-radius:var(--radius-s); cursor:zoom-in;
+    transition:transform var(--dur-trans) var(--ease)}
+  .lb img:hover{transform:translateY(-4px)}
+  .lbov{position:fixed; inset:0; z-index:99; background:rgba(11,13,18,.92); display:grid; place-items:center;
+    opacity:0; pointer-events:none; transition:opacity var(--dur-trans) var(--ease); cursor:zoom-out}
+  .lbov.on{opacity:1; pointer-events:auto}
+  .lbov img{max-width:88vw; max-height:82vh; border-radius:var(--radius); transform:scale(.96);
+    transition:transform var(--dur-trans) var(--ease)}
+  .lbov.on img{transform:scale(1)}
+  .lbov .lbx{position:absolute; top:18px; right:22px; font-size:13px; color:var(--dim)}
+
   /* ============ VARREDURA LAB ============ */
   .lab{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:44px; align-items:start}
   @media(max-width:880px){.lab{grid-template-columns:1fr}}
@@ -659,8 +734,8 @@
 <section id="fotos" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
   <div class="wrap">
     <div class="kicker rv">Exposição de imagem</div>
-    <h2 class="rv" style="--i:1">Quatro jeitos de mostrar fotos.<br>Cada um com seu palco.</h2>
-    <p class="lead rv" style="--i:2">Imagem não se joga na página — se expõe. Carrossel pra narrativa guiada, Ken Burns pra atmosfera, accordion pra exploração, filme corrido pra volume. Movimento só em transform/opacity, como manda a casa.</p>
+    <h2 class="rv" style="--i:1">Dez jeitos de mostrar fotos.<br>Cada um com seu palco.</h2>
+    <p class="lead rv" style="--i:2">Imagem não se joga na página — se expõe. Dez padrões prontos, incluindo <b style="color:var(--ink)">dois extraídos de produção</b> (Portal GR e Hub do Proprietário) que viraram skills do hub. Movimento só em transform/opacity, como manda a casa.</p>
 
     <div class="fotogrid">
       <div class="fx rv" style="--i:0">
@@ -707,9 +782,95 @@
         </div>
         <span class="fxlbl"><b>Filme corrido</b> <span>· logos, galerias grandes, bastidores — pausa no hover</span></span>
       </div>
+
+      <div class="fx full rv" style="--i:0">
+        <div class="cs" id="cs">
+          <div class="csl"><img src="https://picsum.photos/id/1011/880/560" alt="Pessoa em caiaque" loading="lazy"><div class="cscap">Comunicado 01 — arraste-me</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1036/880/560" alt="Montanha e lago" loading="lazy"><div class="cscap">Comunicado 02 — solte e veja o snap de 800ms</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1041/880/560" alt="Ponte na neblina" loading="lazy"><div class="cscap">Comunicado 03 — clique no vizinho: foca, não navega</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1044/880/560" alt="Céu estrelado" loading="lazy"><div class="cscap">Comunicado 04 — autoplay pausa no hover</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1057/880/560" alt="Estrada litorânea" loading="lazy"><div class="cscap">Comunicado 05 — peek de 55% nos vizinhos</div></div>
+          <div class="csdots" id="csdots"></div>
+        </div>
+        <span class="fxlbl"><b>Center-stage arrastável</b> <span>· padrão de produção — Portal GR · skill <code>center-stage-carousel</code></span></span>
+      </div>
+
+      <div class="fx full rv" style="--i:1">
+        <div class="xp" id="xp">
+          <div class="xpp on" tabindex="0" role="button" aria-label="Praia">
+            <img src="https://picsum.photos/id/1019/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1039/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1043/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Serra Azul</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+          <div class="xpp" tabindex="0" role="button" aria-label="Campo">
+            <img src="https://picsum.photos/id/1020/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1024/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Vale do Sol</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+          <div class="xpp" tabindex="0" role="button" aria-label="Lago">
+            <img src="https://picsum.photos/id/1031/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1035/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Lagoa Real</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+          <div class="xpp" tabindex="0" role="button" aria-label="Cidade">
+            <img src="https://picsum.photos/id/1040/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1047/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Costa Norte</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+        </div>
+        <span class="fxlbl"><b>Expansível com carrossel aninhado</b> <span>· padrão de produção — Hub do Proprietário · skill <code>expanding-gallery</code></span></span>
+      </div>
+
+      <div class="fx rv" style="--i:2">
+        <div class="bento">
+          <figure class="b1"><img src="https://picsum.photos/id/1015/700/500" alt="Rio entre montanhas" loading="lazy"><figcaption>Destaque — 2×2</figcaption></figure>
+          <figure><img src="https://picsum.photos/id/1016/400/300" alt="Cânion" loading="lazy"><figcaption>Apoio</figcaption></figure>
+          <figure class="b4"><img src="https://picsum.photos/id/1018/400/560" alt="Montanha" loading="lazy"><figcaption>Vertical</figcaption></figure>
+          <figure><img src="https://picsum.photos/id/1025/400/300" alt="Cão" loading="lazy"><figcaption>Apoio</figcaption></figure>
+          <figure><img src="https://picsum.photos/id/1050/400/300" alt="Cidade" loading="lazy"><figcaption>Apoio</figcaption></figure>
+        </div>
+        <span class="fxlbl"><b>Bento mosaico</b> <span>· hierarquia sem carrossel</span></span>
+      </div>
+
+      <div class="fx rv" style="--i:3">
+        <div class="deck" id="deck">
+          <div class="dcard"><img src="https://picsum.photos/id/1051/660/480" alt="Escalada" loading="lazy"><span class="dcap">Topo do baralho — clique</span></div>
+          <div class="dcard"><img src="https://picsum.photos/id/1052/660/480" alt="Barco" loading="lazy"><span class="dcap">A próxima da pilha</span></div>
+          <div class="dcard"><img src="https://picsum.photos/id/1053/660/480" alt="Templo" loading="lazy"><span class="dcap">Sempre 4 no maço</span></div>
+          <div class="dcard"><img src="https://picsum.photos/id/1055/660/480" alt="Floresta" loading="lazy"><span class="dcap">E volta pro fundo</span></div>
+          <div class="deckhint">clique na carta do topo</div>
+        </div>
+        <span class="fxlbl"><b>Deck de cartas</b> <span>· stories, revisão de itens</span></span>
+      </div>
+
+      <div class="fx rv" style="--i:4">
+        <div class="ba" id="ba" style="--bacut:50%">
+          <img class="antes" src="https://picsum.photos/id/1060/880/560" alt="Cena antes" loading="lazy">
+          <img class="depois" src="https://picsum.photos/id/1060/880/560" alt="Cena depois" loading="lazy">
+          <span class="batag l">antes</span><span class="batag r">depois</span>
+          <div class="bal"></div>
+          <input type="range" min="4" max="96" value="50" aria-label="comparar antes e depois">
+        </div>
+        <span class="fxlbl"><b>Antes / depois</b> <span>· reformas, edição, resultados</span></span>
+      </div>
+
+      <div class="fx rv" style="--i:5">
+        <div class="lb" id="lb">
+          <img src="https://picsum.photos/id/1061/460/304" alt="Miniatura 1" loading="lazy">
+          <img src="https://picsum.photos/id/1062/460/304" alt="Miniatura 2" loading="lazy">
+          <img src="https://picsum.photos/id/1063/460/304" alt="Miniatura 3" loading="lazy">
+          <img src="https://picsum.photos/id/1065/460/304" alt="Miniatura 4" loading="lazy">
+          <img src="https://picsum.photos/id/1067/460/304" alt="Miniatura 5" loading="lazy">
+          <img src="https://picsum.photos/id/1069/460/304" alt="Miniatura 6" loading="lazy">
+          <img src="https://picsum.photos/id/1070/460/304" alt="Miniatura 7" loading="lazy">
+          <img src="https://picsum.photos/id/1074/460/304" alt="Miniatura 8" loading="lazy">
+        </div>
+        <span class="fxlbl"><b>Lightbox</b> <span>· clique amplia · Esc fecha</span></span>
+      </div>
     </div>
   </div>
 </section>
+<div class="lbov" id="lbov" aria-modal="true" role="dialog"><img src="" alt="Foto ampliada"><span class="lbx">clique ou Esc para fechar</span></div>
 
 <!-- VARREDURA LAB -->
 <section id="varrer">
@@ -848,6 +1009,88 @@ document.querySelectorAll('.ldp').forEach(b=>b.addEventListener('click',()=>{
     i=(i+1)%imgs.length;
     imgs[i].classList.add('on');
   },4600);
+})();
+
+/* 5 · center-stage arrastável (mecânica da skill center-stage-carousel) */
+(function(){
+  const cs=$('#cs'); if(!cs)return;
+  const sls=[...cs.querySelectorAll('.csl')], dots=$('#csdots'), n=sls.length;
+  let i=0, drag=0, dragging=false, sx=0, moved=false, timer=null;
+  for(let k=0;k<n;k++){const d=document.createElement('i');
+    d.addEventListener('click',()=>{i=k; paint(); restart()}); dots.appendChild(d)}
+  const off=k=>{let o=k-i; if(o>n/2)o-=n; if(o<-n/2)o+=n; return o};
+  function paint(){
+    sls.forEach((el,k)=>{
+      const o=off(k), a=Math.abs(o);
+      el.style.transition=dragging?'none':'transform 800ms cubic-bezier(.22,1,.36,1), opacity 800ms cubic-bezier(.22,1,.36,1)';
+      el.style.transform=`translateX(calc(${o*55}% + ${drag}px)) scale(${a===0?1:.86})`;
+      el.style.opacity=a<=1?'1':'0';
+      el.style.zIndex=String(30-a*10);
+    });
+    [...dots.children].forEach((d,k)=>d.classList.toggle('on',k===i));
+  }
+  cs.addEventListener('pointerdown',e=>{dragging=true; moved=false; sx=e.clientX; cs.classList.add('grab')});
+  window.addEventListener('pointermove',e=>{if(!dragging)return; drag=e.clientX-sx; if(Math.abs(drag)>8)moved=true; paint()});
+  window.addEventListener('pointerup',()=>{
+    if(!dragging)return; dragging=false; cs.classList.remove('grab');
+    if(moved&&Math.abs(drag)>60) i=(i+(drag<0?1:-1)+n)%n;
+    drag=0; paint(); restart();
+  });
+  function restart(){clearInterval(timer); if(!reduced)timer=setInterval(()=>{i=(i+1)%n; paint()},4200)}
+  cs.addEventListener('mouseenter',()=>clearInterval(timer));
+  cs.addEventListener('mouseleave',restart);
+  paint(); restart();
+})();
+
+/* 6 · expansível com carrossel aninhado (mecânica da skill expanding-gallery) */
+(function(){
+  const xp=$('#xp'); if(!xp)return;
+  [...xp.querySelectorAll('.xpp')].forEach(p=>{
+    const imgs=[...p.querySelectorAll('img')]; let ci=0; imgs[0].classList.add('cur');
+    p.addEventListener('click',()=>[...xp.querySelectorAll('.xpp')].forEach(q=>q.classList.toggle('on',q===p)));
+    p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault(); p.click()}});
+    p.querySelectorAll('.xarr').forEach(a=>a.addEventListener('click',e=>{
+      e.stopPropagation();
+      imgs[ci].classList.remove('cur');
+      ci=(ci+(a.classList.contains('r')?1:-1)+imgs.length)%imgs.length;
+      imgs[ci].classList.add('cur');
+    }));
+  });
+})();
+
+/* 8 · deck de cartas */
+(function(){
+  const deck=$('#deck'); if(!deck)return;
+  let cards=[...deck.querySelectorAll('.dcard')];
+  const POS=['rotate(0deg)','rotate(3.5deg) translate(16px,10px)','rotate(-3deg) translate(-14px,20px)','rotate(1deg) translateY(30px) scale(.96)'];
+  let busy=false;
+  function paint(){cards.forEach((c,k)=>{c.style.transform=POS[Math.min(k,POS.length-1)]; c.style.zIndex=String(40-k)})}
+  deck.addEventListener('click',()=>{
+    if(busy)return; busy=true;
+    const top=cards[0];
+    top.style.transform='translateX(130%) rotate(14deg)'; top.style.opacity='0';
+    setTimeout(()=>{cards.push(cards.shift()); top.style.opacity='1'; paint(); busy=false}, reduced?40:470);
+  });
+  paint();
+})();
+
+/* 9 · antes/depois */
+(function(){
+  const ba=$('#ba'); if(!ba)return;
+  const r=ba.querySelector('input');
+  r.addEventListener('input',()=>ba.style.setProperty('--bacut',r.value+'%'));
+})();
+
+/* 10 · lightbox */
+(function(){
+  const ov=$('#lbov'); if(!ov)return;
+  const big=ov.querySelector('img');
+  document.querySelectorAll('#lb img').forEach(t=>t.addEventListener('click',()=>{
+    big.src=t.src.replace('/460/304','/1100/730');
+    ov.classList.add('on');
+  }));
+  ov.addEventListener('click',()=>ov.classList.remove('on'));
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')ov.classList.remove('on')});
 })();
 
 /* lab do /varrer */

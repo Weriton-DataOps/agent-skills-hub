@@ -7172,6 +7172,31 @@
     }
   },
   {
+    "id": "center-stage-carousel",
+    "path": "skills/center-stage-carousel",
+    "category": "design",
+    "name": "center-stage-carousel",
+    "description": "Carrossel center-stage arrastavel de producao: palco central + peek, arrasto 1:1 com snap suave, arrasto!=clique, autoplay que pausa, touch pan-y.",
+    "risk": "safe",
+    "source": "overcore:producao",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "producao:portal-gr",
+    "author": "Weriton - GR Group",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/9"
+  },
+  {
     "id": "changelog-automation",
     "path": "skills/changelog-automation",
     "category": "workflow",
@@ -11875,6 +11900,31 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "expanding-gallery",
+    "path": "skills/expanding-gallery",
+    "category": "design",
+    "name": "expanding-gallery",
+    "description": "Accordion expansivel com carrossel aninhado (producao): flex-grow, rotulo rotacionado, setas so no ativo com crossfade+scale, outline de acento.",
+    "risk": "safe",
+    "source": "overcore:producao",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "producao:hub-proprietario",
+    "author": "Weriton - GR Group",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/10"
   },
   {
     "id": "explain-like-socrates",
