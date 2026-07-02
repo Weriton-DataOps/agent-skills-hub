@@ -44,7 +44,9 @@
 
   /* ---- controles (estilo + cor) ---- */
   .controls{display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin:26px 0 20px;
-    border:1px solid var(--line); background:var(--panel); border-radius:var(--radius); padding:12px 14px}
+    border:1px solid var(--line); background:rgba(18,21,29,.94); border-radius:var(--radius); padding:12px 14px;
+    position:sticky; top:62px; z-index:35; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    box-shadow:0 8px 22px rgba(0,0,0,.28)}
   .controls .grp{display:flex; flex-wrap:wrap; gap:7px; align-items:center}
   .controls .cap{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-weight:700; margin-right:4px}
   .pk{font:600 12.5px/1 inherit; padding:8px 13px; border-radius:999px; cursor:pointer;
@@ -1428,7 +1430,9 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* ---- controles: tema + acento (por seção) ---- */
 const SWATCHES=[
   ['#c8ff3d','#0b0d12'],['#facc15','#0b0d12'],['#fb923c','#0b0d12'],['#f472b6','#0b0d12'],
-  ['#a78bfa','#ffffff'],['#60a5fa','#0b0d12'],['#34d399','#0b0d12'],['#f87171','#ffffff'],
+  ['#e879f9','#ffffff'],['#a78bfa','#ffffff'],['#818cf8','#ffffff'],['#60a5fa','#0b0d12'],
+  ['#22d3ee','#0b0d12'],['#2dd4bf','#0b0d12'],['#34d399','#0b0d12'],['#4ade80','#0b0d12'],
+  ['#f87171','#ffffff'],['#e8ebf2','#0b0d12'],
 ];
 document.querySelectorAll('.controls').forEach(ctrl=>{
   const canvas=document.getElementById(ctrl.dataset.target||'');
