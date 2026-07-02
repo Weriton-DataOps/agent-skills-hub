@@ -181,7 +181,7 @@
     <a class="logo" href="index.html">Atelier<b>.</b> <span style="color:var(--dim); font-weight:500; font-size:13px">catálogo</span></a>
     <div class="links">
       <a href="#linguagens">Linguagens</a><a href="#cartoes">Cartões</a><a href="#botoes">Botões</a>
-      <a href="#textos">Textos</a><a href="#loading">Loading</a><a href="#fotos">Fotos</a><a href="#efeitos">Efeitos</a>
+      <a href="#textos">Textos</a><a href="#loading">Loading</a><a href="#fotos">Fotos</a><a href="#efeitos">Efeitos</a><a href="#menus">Menus</a><a href="verbos.html">Verbos</a>
       <a href="index.html" style="color:var(--accent)">← showcase</a>
     </div>
   </div>
@@ -1286,6 +1286,128 @@
   </div>
 </section>
 
+<!-- ============ MENUS (10 padrões de navegação) ============ -->
+<style>
+  .mn-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px}
+  .mnf{background:var(--cCard); border:var(--cBorder); border-radius:var(--cR); box-shadow:var(--cShadow);
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur); color:var(--cInk);
+    min-height:190px; padding:16px; position:relative; overflow:hidden; display:flex; flex-direction:column; gap:10px}
+  .mnlbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .mnlbl b{color:var(--ink); font-weight:600}
+  .mn-a{font-size:13px; color:var(--cDim); text-decoration:none; padding:6px 10px; border-radius:8px; cursor:pointer;
+    transition:color var(--dur-micro) var(--ease), background var(--dur-micro) var(--ease)}
+  .mn-a:hover{color:var(--cInk); background:color-mix(in srgb, var(--acc) 12%, transparent)}
+  .mn-a.on{color:var(--cInk); font-weight:600}
+  .mn-top{display:flex; align-items:center; gap:4px; border-bottom:1px solid var(--cTrack); padding-bottom:12px}
+  .mn-top .lg{font-weight:800; margin-right:auto} .mn-top .lg b{color:var(--acc)}
+  .mn-top .cta{background:var(--acc); color:var(--accInk); font:700 12.5px/1 Inter,sans-serif; border:none;
+    border-radius:999px; padding:9px 14px; cursor:pointer}
+  .mn-burg{width:38px; height:38px; border-radius:10px; border:1px solid var(--cTrack); background:transparent;
+    color:var(--cInk); font-size:16px; cursor:pointer}
+  .mn-drawer{position:absolute; inset:0 34% 0 0; background:var(--cCard); border-right:var(--cBorder);
+    box-shadow:8px 0 24px rgba(0,0,0,.3); z-index:5; padding:16px; transform:translateX(-105%);
+    transition:transform .35s var(--snap); display:flex; flex-direction:column; gap:2px}
+  .mn-drawer.on{transform:none}
+  .mn-drawer .x{align-self:flex-end; background:none; border:none; color:var(--cDim); font-size:15px; cursor:pointer}
+  .mn-tabs{display:flex; gap:2px; position:relative; border-bottom:2px solid var(--cTrack)}
+  .mn-tabs button{background:none; border:none; font:600 13px/1 Inter,sans-serif; color:var(--cDim);
+    padding:10px 14px; cursor:pointer; transition:color var(--dur-micro) var(--ease)}
+  .mn-tabs button[aria-selected=true]{color:var(--cInk)}
+  .mn-tabs .tind{position:absolute; bottom:-2px; height:2px; background:var(--acc); transition:left .3s var(--snap), width .3s var(--snap)}
+  .mn-tabbody{font-size:13px; color:var(--cDim); padding:6px 2px}
+  .mn-rail{display:flex; gap:0; height:150px; border:1px solid var(--cTrack); border-radius:10px; overflow:hidden}
+  .mn-rail .rail{width:52px; background:color-mix(in srgb, var(--cInk) 4%, transparent); display:flex; flex-direction:column;
+    gap:4px; padding:10px 8px; transition:width .35s var(--snap); overflow:hidden}
+  .mn-rail.open .rail{width:170px}
+  .mn-rail .ritem{display:flex; align-items:center; gap:10px; padding:8px 9px; border-radius:8px; cursor:pointer;
+    white-space:nowrap; font-size:13px; color:var(--cDim)}
+  .mn-rail .ritem:hover{background:color-mix(in srgb, var(--acc) 12%, transparent); color:var(--cInk)}
+  .mn-rail .ritem.on{background:var(--acc); color:var(--accInk); font-weight:700}
+  .mn-rail .ric{width:18px; text-align:center; flex:none}
+  .mn-rail .body{flex:1; padding:12px; font-size:12.5px; color:var(--cDim)}
+  .mn-bot{margin-top:auto; display:flex; border-top:1px solid var(--cTrack); padding-top:10px}
+  .mn-bot button{flex:1; background:none; border:none; color:var(--cDim); font:600 12px/1.6 Inter,sans-serif; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0; border-radius:10px;
+    transition:color var(--dur-micro) var(--ease)}
+  .mn-bot button .bic{font-size:16px}
+  .mn-bot button.on{color:var(--acc)}
+  .mn-mega{position:relative}
+  .mn-megapanel{position:absolute; top:calc(100% + 8px); left:0; right:0; z-index:6; background:var(--cCard);
+    border:var(--cBorder); border-radius:12px; box-shadow:0 14px 34px rgba(0,0,0,.35); padding:14px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:8px; opacity:0; transform:translateY(-6px);
+    pointer-events:none; transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
+  .mn-mega.on .mn-megapanel{opacity:1; transform:none; pointer-events:auto}
+  .mn-megapanel .col b{display:block; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--acc); margin-bottom:6px}
+  .mn-megapanel .col a{display:block; font-size:12.5px; color:var(--cDim); text-decoration:none; padding:4px 0}
+  .mn-megapanel .col a:hover{color:var(--cInk)}
+  .mn-bc{display:flex; align-items:center; gap:8px; font-size:13px; flex-wrap:wrap}
+  .mn-bc .sep{color:var(--cDim); opacity:.6}
+  .mn-bc .here{color:var(--cInk); font-weight:600}
+  .mn-palbtn{display:inline-flex; align-items:center; gap:10px; background:color-mix(in srgb, var(--cInk) 5%, transparent);
+    border:1px solid var(--cTrack); border-radius:10px; color:var(--cDim); font:500 13px/1 Inter,sans-serif;
+    padding:10px 14px; cursor:pointer}
+  .mn-palbtn kbd{font:600 12px/1 ui-monospace,monospace; border:1px solid var(--cTrack); border-radius:5px; padding:3px 6px}
+  .mn-pal{position:absolute; inset:12px; z-index:7; background:var(--cCard); border:var(--cBorder); border-radius:12px;
+    box-shadow:0 18px 44px rgba(0,0,0,.45); padding:12px; display:none; flex-direction:column; gap:8px}
+  .mn-pal.on{display:flex}
+  .mn-pal input{background:transparent; border:none; border-bottom:1px solid var(--cTrack); color:var(--cInk);
+    font:500 14px/1.4 Inter,sans-serif; padding:8px 4px; outline:none}
+  .mn-pal .it{font-size:13px; color:var(--cDim); padding:8px 10px; border-radius:8px; cursor:pointer}
+  .mn-pal .it:hover{background:color-mix(in srgb, var(--acc) 14%, transparent); color:var(--cInk)}
+  .mn-pal .it kbd{float:right; font:600 12px/1 ui-monospace,monospace; color:var(--cDim)}
+  .mn-chips{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px}
+  .mn-chip{flex:none; font:600 12.5px/1 Inter,sans-serif; padding:9px 14px; border-radius:999px; cursor:pointer;
+    border:1px solid var(--cTrack); background:transparent; color:var(--cDim); transition:all var(--dur-micro) var(--ease)}
+  .mn-chip .n{opacity:.65; font-weight:500; margin-left:5px}
+  .mn-chip.on{background:var(--acc); border-color:var(--acc); color:var(--accInk)}
+  .mn-dd{position:relative; align-self:flex-start}
+  .mn-ddbtn{background:color-mix(in srgb, var(--cInk) 5%, transparent); border:1px solid var(--cTrack); border-radius:10px;
+    color:var(--cInk); font:600 13px/1 Inter,sans-serif; padding:10px 14px; cursor:pointer}
+  .mn-ddmenu{position:absolute; top:calc(100% + 6px); left:0; min-width:190px; z-index:6; background:var(--cCard);
+    border:var(--cBorder); border-radius:12px; box-shadow:0 14px 30px rgba(0,0,0,.35); padding:6px; display:none}
+  .mn-dd.on .mn-ddmenu{display:block}
+  .mn-ddmenu button{display:block; width:100%; text-align:left; background:none; border:none; color:var(--cDim);
+    font:500 13px/1 Inter,sans-serif; padding:9px 11px; border-radius:8px; cursor:pointer}
+  .mn-ddmenu button:hover{background:color-mix(in srgb, var(--acc) 14%, transparent); color:var(--cInk)}
+  .mn-ddmenu hr{border:none; border-top:1px solid var(--cTrack); margin:5px 4px}
+</style>
+<section id="menus" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker">08 · Menus</div>
+    <h2>Dez jeitos de navegar.</h2>
+    <p class="lead">Do topbar honesto ao command palette — cada padrão com seu palco e sua escala. Teste o hamburger (2), o mega menu (6) e o palette (8).</p>
+    <div class="controls" data-target="cv-menus">
+      <div class="grp"><span class="cap">Estilo</span>
+        <button class="pk th-pk" aria-pressed="true"  data-th="over">OverCore</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="minimal">Minimal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="glass">Glass</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="brutal">Brutal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="clay">Clay</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="false" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="true" data-m="dark">Escuro</button>
+      </div>
+    </div>
+    <div class="canvas th th-over" id="cv-menus">
+      <div class="mn-grid">
+        <div><div class="mnf"><div class="mn-top"><span class="lg">Marca<b>.</b></span><a class="mn-a on">Home</a><a class="mn-a">Produto</a><a class="mn-a">Preços</a><button class="cta">Entrar</button></div><div class="mn-tabbody">O clássico: logo à esquerda, links, 1 CTA — só um primário por viewport (A16).</div></div><div class="mnlbl"><b>01 Topbar</b><span>sites, apps</span></div></div>
+        <div><div class="mnf" style="justify-content:flex-start"><div><button class="mn-burg" data-drawer>☰</button></div><div class="mn-tabbody">Clique no hamburger: o drawer desliza por cima, com X pra sair.</div><div class="mn-drawer"><button class="x" aria-label="fechar">✕</button><a class="mn-a on">Início</a><a class="mn-a">Minhas reservas</a><a class="mn-a">Documentos</a><a class="mn-a">Ajuda</a></div></div><div class="mnlbl"><b>02 Drawer</b><span>mobile, apps densos</span></div></div>
+        <div><div class="mnf"><div class="mn-tabs" data-tabs><span class="tind"></span><button aria-selected="true">Visão geral</button><button aria-selected="false">Atividade</button><button aria-selected="false">Config</button></div><div class="mn-tabbody" data-tabbody>Conteúdo da primeira aba — o indicador desliza no snap da casa.</div></div><div class="mnlbl"><b>03 Tabs</b><span>seções irmãs</span></div></div>
+        <div><div class="mnf"><div class="mn-rail" data-rail><div class="rail"><div class="ritem" data-railtoggle><span class="ric">☰</span><span>Recolher</span></div><div class="ritem on"><span class="ric">▤</span><span>Dashboard</span></div><div class="ritem"><span class="ric">◎</span><span>Relatórios</span></div><div class="ritem"><span class="ric">⚙</span><span>Ajustes</span></div></div><div class="body">Rail de ícones → clique no ☰ pra expandir com rótulos.</div></div></div><div class="mnlbl"><b>04 Sidebar rail</b><span>dashboards</span></div></div>
+        <div><div class="mnf"><div class="mn-tabbody" style="flex:1">A navegação mora embaixo, no alcance do polegar — ativo na cor de acento.</div><div class="mn-bot" data-bot><button class="on"><span class="bic">⌂</span>Início</button><button><span class="bic">☆</span>Favoritos</button><button><span class="bic">⊕</span>Novo</button><button><span class="bic">⚙</span>Perfil</button></div></div><div class="mnlbl"><b>05 Bottom nav</b><span>mobile-first</span></div></div>
+        <div><div class="mnf" style="overflow:visible"><div class="mn-mega" data-mega><a class="mn-a" style="display:inline-block">Produtos ▾</a><div class="mn-megapanel"><div class="col"><b>Criar</b><a>Editor</a><a>Templates</a><a>Assets</a></div><div class="col"><b>Gerir</b><a>Projetos</a><a>Times</a><a>Permissões</a></div><div class="col"><b>Medir</b><a>Analytics</a><a>Relatórios</a><a>Exportar</a></div></div></div><div class="mn-tabbody">Clique em "Produtos": painel largo com colunas temáticas.</div></div><div class="mnlbl"><b>06 Mega menu</b><span>portais, e-commerce</span></div></div>
+        <div><div class="mnf" style="justify-content:center"><div class="mn-bc"><a class="mn-a" style="padding:2px 4px">Home</a><span class="sep">/</span><a class="mn-a" style="padding:2px 4px">…</a><span class="sep">/</span><a class="mn-a" style="padding:2px 4px">Relatórios</a><span class="sep">/</span><span class="here">Julho 2026</span></div><div class="mn-tabbody" style="text-align:center">Onde estou e como volto — com elipse quando o caminho é longo.</div></div><div class="mnlbl"><b>07 Breadcrumb</b><span>hierarquias fundas</span></div></div>
+        <div><div class="mnf" style="justify-content:center; align-items:flex-start"><button class="mn-palbtn" data-palopen>⌕ Buscar… <kbd>Ctrl K</kbd></button><div class="mn-tabbody">Um atalho, tudo ao alcance — digite pra filtrar.</div><div class="mn-pal" data-pal><input placeholder="digite um comando…" data-palq><div class="it">Ir para Dashboard <kbd>G D</kbd></div><div class="it">Criar relatório <kbd>C R</kbd></div><div class="it">Convidar pessoa <kbd>I</kbd></div><div class="it">Alternar tema <kbd>T</kbd></div><div class="it">Abrir configurações <kbd>,</kbd></div></div></div><div class="mnlbl"><b>08 Command palette</b><span>power users</span></div></div>
+        <div><div class="mnf" style="justify-content:center"><div class="mn-chips" data-chips><button class="mn-chip on">Todos<span class="n">128</span></button><button class="mn-chip">Abertos<span class="n">37</span></button><button class="mn-chip">Urgentes<span class="n">5</span></button><button class="mn-chip">Concluídos<span class="n">86</span></button><button class="mn-chip">Arquivados</button></div><div class="mn-tabbody">Filtros como navegação — contadores honestos.</div></div><div class="mnlbl"><b>09 Chips de filtro</b><span>listas, inboxes</span></div></div>
+        <div><div class="mnf" style="overflow:visible; justify-content:center"><div class="mn-dd" data-dd><button class="mn-ddbtn" data-ddlabel>Ordenar: Recentes ▾</button><div class="mn-ddmenu"><button>Recentes</button><button>Mais antigos</button><button>A–Z</button><hr><button>Personalizado…</button></div></div><div class="mn-tabbody">O dropdown que não clipa (A30): fecha no clique fora.</div></div><div class="mnlbl"><b>10 Dropdown</b><span>ordenação, ações</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ANCHOR:TEXTOS -->
 
 <footer>
@@ -1506,6 +1628,54 @@ document.querySelectorAll('.fxt').forEach(t=>t.addEventListener('click',()=>fxPl
 const fxAll=document.getElementById('fx-all');
 if(fxAll)fxAll.addEventListener('click',()=>{
   document.querySelectorAll('.fxt').forEach((t,i)=>setTimeout(()=>fxPlay(t), reduced?0:i*100));
+});
+
+/* ---- menus ---- */
+document.querySelectorAll('[data-drawer]').forEach(b=>{
+  const f=b.closest('.mnf'), d=f.querySelector('.mn-drawer');
+  b.addEventListener('click',()=>d.classList.add('on'));
+  d.querySelector('.x').addEventListener('click',()=>d.classList.remove('on'));
+});
+document.querySelectorAll('[data-tabs]').forEach(tabs=>{
+  const ind=tabs.querySelector('.tind'), btns=[...tabs.querySelectorAll('button')];
+  const body=tabs.closest('.mnf').querySelector('[data-tabbody]');
+  const TXT=['Conteúdo da primeira aba — o indicador desliza no snap da casa.','Atividade recente: 3 entregas, 1 revisão pendente.','Preferências, notificações e integrações.'];
+  function place(b){ind.style.left=b.offsetLeft+'px'; ind.style.width=b.offsetWidth+'px'}
+  btns.forEach((b,i)=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.setAttribute('aria-selected','false'));
+    b.setAttribute('aria-selected','true'); place(b); if(body)body.textContent=TXT[i]||'';
+  }));
+  requestAnimationFrame(()=>place(btns[0]));
+});
+document.querySelectorAll('[data-railtoggle]').forEach(b=>b.addEventListener('click',()=>{
+  b.closest('.mn-rail').classList.toggle('open');
+}));
+document.querySelectorAll('[data-bot]').forEach(bot=>bot.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  bot.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+})));
+document.querySelectorAll('[data-mega]').forEach(m=>{
+  m.querySelector('.mn-a').addEventListener('click',e=>{e.stopPropagation(); m.classList.toggle('on')});
+  document.addEventListener('click',()=>m.classList.remove('on'));
+});
+document.querySelectorAll('[data-palopen]').forEach(b=>{
+  const f=b.closest('.mnf'), pal=f.querySelector('[data-pal]'), q=pal.querySelector('[data-palq]');
+  b.addEventListener('click',e=>{e.stopPropagation(); pal.classList.add('on'); q.focus()});
+  document.addEventListener('click',e=>{if(!pal.contains(e.target))pal.classList.remove('on')});
+  q.addEventListener('input',()=>{
+    const v=q.value.toLowerCase();
+    pal.querySelectorAll('.it').forEach(it=>it.style.display=it.textContent.toLowerCase().includes(v)?'':'none');
+  });
+});
+document.querySelectorAll('[data-chips]').forEach(c=>c.querySelectorAll('.mn-chip').forEach(ch=>ch.addEventListener('click',()=>{
+  c.querySelectorAll('.mn-chip').forEach(x=>x.classList.remove('on')); ch.classList.add('on');
+})));
+document.querySelectorAll('[data-dd]').forEach(dd=>{
+  const btn=dd.querySelector('[data-ddlabel]');
+  btn.addEventListener('click',e=>{e.stopPropagation(); dd.classList.toggle('on')});
+  dd.querySelectorAll('.mn-ddmenu button').forEach(it=>it.addEventListener('click',()=>{
+    btn.textContent='Ordenar: '+it.textContent+' ▾'; dd.classList.remove('on');
+  }));
+  document.addEventListener('click',()=>dd.classList.remove('on'));
 });
 
 /* ---- linguagens (sample switcher) ---- */

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verbos do Atelier — o que você pode pedir</title>
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --panel-2:#171b26; --line:#242a36;
+    --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d;
+    --radius:18px; --radius-s:10px; --dur-micro:100ms; --dur-trans:300ms; --ease:cubic-bezier(.4,0,.2,1);
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+  a{color:inherit}
+  nav{position:fixed; top:0; left:0; right:0; z-index:60; backdrop-filter:blur(10px);
+    background:rgba(11,13,18,.8); border-bottom:1px solid var(--line)}
+  nav .bar{max-width:1000px; margin:0 auto; padding:13px 24px; display:flex; justify-content:space-between; align-items:center}
+  .logo{font-weight:800; font-size:15px; text-decoration:none}
+  .logo b{color:var(--accent)}
+  nav .links{display:flex; gap:18px; font-size:13px}
+  nav .links a{color:var(--dim); text-decoration:none; transition:color var(--dur-micro) var(--ease)}
+  nav .links a:hover{color:var(--ink)}
+  .wrap{max-width:1000px; margin:0 auto; padding:120px 24px 80px}
+  .kicker{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  h1{font-size:clamp(30px,4.6vw,46px); font-weight:800; letter-spacing:-.03em; line-height:1.05; margin:14px 0 12px; text-wrap:balance}
+  .lead{color:var(--dim); max-width:62ch; font-size:16px; margin:0 0 26px}
+  .lead b{color:var(--ink)}
+  .search{width:100%; max-width:420px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-s);
+    color:var(--ink); font:500 14px/1 inherit; padding:12px 14px; margin-bottom:40px}
+  .search:focus{outline:2px solid var(--accent); outline-offset:1px}
+  .search::placeholder{color:var(--dim)}
+  h2{font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); font-weight:700;
+    margin:40px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--line)}
+  h2 span{color:var(--accent)}
+  .verbos{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px}
+  .vb{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px;
+    transition:border-color var(--dur-trans) var(--ease)}
+  .vb:hover{border-color:#31394a}
+  .vb .cmd{font-family:ui-monospace,Consolas,monospace; font-size:14.5px; font-weight:700; color:var(--accent)}
+  .vb .cmd small{color:var(--dim); font-weight:500}
+  .vb p{margin:7px 0 0; font-size:13.5px; color:var(--dim)}
+  .vb p b{color:var(--ink); font-weight:600}
+  .vb .ex{margin-top:10px; font-size:12.5px; color:var(--ink); background:var(--panel-2); border-radius:8px; padding:8px 11px}
+  .vb .ex::before{content:"peça assim: "; color:var(--dim)}
+  .vb .skill{margin-top:9px; font-size:12px; color:var(--dim)}
+  .vb .skill code{font-size:11.5px; background:var(--panel-2); border-radius:5px; padding:2px 6px}
+  .gate{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:#fbbf24; border:1px solid rgba(251,191,36,.35); background:rgba(251,191,36,.08); border-radius:999px; padding:2px 8px; margin-left:8px; vertical-align:2px}
+  footer{border-top:1px solid var(--line); padding:30px 24px; font-size:13px; color:var(--dim)}
+  footer .wrap{padding:0; max-width:1000px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="bar">
+    <a class="logo" href="index.html">Atelier<b>.</b> <span style="color:var(--dim); font-weight:500; font-size:13px">manual de verbos</span></a>
+    <div class="links">
+      <a href="#fluxo">Fluxo</a><a href="#dimensoes">Dimensões</a><a href="#especialistas">Especialistas</a><a href="#roster">Roster</a>
+      <a href="catalogo.html">Catálogo</a><a href="index.html" style="color:var(--accent)">← showcase</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="kicker">Atelier · manual de verbos</div>
+  <h1>O que você pode pedir.</h1>
+  <p class="lead">O Atelier trabalha por <b>verbos</b> — cada um opera <b>uma dimensão, com escopo fechado</b>: <span class="mono">/tipografar</span> não mexe em cor, <span class="mono">/cor</span> não mexe em layout. Iterar peça a peça sem regenerar a tela inteira é o que mata o slop. Fale o verbo (ou só descreva a intenção — o mestre traduz).</p>
+  <input class="search" id="q" type="search" placeholder="filtrar verbos… (ex.: cor, croqui, onboarding)">
+
+  <h2 id="fluxo"><span>01</span> · O fluxo — do zero ao código, com seus gates</h2>
+  <div class="verbos">
+    <div class="vb"><div class="cmd">/atelier</div><p>O wizard completo: herança → direção → DESIGN.md → croqui → peças → varredura → código. <b>Três gates humanos</b> no caminho — nada vira código sem seu aval.</p><div class="ex">"atelier, quero a tela de relatórios do zero"</div></div>
+    <div class="vb"><div class="cmd">/heranca</div><p>Escaneia o projeto (DESIGN.md, tokens, tailwind, componentes) e reporta o que será <b>herdado</b>. Nada existente é sobrescrito — nunca.</p><div class="ex">"o que você herdaria deste projeto?"</div></div>
+    <div class="vb"><div class="cmd">/direcao</div><p>Abre a galeria de estilos (glass, brutal, clay, minimal…) para fixar a linguagem visual. Reabrir <b>invalida os gates seguintes</b>.</p><div class="ex">"quero rever a direção visual"</div></div>
+    <div class="vb"><div class="cmd">/documentar</div><p>Gera ou atualiza o <b>DESIGN.md</b> a partir do código existente — e tem <b>seed mode</b> para projeto vazio (5 perguntas).</p><div class="skill">skill <code>design-md</code></div><div class="ex">"documenta o design system deste repo"</div></div>
+    <div class="vb"><div class="cmd">/croqui <small>&lt;tela&gt;</small><span class="gate">gate</span></div><p>Esboço tosco e barato: estrutura, hierarquia e navegação — <b>zero estética</b>. Errar aqui custa segundos.</p><div class="ex">"croqui da tela de checkout"</div></div>
+    <div class="vb"><div class="cmd">/refinar <small>&lt;tela|peça&gt;</small><span class="gate">gate</span></div><p>Sobe o croqui aprovado para <b>alta fidelidade</b> dentro do DESIGN.md — uma artesã por peça.</p><div class="ex">"refina o hero e a tabela"</div></div>
+    <div class="vb"><div class="cmd">/varrer</div><p>As <b>30 regras anti-slop</b> (A1–A30) + contraste AA <b>calculado</b> + checklist de estados. Violações numeradas peça→regra.</p><div class="ex">"varre essa página antes de eu aprovar"</div></div>
+    <div class="vb"><div class="cmd">/registro <small>&lt;landing|app|docs&gt;</small></div><p>Declara o tipo de tela — as regras mudam de <b>peso</b>: animação decorativa passa em landing, é proibida em dashboard.</p><div class="skill">skill <code>design-register</code></div><div class="ex">"isso é um dashboard, registro app"</div></div>
+  </div>
+
+  <h2 id="dimensoes"><span>02</span> · Dimensões — um ajuste por vez, sem efeito colateral</h2>
+  <div class="verbos">
+    <div class="vb"><div class="cmd">/tipografar</div><p>SÓ fonte, escala e ritmo vertical. Pareamento sai do DESIGN.md, nunca do hábito.</p><div class="ex">"a tipografia está frouxa, tipografa"</div></div>
+    <div class="vb"><div class="cmd">/cor</div><p>SÓ paleta e contraste — com AA <b>validado numericamente</b>, não no olho.</p><div class="ex">"revisa as cores, o cinza tá sumindo"</div></div>
+    <div class="vb"><div class="cmd">/animar</div><p>Micro-interações só com os tokens de motion (100/300/500ms, sem bounce). Em registro APP, decorativa nem entra.</p><div class="ex">"anima as entradas dessa lista"</div></div>
+    <div class="vb"><div class="cmd">/polir</div><p>Alinhamento, espaçamento e os estados esquecidos (hover/focus/empty/loading/error) — <b>sem mudar estrutura</b>.</p><div class="ex">"dá um polish geral antes do deploy"</div></div>
+    <div class="vb"><div class="cmd">/baixar <small>&lt;peça&gt;</small></div><p>Menos borda, menos sombra, menos cor. Hierarquia mais quieta — e <b>quiet ≠ genérico</b>.</p><div class="ex">"esse card tá gritando, baixa ele"</div></div>
+    <div class="vb"><div class="cmd">/subir <small>&lt;peça&gt;</small></div><p>Mais peso via contraste, escala e posição — <b>sem adicionar decoração</b>.</p><div class="ex">"o CTA precisa dominar a dobra, sobe"</div></div>
+  </div>
+
+  <h2 id="especialistas"><span>03</span> · Especialistas — dimensões inteiras com artesã dedicada</h2>
+  <div class="verbos">
+    <div class="vb"><div class="cmd">/criticar <small>&lt;tela&gt;</small></div><p>Crítica <b>pontuada</b>: rubrica Nielsen 0–40 com âncoras, severidade P0–P3 e tendência entre execuções.</p><div class="skill">skill <code>design-critique</code></div><div class="ex">"critica essa tela como um design lead faria"</div></div>
+    <div class="vb"><div class="cmd">/endurecer <small>&lt;tela&gt;</small></div><p>Robustez de produção: i18n/expansão de texto (+30% alemão), overflow, matriz HTTP→UI, duplo-submit, estados extremos.</p><div class="skill">skill <code>hardening-ui</code></div><div class="ex">"endurece esse formulário pra produção"</div></div>
+    <div class="vb"><div class="cmd">/embarcar</div><p>Onboarding e first-run: os 5 tipos de empty state, progressive disclosure, o primeiro minuto do usuário.</p><div class="skill">skill <code>onboarding-first-run</code></div><div class="ex">"desenha o primeiro acesso do usuário novo"</div></div>
+    <div class="vb"><div class="cmd">/impactar <small>&lt;peça&gt;</small></div><p>Momento tecnicamente extraordinário (hero, data-viz) — com <b>gate de 2-3 direções</b> antes de executar e disciplina de fallback.</p><div class="skill">skill <code>high-impact-moments</code></div><div class="ex">"quero um hero de cair o queixo"</div></div>
+    <div class="vb"><div class="cmd">/adaptar <small>&lt;tela&gt;</small></div><p>Responsividade de verdade: navegação em 3 estágios, tabela→cards, pointer/hover queries, print e e-mail 600px.</p><div class="skill">skill <code>responsive-adaptation</code></div><div class="ex">"adapta o dashboard pro celular"</div></div>
+    <div class="vb"><div class="cmd">/clarificar <small>(via ux-copy)</small></div><p>Microcopy que diz consequência: "Cancelar"→"Continuar editando", erros com o-que-houve + como-resolver, undo &gt; confirmação.</p><div class="skill">skill <code>ux-copy</code></div><div class="ex">"os textos dos botões estão confusos"</div></div>
+  </div>
+
+  <h2 id="roster"><span>04</span> · Roster vivo — o que só o Atelier tem</h2>
+  <div class="verbos">
+    <div class="vb"><div class="cmd">/artesao <small>&lt;especialidade&gt;</small></div><p>Convoca uma artesã: <b>descobre</b> a skill no hub, ou <b>improvisa</b> uma efêmera com mandato estreito ("você SÓ faz tabelas densas").</p><div class="ex">"convoca uma artesã de pricing page"</div></div>
+    <div class="vb"><div class="cmd">/cristalizar</div><p>A efêmera acertou? Vira skill <b>permanente</b>: Issue → juiz → PR → seu merge. O roster cresce da demanda real.</p><div class="ex">"cristaliza essa artesã de loading"</div></div>
+    <div class="vb"><div class="cmd">/atelier off</div><p>Desliga o modo. Sem drama, sem rastro.</p><div class="ex">"atelier off"</div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:var(--ink)">Manual de verbos do Atelier</b> · não decore: descreva a intenção que o mestre traduz.</span>
+    <span>Atelier · OverCore</span>
+  </div>
+</footer>
+
+<script>
+document.getElementById('q').addEventListener('input',e=>{
+  const q=e.target.value.trim().toLowerCase();
+  document.querySelectorAll('.vb').forEach(v=>{
+    v.style.display=!q||v.textContent.toLowerCase().includes(q)?'':'none';
+  });
+});
+</script>
+</body>
+</html>
