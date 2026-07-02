@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fila do Curador — OverCore</title>
+<style>
+  /* REFINADO v1 · registro APP · 100% tokens do DESIGN.md — zero valor inventado (A18) */
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --panel-2:#171b26; --line:#242a36;
+    --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d;
+    --ok:#4ade80; --warn:#fbbf24; --err:#f87171;
+    --radius:18px; --radius-s:10px;
+    --dur-micro:100ms; --ease:cubic-bezier(.4,0,.2,1);
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:14px; line-height:1.45; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px; margin:0 auto; padding:28px 24px 64px}
+  code,.mono{font-family:ui-monospace,Consolas,monospace}
+
+  /* header */
+  header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px}
+  .kicker{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  h1{font-size:25px; font-weight:700; letter-spacing:-.02em; margin:2px 0 0}
+  .actions{display:flex; gap:8px}
+  .btn{font:600 13px/1 inherit; padding:9px 14px; border-radius:var(--radius-s); cursor:pointer;
+    transition:background var(--dur-micro) var(--ease); border:1px solid var(--line); background:var(--panel); color:var(--ink)}
+  .btn:hover{background:var(--panel-2)}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#0b0d12}
+  .btn.primary:hover{filter:brightness(1.06)}
+  .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  /* stats */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px}
+  @media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
+  .stat .n{font-size:31px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+  .stat .l{font-size:12px; color:var(--dim); margin-top:2px}
+  .stat .d{font-size:12px; color:var(--dim); margin-top:6px}
+  .stat .d b{color:var(--ok); font-weight:600}
+
+  /* layout principal */
+  .split{display:grid; grid-template-columns:2fr 1fr; gap:12px; align-items:start}
+  @media(max-width:800px){.split{grid-template-columns:1fr}}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden}
+  .card h2{font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--dim);
+    font-weight:600; margin:0; padding:12px 16px; border-bottom:1px solid var(--line)}
+
+  /* fila (tabela) */
+  table{width:100%; border-collapse:collapse; font-size:13px}
+  th{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); font-weight:600;
+    text-align:left; padding:10px 12px; border-bottom:1px solid var(--line)}
+  td{padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tbody tr{transition:background var(--dur-micro) var(--ease)}
+  tbody tr:hover{background:var(--panel-2)}
+  .id{color:var(--dim)}
+  .title{max-width:320px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .origin{font-size:12px; color:var(--dim)}
+  .state{display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600}
+  .state::before{content:""; width:7px; height:7px; border-radius:999px; background:currentColor}
+  .state.ok{color:var(--ok)} .state.warn{color:var(--warn)} .state.err{color:var(--err)}
+  .rowact{font-size:12px; color:var(--ink); text-decoration:none; border-bottom:1px solid var(--accent); padding-bottom:1px}
+
+  /* lateral */
+  .side .card{margin-bottom:12px}
+  .list{list-style:none; margin:0; padding:6px 0}
+  .list li{display:flex; justify-content:space-between; gap:10px; padding:9px 16px; font-size:13px}
+  .list li + li{border-top:1px solid var(--line)}
+  .list .meta{color:var(--dim); font-size:12px; white-space:nowrap}
+  .health .list b{font-variant-numeric:tabular-nums}
+
+  /* peças de estado (artesãs) */
+  .states-strip{margin-top:16px}
+  .states-strip h3{font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--dim); font-weight:600; margin:0 0 10px}
+  .strip{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  @media(max-width:800px){.strip{grid-template-columns:1fr}}
+  .mini{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; min-height:120px}
+  .mini .tag{font-size:12px; text-transform:uppercase; letter-spacing:.14em; color:var(--dim); display:block; margin-bottom:10px}
+  /* vazio */
+  .empty p{margin:4px 0 2px; font-weight:600} .empty span{font-size:12.5px; color:var(--dim)}
+  /* skeleton fiel (loading-states: mesma geometria da tabela) */
+  .sk{position:relative; overflow:hidden; background:var(--panel-2); border-radius:6px; height:11px; margin:9px 0}
+  .sk::after{content:""; position:absolute; inset:0; transform:translateX(-100%);
+    background:linear-gradient(90deg,transparent,rgba(232,235,242,.06),transparent);
+    animation:sh 1.4s var(--ease) infinite}
+  @keyframes sh{to{transform:translateX(100%)}}
+  /* erro */
+  .error p{margin:4px 0 2px; font-weight:600; color:var(--err)} .error span{font-size:12.5px; color:var(--dim)}
+  .error .btn{margin-top:10px; font-size:12px; padding:7px 12px}
+
+  footer{margin-top:26px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="kicker">OverCore · Curadoria</div>
+      <h1>Fila do Curador</h1>
+    </div>
+    <div class="actions">
+      <button class="btn">Atualizar</button>
+      <button class="btn primary">Rodar ciclo</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="n">3</div><div class="l">contribuições abertas</div><div class="d">via Issues + pasta</div></div>
+    <div class="stat"><div class="n">1</div><div class="l">aguardando juiz</div><div class="d">pré-gates ok</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">promovidas (30 dias)</div><div class="d"><b>100%</b> de aprovação</div></div>
+    <div class="stat"><div class="n">1.469</div><div class="l">skills no índice</div><div class="d">+8 do Impeccable</div></div>
+  </div>
+
+  <div class="split">
+    <div class="card">
+      <h2>Fila de contribuições</h2>
+      <table>
+        <thead><tr><th>#</th><th>Título</th><th>Origem</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="id mono">#9</td>
+            <td class="title">Padrão de retry com backoff pra APIs instáveis</td>
+            <td class="origin">pipeline-studio</td>
+            <td><span class="state warn">Aguardando juiz</span></td>
+            <td><a class="rowact" href="#">Avaliar</a></td>
+          </tr>
+          <tr>
+            <td class="id mono">#7</td>
+            <td class="title">loading-states — o ofício das telas de carregamento</td>
+            <td class="origin">atelier</td>
+            <td><span class="state ok">Promovida</span></td>
+            <td><a class="rowact" href="#">Ver PR</a></td>
+          </tr>
+          <tr>
+            <td class="id mono">#4</td>
+            <td class="title">CLAUDE.md carrega só no boot — auto-adoção mid-session</td>
+            <td class="origin">vscode-claude</td>
+            <td><span class="state ok">Promovida</span></td>
+            <td><a class="rowact" href="#">Ver PR</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <h2>Últimas promovidas</h2>
+        <ul class="list">
+          <li><span class="mono">loading-states</span><span class="meta">via #7 · 02/07</span></li>
+          <li><span class="mono">claude-md-mode-activation</span><span class="meta">via #4 · 01/07</span></li>
+        </ul>
+      </div>
+      <div class="card health">
+        <h2>Saúde do hub</h2>
+        <ul class="list">
+          <li>Último ciclo <b class="meta">hoje 14:32</b></li>
+          <li>PRs abertos <b class="meta">1 — #8</b></li>
+          <li>Buracos do roster <b class="meta">11</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="states-strip">
+    <h3>Estados obrigatórios · peças das artesãs</h3>
+    <div class="strip">
+      <div class="mini empty">
+        <span class="tag">vazio · ux-feedback</span>
+        <p>Fila limpa.</p>
+        <span>Nenhuma contribuição aguardando — o padrão agradece.</span>
+      </div>
+      <div class="mini">
+        <span class="tag">carregando · loading-states (skeleton fiel)</span>
+        <div class="sk" style="width:88%"></div>
+        <div class="sk" style="width:72%"></div>
+        <div class="sk" style="width:80%"></div>
+      </div>
+      <div class="mini error">
+        <span class="tag">erro · ux-feedback + ux-copy</span>
+        <p>Não consegui falar com o GitHub.</p>
+        <span>A fila local continua válida — só não está fresca.</span><br>
+        <button class="btn">Tentar de novo</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Refinado v1 · registro APP · tokens do DESIGN.md (herdados)</span>
+    <span>Atelier · OverCore</span>
+  </footer>
+</div>
+</body>
+</html>
