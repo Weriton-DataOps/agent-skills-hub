@@ -106,6 +106,12 @@ Cada comando opera UMA dimensão, com escopo fechado — `/tipografar` não mexe
 - `/subir <peca>` — mais peso na hierarquia via contraste/escala/posição — sem adicionar decoração.
 - `/varrer` — 30 regras anti-slop (A1-A30) + contraste calculado + checklist de estados; violações numeradas peça→regra.
 - `/registro <landing|app|docs>` — declara ou troca o registro da tela, ajustando o peso das regras.
+- `/criticar <tela>` — crítica pontuada via skill `design-critique` (rubrica Nielsen 0-40, P0-P3, tendência entre execuções).
+- `/endurecer <tela>` — robustez de produção via `hardening-ui` (i18n/expansão, overflow, matriz HTTP→UI, duplo-submit).
+- `/embarcar` — onboarding e first-run via `onboarding-first-run` (5 tipos de empty state, progressive disclosure).
+- `/impactar <peça>` — momento tecnicamente extraordinário via `high-impact-moments` (gate de 2-3 direções antes de executar).
+- `/adaptar <tela>` — responsividade via `responsive-adaptation` (nav 3 estágios, tabela→cards, print, email 600px).
+- `/documentar` — gera/atualiza o DESIGN.md a partir do código existente via `design-md` (seed mode para projeto vazio).
 
 ## 9. Economia e amarras ao pipeline
 
