@@ -1,4 +1,6 @@
-# O Escritório — planejamento do ambiente de produção vivo
+# A Sede da OverCore — planejamento do ambiente de produção vivo
+
+> **Decisão do dono:** OverCore é **a empresa**. A cena é a sede dela; os agentes são o time contratado.
 
 > **Visão:** uma cena 3D (no navegador — dentro do VS Code via Simple Browser ou fora dele)
 > mostrando o escritório do OverCore com os agentes trabalhando. Quando um agente é acionado
@@ -30,7 +32,7 @@ escritorio.html (Three.js do vendor/)
   edição de código → Code · prompt do usuário → Router acende · fetch externo/research → Researcher.
 - **Onde ver:** navegador normal, ou painel do VS Code (Simple Browser aponta pro localhost).
 
-## 2. O cenário — "Estúdio OverCore"
+## 2. O cenário — a sede da OverCore
 
 Uma **plataforma flutuante dark-premium** (paleta da casa: grafite #0b0d12–#171b26, acentos lima),
 vista isométrica-orbital (câmera arrastável, como no experimento 001). Estações:
@@ -45,8 +47,8 @@ vista isométrica-orbital (câmera arrastável, como no experimento 001). Estaç
 | **Quadro do Plan** | quadro branco + post-its flutuantes | post-it reorganiza sozinho |
 | **Bancada da Validação** | bancada com semáforo verde/vermelho + prensa de teste | semáforo em amarelo repousando |
 | **Observatório do Researcher** | telescópio/parabólica na borda, apontado "pra fora" | parabólica gira devagar procurando sinal |
-| **Núcleo central** | um cristal de energia (o "core" do estúdio) pulsando | pulso lento; acende com atividade geral |
-| **Placar** | letreiro com contador de skills do hub (dado real do índice) | contador vivo |
+| **Núcleo central** | um cristal de energia (o "core" da empresa) pulsando | pulso lento; acende com atividade geral |
+| **Letreiro da empresa** | "OverCore" em 3D no alto da sede + contador de skills do hub (dado real) | contador vivo; letreiro com brilho sutil |
 
 ## 3. Os personagens — a família do Core
 
@@ -114,7 +116,7 @@ Máquina de estados por personagem (transições suaves, nada de teleporte):
 2. **Core = Router** (maestro na torre) ou Core = mascote livre circulando (e o Router é outro)?
 3. **Som** — desligado por padrão com toggle, ou sem som nunca?
 4. **Tom visual** — sóbrio-premium (como o 001) ou mais cartoon (olhos maiores, squash forte)?
-5. **Nome do produto** — "Escritório OverCore"? "Estúdio"? "A Sala"?
+5. ~~Nome do produto~~ — **decidido: a sede da OverCore** (OverCore é a empresa; a cena é o QG dela).
 
 ## 7. Regras herdadas (inegociáveis)
 - Código no repo, Three.js do `vendor/`, zero CDN.
