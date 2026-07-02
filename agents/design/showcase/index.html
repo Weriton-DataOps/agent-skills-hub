@@ -62,9 +62,7 @@
   .hero::before{content:""; position:absolute; inset:0; pointer-events:none; opacity:.5;
     background-image:radial-gradient(rgba(139,147,167,.14) 1px, transparent 1px); background-size:28px 28px;
     mask-image:radial-gradient(720px 480px at 30% 40%, #000 0%, transparent 75%)}
-  .hero .wrap{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; position:relative; z-index:1}
-  #hero3d{position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0; transition:opacity 1.2s var(--ease)}
-  #hero3d.on{opacity:1}
+  .hero .wrap{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center}
   @media(max-width:920px){.hero .wrap{grid-template-columns:1fr} .hero{padding-top:110px}}
   .hero h1{font-size:clamp(40px,6vw,68px); font-weight:800; letter-spacing:-.035em; line-height:1.02; margin:16px 0 18px; text-wrap:balance}
   .hero h1 em{font-style:normal; color:var(--accent)}
@@ -247,7 +245,6 @@
 
 <!-- HERO -->
 <section class="hero" id="top">
-  <canvas id="hero3d" aria-hidden="true"></canvas>
   <div class="wrap">
     <div>
       <div class="kicker rv"><span class="live" style="display:inline-block; margin-right:8px"></span>Atelier · o ateliê de design do OverCore</div>
@@ -449,84 +446,6 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* reveals */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target)}}),{threshold:.18});
 document.querySelectorAll('.rv,.step,.specimen').forEach(el=>io.observe(el));
-
-/* hero 3D — malha viva (fundo) + objeto-assinatura (three.js vendorizado, lazy) */
-(function(){
-  const cv=document.getElementById('hero3d'); if(!cv)return;
-  const hero=cv.parentElement;
-  function boot(){
-    const s=document.createElement('script');
-    s.src='vendor/three.min.js';
-    s.onload=init; s.onerror=()=>{}; // sem 3D, o hero continua digno
-    document.head.appendChild(s);
-  }
-  ('requestIdleCallback' in window)?requestIdleCallback(boot,{timeout:2500}):setTimeout(boot,900);
-
-  function init(){
-    let renderer;
-    try{ renderer=new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true}) }catch(e){ return }
-    const W=()=>hero.clientWidth, H=()=>hero.clientHeight;
-    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-    renderer.setSize(W(),H(),false);
-    const scene=new THREE.Scene();
-    const cam=new THREE.PerspectiveCamera(50, W()/H(), .1, 80);
-    cam.position.set(0, 1.2, 10);
-
-    /* C · malha viva — tapete de pontos ondulando no terco inferior */
-    const COLS=110, ROWS=46, SP=0.34;
-    const geo=new THREE.BufferGeometry();
-    const pos=new Float32Array(COLS*ROWS*3);
-    let k=0;
-    for(let i=0;i<COLS;i++)for(let j=0;j<ROWS;j++){
-      pos[k++]=(i-COLS/2)*SP; pos[k++]=0; pos[k++]=(j-ROWS/2)*SP;
-    }
-    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-    const pts=new THREE.Points(geo, new THREE.PointsMaterial({color:0x39435a, size:0.045, transparent:true, opacity:.85}));
-    pts.position.set(0,-2.6,0); pts.rotation.x=-0.12;
-    scene.add(pts);
-
-    /* B · objeto-assinatura — gema low-poly com arestas na cor da casa */
-    const gem=new THREE.Group();
-    const core=new THREE.Mesh(
-      new THREE.IcosahedronGeometry(1.15,0),
-      new THREE.MeshStandardMaterial({color:0x141824, metalness:.9, roughness:.28, flatShading:true}));
-    const edges=new THREE.LineSegments(
-      new THREE.EdgesGeometry(core.geometry),
-      new THREE.LineBasicMaterial({color:0xc8ff3d, transparent:true, opacity:.5}));
-    gem.add(core, edges);
-    gem.position.set(3.4, 2.3, 0.5);
-    scene.add(gem);
-    scene.add(new THREE.AmbientLight(0xffffff,.45));
-    const key=new THREE.DirectionalLight(0xc8ff3d,.7); key.position.set(4,6,6); scene.add(key);
-    const fill=new THREE.DirectionalLight(0x516cb1,.5); fill.position.set(-5,2,4); scene.add(fill);
-
-    let mx=0,my=0;
-    hero.addEventListener('pointermove',e=>{
-      const r=hero.getBoundingClientRect();
-      mx=(e.clientX-r.left)/r.width-.5; my=(e.clientY-r.top)/r.height-.5;
-    },{passive:true});
-    addEventListener('resize',()=>{cam.aspect=W()/H(); cam.updateProjectionMatrix(); renderer.setSize(W(),H(),false)});
-
-    const p=geo.attributes.position;
-    function paint(tms){
-      const tt=tms*0.00045;
-      let k2=1;
-      for(let i=0;i<COLS;i++)for(let j=0;j<ROWS;j++){
-        const x=(i-COLS/2)*SP, z=(j-ROWS/2)*SP;
-        p.array[k2]=Math.sin(x*0.55+tt*2.2)*0.32+Math.cos(z*0.7+tt*1.6+mx*2)*0.26;
-        k2+=3;
-      }
-      p.needsUpdate=true;
-      gem.rotation.y=tt*0.9; gem.rotation.x=0.35+my*0.35; gem.rotation.z=mx*0.25;
-      gem.position.y=2.3+Math.sin(tt*1.4)*0.14;
-      cam.position.x=mx*0.5; cam.lookAt(0,0.4,0);
-      renderer.render(scene,cam);
-    }
-    cv.classList.add('on');
-    if(reduced){ paint(1200); return }        // um quadro estático, sem loop
-    (function loop(tms){ paint(tms||0); requestAnimationFrame(loop) })(0);
-  }
-})();
 
 /* hero morph — arraste (range invisível) + drift automático até 1ª interação */
 const morph=$('#morph'), range=morph.querySelector('input');
