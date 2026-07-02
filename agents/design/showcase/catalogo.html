@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo — Atelier · OverCore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Bebas+Neue&family=Caveat:wght@600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --panel-2:#171b26; --line:#242a36;
+    --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d;
+    --radius:18px; --radius-s:10px;
+    --dur-micro:100ms; --dur-trans:300ms; --dur-enter:500ms; --ease:cubic-bezier(.4,0,.2,1);
+    --snap:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  section{padding:84px 24px}
+  .wrap{max-width:1160px; margin:0 auto}
+  .kicker{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  h2{font-size:clamp(26px,3.6vw,38px); font-weight:800; letter-spacing:-.02em; margin:12px 0 8px; text-wrap:balance}
+  .lead{color:var(--dim); max-width:64ch; font-size:15.5px; margin:0}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}}
+
+  nav{position:fixed; top:0; left:0; right:0; z-index:60; backdrop-filter:blur(10px);
+    background:rgba(11,13,18,.8); border-bottom:1px solid var(--line)}
+  nav .bar{max-width:1160px; margin:0 auto; padding:13px 24px; display:flex; justify-content:space-between; align-items:center}
+  .logo{font-weight:800; font-size:15px; text-decoration:none}
+  .logo b{color:var(--accent)}
+  nav .links{display:flex; gap:18px; font-size:13px}
+  nav .links a{color:var(--dim); text-decoration:none; transition:color var(--dur-micro) var(--ease)}
+  nav .links a:hover{color:var(--ink)}
+
+  header.hero{padding:130px 24px 30px}
+  header.hero h1{font-size:clamp(32px,5vw,52px); font-weight:800; letter-spacing:-.03em; line-height:1.04; margin:14px 0 12px; text-wrap:balance}
+  header.hero h1 em{font-style:normal; color:var(--accent)}
+  header.hero p{color:var(--dim); max-width:58ch; font-size:16px}
+
+  /* ---- controles (estilo + cor) ---- */
+  .controls{display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin:26px 0 20px;
+    border:1px solid var(--line); background:var(--panel); border-radius:var(--radius); padding:12px 14px}
+  .controls .grp{display:flex; flex-wrap:wrap; gap:7px; align-items:center}
+  .controls .cap{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-weight:700; margin-right:4px}
+  .pk{font:600 12.5px/1 inherit; padding:8px 13px; border-radius:999px; cursor:pointer;
+    border:1px solid var(--line); background:transparent; color:var(--dim); transition:all var(--dur-micro) var(--ease)}
+  .pk:hover{color:var(--ink); border-color:#31394a}
+  .pk[aria-pressed=true]{background:var(--accent); border-color:var(--accent); color:#0b0d12}
+  .sw{width:26px; height:26px; border-radius:999px; cursor:pointer; border:2px solid transparent;
+    transition:transform var(--dur-micro) var(--ease), border-color var(--dur-micro) var(--ease)}
+  .sw:hover{transform:scale(1.12)}
+  .sw[aria-pressed=true]{border-color:var(--ink)}
+
+  /* ---- temas (6 linguagens, vars compartilhadas) ---- */
+  .th{transition:background var(--dur-trans) var(--ease)}
+  .th-minimal{--cBg:#faf9f7; --cCard:#fff; --cBorder:1px solid #e6e2db; --cR:6px;
+    --cShadow:0 1px 3px rgba(0,0,0,.06); --cInk:#1a1a1a; --cDim:#8a857c; --cTrack:#eee9e1; --cBlur:none}
+  .th-glass{--cBg:linear-gradient(135deg,#4638a8,#a83a7e 55%,#c77b3f); --cCard:rgba(255,255,255,.13);
+    --cBorder:1px solid rgba(255,255,255,.36); --cR:18px; --cShadow:0 8px 26px rgba(0,0,0,.24);
+    --cInk:#fff; --cDim:rgba(255,255,255,.72); --cTrack:rgba(255,255,255,.22); --cBlur:blur(14px) saturate(1.35)}
+  .th-brutal{--cBg:#a6f0c6; --cCard:#fff; --cBorder:3px solid #111; --cR:4px; --cShadow:6px 6px 0 #111;
+    --cInk:#111; --cDim:#555; --cTrack:#efefef; --cBlur:none}
+  .th-clay{--cBg:linear-gradient(160deg,#dfe6ff,#f4e8ff); --cCard:#eef1ff; --cBorder:1px solid transparent; --cR:24px;
+    --cShadow:8px 8px 18px #c3c9e6,-7px -7px 16px #fff; --cInk:#4a4e69; --cDim:#7a7f9c; --cTrack:#dde1f7; --cBlur:none}
+  .th-skeu{--cBg:linear-gradient(180deg,#2b2f36,#15171b); --cCard:linear-gradient(180deg,#3a3f47,#23272e);
+    --cBorder:1px solid transparent; --cR:12px; --cShadow:inset 0 1px 0 #5a616c, inset 0 -2px 5px #0a0c0f, 0 10px 20px rgba(0,0,0,.5);
+    --cInk:#e8ebf2; --cDim:#8b93a7; --cTrack:#1a1d23; --cBlur:none}
+  .th-over{--cBg:#0e1118; --cCard:#12151d; --cBorder:1px solid #242a36; --cR:18px;
+    --cShadow:0 6px 18px rgba(0,0,0,.3); --cInk:#e8ebf2; --cDim:#8b93a7; --cTrack:#171b26; --cBlur:none}
+  .canvas{background:var(--cBg); border:1px solid var(--line); border-radius:var(--radius); padding:22px;
+    --acc:var(--accDefault,#c8ff3d); --accInk:var(--accInkDefault,#0b0d12)}
+
+  /* ============ CARTÕES (10) ============ */
+  .cards-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px}
+  .cd{position:relative; background:var(--cCard); border:var(--cBorder); border-radius:var(--cR);
+    box-shadow:var(--cShadow); color:var(--cInk); padding:20px; min-height:210px;
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur);
+    display:flex; flex-direction:column; overflow:hidden}
+  .cd h4{margin:0 0 6px; font-size:16px; letter-spacing:-.01em}
+  .cd p{margin:0; font-size:13px; color:var(--cDim); line-height:1.5}
+  .cd .tag{position:absolute; top:14px; right:14px; font-size:10.5px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--cDim)}
+  .cd .foot{margin-top:auto; padding-top:14px; font-size:12.5px; font-weight:600; color:var(--acc)}
+  .cdlbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .cdlbl b{color:var(--ink); font-weight:600}
+  /* 1 lift */
+  .cd-lift{transition:transform var(--dur-trans) var(--snap), box-shadow var(--dur-trans) var(--ease)}
+  .cd-lift:hover{transform:translateY(-8px)}
+  /* 2 tilt 3d */
+  .cd-tilt{transition:transform 150ms linear; transform-style:preserve-3d}
+  .cd-tilt .foot{transform:translateZ(24px)}
+  /* 3 flip */
+  .cd-flipwrap{perspective:1100px; min-height:210px; position:relative}
+  .cd-flip{position:absolute; inset:0; transition:transform .7s var(--snap); transform-style:preserve-3d}
+  .cd-flipwrap:hover .cd-flip{transform:rotateY(180deg)}
+  .cd-face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden}
+  .cd-face.back{transform:rotateY(180deg); display:flex; flex-direction:column; justify-content:center; text-align:center}
+  .cd-face.back .foot{margin:14px auto 0}
+  /* 4 reveal */
+  .cd-reveal{padding:0}
+  .cd-reveal img{width:100%; height:210px; object-fit:cover; display:block; transition:transform .5s var(--snap)}
+  .cd-reveal:hover img{transform:scale(1.06)}
+  .cd-reveal .rv-body{position:absolute; inset:auto 0 0 0; padding:16px 18px;
+    background:linear-gradient(to top, rgba(8,10,14,.88), rgba(8,10,14,.4) 70%, transparent); color:#fff;
+    transform:translateY(38px); transition:transform .45s var(--snap)}
+  .cd-reveal:hover .rv-body{transform:none}
+  .cd-reveal .rv-body p{color:rgba(255,255,255,.75); opacity:0; transition:opacity .35s var(--ease) .1s}
+  .cd-reveal:hover .rv-body p{opacity:1}
+  /* 5 border-draw */
+  .cd-draw::before,.cd-draw::after{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    border:2px solid transparent}
+  .cd-draw:hover::before{border-top-color:var(--acc); border-right-color:var(--acc);
+    transition:border-top-color 0s, width .3s var(--ease); animation:drawA .5s var(--ease) forwards}
+  .cd-draw:hover::after{animation:drawB .5s var(--ease) .25s forwards}
+  @keyframes drawA{from{clip-path:inset(0 100% 100% 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes drawB{from{clip-path:inset(100% 0 0 100%); border-bottom-color:var(--acc); border-left-color:var(--acc)}
+    to{clip-path:inset(0 0 0 0); border-bottom-color:var(--acc); border-left-color:var(--acc)}}
+  /* 6 spotlight */
+  .cd-spot::before{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0;
+    background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%), color-mix(in srgb, var(--acc) 16%, transparent), transparent 65%);
+    transition:opacity var(--dur-trans) var(--ease)}
+  .cd-spot:hover::before{opacity:1}
+  /* 7 expand */
+  .cd-exp .more{display:grid; grid-template-rows:0fr; transition:grid-template-rows .45s var(--snap)}
+  .cd-exp .more>div{overflow:hidden}
+  .cd-exp:hover .more{grid-template-rows:1fr}
+  .cd-exp .more p{padding-top:10px}
+  /* 8 underline-grow */
+  .cd-ul .bar{height:3px; width:34px; background:var(--acc); border-radius:3px; margin-bottom:14px;
+    transition:width .45s var(--snap)}
+  .cd-ul:hover .bar{width:100%}
+  /* 9 skeleton→conteudo (loop) */
+  .cd-skel .real{opacity:0; transition:opacity .4s var(--ease)}
+  .cd-skel.loaded .real{opacity:1}
+  .cd-skel .bones{position:absolute; inset:20px; opacity:1; transition:opacity .4s var(--ease)}
+  .cd-skel.loaded .bones{opacity:0}
+  .cd-skel .bn{position:relative; overflow:hidden; background:var(--cTrack); border-radius:6px; height:12px; margin:9px 0}
+  .cd-skel .bn::after{content:""; position:absolute; inset:0; transform:translateX(-100%);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cbsh 1.3s var(--ease) infinite}
+  @keyframes cbsh{to{transform:translateX(100%)}}
+  /* 10 notificação (loop) */
+  .cd-notif{justify-content:center}
+  .cd-notif .toast{display:flex; align-items:center; gap:12px; background:var(--cTrack); border-radius:calc(var(--cR)*.6);
+    padding:12px 14px; opacity:0; transform:translateY(14px); animation:toastIn 4.2s var(--ease) infinite}
+  .cd-notif .toast:nth-child(2){animation-delay:1.4s}
+  .cd-notif .toast+.toast{margin-top:10px}
+  @keyframes toastIn{5%,60%{opacity:1; transform:none}0%,72%,100%{opacity:0; transform:translateY(14px)}}
+  .cd-notif .dotn{width:34px; height:34px; border-radius:999px; background:var(--acc); color:var(--accInk);
+    display:grid; place-items:center; font-weight:800; font-size:14px; flex:none}
+  .cd-notif .toast b{display:block; font-size:13px} .cd-notif .toast span{font-size:12px; color:var(--cDim)}
+
+  footer{border-top:1px solid var(--line); padding:34px 24px; margin-top:30px}
+  footer .wrap{display:flex; justify-content:space-between; gap:12px; font-size:13px; color:var(--dim); flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="bar">
+    <a class="logo" href="index.html">Atelier<b>.</b> <span style="color:var(--dim); font-weight:500; font-size:13px">catálogo</span></a>
+    <div class="links">
+      <a href="#cartoes">Cartões</a><a href="#botoes">Botões</a><a href="#textos">Textos</a>
+      <a href="index.html#fotos">Fotos</a><a href="index.html#loading">Loading</a>
+      <a href="index.html" style="color:var(--accent)">← showcase</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="kicker">Atelier · catálogo de componentes</div>
+  <h1>Escolha a peça. Troque a roupa. <em>Leve a receita.</em></h1>
+  <p>Cada componente abaixo troca de <b style="color:var(--ink)">linguagem</b> e de <b style="color:var(--ink)">cor de acento</b> ao vivo — a estrutura nunca muda, só a pele. É o catálogo que alimenta o <span style="color:var(--accent)">/overcore</span>.</p>
+</header>
+
+<!-- ============ CARTÕES ============ -->
+<section id="cartoes" style="padding-top:30px">
+  <div class="wrap">
+    <div class="kicker">01 · Cartões</div>
+    <h2>Dez cartões, dez comportamentos.</h2>
+    <p class="lead">Hover em cada um. O 2 segue seu mouse em 3D, o 3 vira, o 9 carrega em loop.</p>
+
+    <div class="controls" data-target="cv-cards">
+      <div class="grp"><span class="cap">Estilo</span>
+        <button class="pk th-pk" aria-pressed="false" data-th="over">OverCore</button>
+        <button class="pk th-pk" aria-pressed="true"  data-th="minimal">Minimal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="glass">Glass</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="brutal">Brutal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="clay">Clay</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+    </div>
+
+    <div class="canvas th th-minimal" id="cv-cards">
+      <div class="cards-grid">
+
+        <div>
+          <div class="cd cd-lift"><span class="tag">01</span><h4>Hover lift</h4><p>O clássico honesto: sobe 8px no ease-out da casa e volta sem drama.</p><div class="foot">Ver detalhes →</div></div>
+          <div class="cdlbl"><b>Lift</b><span>listas, produtos</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-tilt" data-tilt><span class="tag">02</span><h4>Tilt 3D</h4><p>Perspectiva que segue o cursor — profundidade sem sombra falsa.</p><div class="foot">Segure o mouse aqui</div></div>
+          <div class="cdlbl"><b>Tilt 3D</b><span>destaques, capas</span></div>
+        </div>
+
+        <div>
+          <div class="cd-flipwrap">
+            <div class="cd-flip">
+              <div class="cd cd-face"><span class="tag">03</span><h4>Flip</h4><p>Frente com o resumo. Passe o mouse pra virar a carta.</p><div class="foot">vire-me</div></div>
+              <div class="cd cd-face back"><h4>O verso.</h4><p>Specs, preço, o que não coube na frente.</p><div class="foot">Voltar ←</div></div>
+            </div>
+          </div>
+          <div class="cdlbl"><b>Flip</b><span>frente/verso, specs</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-reveal"><img src="https://picsum.photos/id/1018/640/430" alt="Montanha" loading="lazy">
+            <div class="rv-body"><h4 style="color:#fff">Reveal sobre imagem</h4><p>A descrição sobe junto com sua curiosidade.</p></div>
+          </div>
+          <div class="cdlbl"><b>Reveal</b><span>galerias, cases</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-draw"><span class="tag">05</span><h4>Border draw</h4><p>A borda se desenha em dois tempos ao redor do card — tinta na cor de acento.</p><div class="foot">Repare no contorno</div></div>
+          <div class="cdlbl"><b>Border draw</b><span>seleção, foco</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-spot" data-spot><span class="tag">06</span><h4>Spotlight</h4><p>Um facho da cor de acento segue o mouse pelo card. Discreto, caro.</p><div class="foot">Passeie por aqui</div></div>
+          <div class="cdlbl"><b>Spotlight</b><span>dark UIs, feature grids</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-exp"><span class="tag">07</span><h4>Expansível</h4><p>O essencial sempre visível.</p>
+            <div class="more"><div><p>O resto expande no hover — via grid-rows, sem animar height na marra. Cabe changelog, specs, contexto.</p></div></div>
+            <div class="foot">Hover pra expandir</div></div>
+          <div class="cdlbl"><b>Expansível</b><span>FAQs, changelogs</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-ul"><div class="bar"></div><span class="tag">08</span><h4>Underline grow</h4><p>O traço de acento cresce até virar régua do card inteiro. Hierarquia em movimento.</p><div class="foot">Cresce comigo</div></div>
+          <div class="cdlbl"><b>Underline</b><span>artigos, categorias</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-skel" data-skel><span class="tag">09</span>
+            <div class="bones"><div class="bn" style="width:52%"></div><div class="bn" style="width:88%"></div><div class="bn" style="width:74%"></div><div class="bn" style="width:40%; margin-top:26px"></div></div>
+            <div class="real"><h4>Skeleton → conteúdo</h4><p>Carrega com a geometria exata e troca sem pulo — zero CLS, como manda a skill loading-states.</p><div class="foot">Recarrega em loop</div></div>
+          </div>
+          <div class="cdlbl"><b>Skeleton</b><span>qualquer card com fetch</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-notif"><span class="tag">10</span>
+            <div class="toast"><div class="dotn">✓</div><div><b>Reserva confirmada</b><span>Semana 32 · Serra Azul</span></div></div>
+            <div class="toast"><div class="dotn">2</div><div><b>Novos comunicados</b><span>há 5 minutos</span></div></div>
+          </div>
+          <div class="cdlbl"><b>Notificação</b><span>toasts, feeds ao vivo</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOTÕES (20) ============ -->
+<style>
+  .btns-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(252px,1fr)); gap:14px}
+  .bf{background:var(--cCard); border:var(--cBorder); border-radius:var(--cR); box-shadow:var(--cShadow);
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur);
+    min-height:132px; display:grid; place-items:center; padding:20px; position:relative; overflow:hidden}
+  .bflbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .bflbl b{color:var(--ink); font-weight:600}
+  .bt{font:700 13.5px/1 Inter,system-ui,sans-serif; padding:12px 20px; border-radius:calc(var(--cR)*.6);
+    cursor:pointer; border:none; position:relative; overflow:hidden;
+    transition:transform var(--dur-micro) var(--ease), filter var(--dur-micro) var(--ease),
+      background var(--dur-trans) var(--ease), color var(--dur-trans) var(--ease), box-shadow var(--dur-trans) var(--ease)}
+  .bt:active{transform:translateY(1px)}
+  .bt:focus-visible{outline:2px solid var(--acc); outline-offset:2px}
+  /* 1 sólido */
+  .bt-solid{background:var(--acc); color:var(--accInk)}
+  .bt-solid:hover{filter:brightness(1.08)}
+  /* 2 outline→fill */
+  .bt-out{background:transparent; color:var(--cInk); box-shadow:inset 0 0 0 2px var(--acc)}
+  .bt-out:hover{background:var(--acc); color:var(--accInk)}
+  /* 3 ghost */
+  .bt-ghost{background:transparent; color:var(--cInk)}
+  .bt-ghost:hover{background:color-mix(in srgb, var(--acc) 16%, transparent)}
+  /* 4 ícone desliza */
+  .bt-ico{background:var(--acc); color:var(--accInk); display:inline-flex; align-items:center; gap:8px}
+  .bt-ico i{font-style:normal; transition:transform var(--dur-trans) var(--snap)}
+  .bt-ico:hover i{transform:translateX(5px)}
+  /* 5 shine */
+  .bt-shine{background:var(--acc); color:var(--accInk)}
+  .bt-shine::after{content:""; position:absolute; inset:0; transform:translateX(-110%) skewX(-18deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent); width:60%}
+  .bt-shine:hover::after{animation:btshine .7s var(--ease)}
+  @keyframes btshine{to{transform:translateX(260%) skewX(-18deg)}}
+  /* 6 border draw */
+  .bt-draw{background:transparent; color:var(--cInk)}
+  .bt-draw::before{content:""; position:absolute; inset:0; border-radius:inherit; border:2px solid var(--acc);
+    clip-path:inset(0 100% 0 0); transition:clip-path .45s var(--snap)}
+  .bt-draw:hover::before{clip-path:inset(0 0 0 0)}
+  /* 7 underline */
+  .bt-und{background:none; color:var(--cInk); padding:8px 2px; border-radius:0}
+  .bt-und::after{content:""; position:absolute; left:0; right:100%; bottom:2px; height:2px; background:var(--acc);
+    transition:right .35s var(--snap)}
+  .bt-und:hover::after{right:0}
+  /* 8 loading morph */
+  .bt-load{background:var(--acc); color:var(--accInk); min-width:150px}
+  .bt-load .sp{display:none; width:13px; height:13px; border-radius:999px; border:2px solid color-mix(in srgb, var(--accInk) 35%, transparent);
+    border-top-color:var(--accInk); animation:btsp .8s linear infinite; vertical-align:-2px; margin-right:8px}
+  @keyframes btsp{to{transform:rotate(360deg)}}
+  .bt-load.busy .sp{display:inline-block}
+  /* 9 shake */
+  .bt-shake{background:transparent; color:#f87171; box-shadow:inset 0 0 0 2px #f87171}
+  .bt-shake.err{animation:btshk .4s var(--ease)}
+  @keyframes btshk{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  /* 10 ripple */
+  .bt-rip{background:var(--acc); color:var(--accInk)}
+  .bt-rip .rp{position:absolute; border-radius:999px; background:rgba(255,255,255,.45); transform:scale(0);
+    animation:btrp .55s var(--ease) forwards; pointer-events:none}
+  @keyframes btrp{to{transform:scale(3.4); opacity:0}}
+  /* 11 magnético */
+  .bt-mag{background:var(--acc); color:var(--accInk); transition:transform 140ms var(--ease)}
+  /* 12 split label */
+  .bt-split{background:var(--acc); color:var(--accInk); height:41px; padding:0 20px}
+  .bt-split .lbls{display:block; overflow:hidden; height:41px}
+  .bt-split .lbls span{display:flex; align-items:center; justify-content:center; height:41px;
+    transition:transform .35s var(--snap)}
+  .bt-split:hover .lbls span{transform:translateY(-41px)}
+  /* 13 conic border (espécime) */
+  .bt-conic{background:var(--cCard); color:var(--cInk); border-radius:999px}
+  .bt-conic::before{content:""; position:absolute; inset:-2px; border-radius:999px; padding:2px; z-index:-1;
+    background:conic-gradient(from var(--cba,0deg), var(--acc), transparent 30%, var(--acc) 60%, transparent 90%, var(--acc));
+    animation:btconic 3s linear infinite}
+  @property --cba{syntax:'<angle>'; initial-value:0deg; inherits:false}
+  @keyframes btconic{to{--cba:360deg}}
+  /* 14 3D pressed */
+  .bt-3d{background:var(--acc); color:var(--accInk);
+    box-shadow:0 5px 0 color-mix(in srgb, var(--acc) 55%, #000), 0 8px 14px rgba(0,0,0,.3)}
+  .bt-3d:active{transform:translateY(4px); box-shadow:0 1px 0 color-mix(in srgb, var(--acc) 55%, #000), 0 2px 5px rgba(0,0,0,.3)}
+  /* 15 toggle */
+  .tgl{width:56px; height:30px; border-radius:999px; background:var(--cTrack); border:none; position:relative; cursor:pointer;
+    transition:background var(--dur-trans) var(--ease)}
+  .tgl::after{content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:999px; background:#fff;
+    box-shadow:0 1px 4px rgba(0,0,0,.35); transition:transform var(--dur-trans) var(--snap)}
+  .tgl[aria-pressed=true]{background:var(--acc)}
+  .tgl[aria-pressed=true]::after{transform:translateX(26px)}
+  /* 16 segmented */
+  .seg{display:inline-flex; position:relative; background:var(--cTrack); border-radius:999px; padding:4px}
+  .seg .ind{position:absolute; top:4px; bottom:4px; border-radius:999px; background:var(--acc); transition:left .3s var(--snap), width .3s var(--snap)}
+  .seg button{position:relative; z-index:1; background:none; border:none; font:600 12.5px/1 Inter,sans-serif;
+    color:var(--cDim); padding:8px 16px; cursor:pointer; border-radius:999px; transition:color var(--dur-trans) var(--ease)}
+  .seg button[aria-pressed=true]{color:var(--accInk)}
+  /* 17 FAB */
+  .fabwrap{position:relative; height:70px; display:grid; place-items:center}
+  .fab{width:46px; height:46px; border-radius:999px; background:var(--acc); color:var(--accInk); border:none;
+    font-size:20px; font-weight:800; cursor:pointer; transition:transform .35s var(--snap)}
+  .fabwrap.open .fab{transform:rotate(45deg)}
+  .fabwrap .mini{position:absolute; width:34px; height:34px; border-radius:999px; background:var(--cCard); border:var(--cBorder);
+    color:var(--cInk); display:grid; place-items:center; font-size:13px; cursor:pointer; opacity:0; transform:scale(.4); pointer-events:none;
+    transition:transform .3s var(--snap), opacity .3s var(--ease)}
+  .fabwrap.open .mini{opacity:1; transform:scale(1); pointer-events:auto}
+  .fabwrap .m1{left:calc(50% - 76px)} .fabwrap .m2{top:-8px} .fabwrap .m3{left:calc(50% + 42px)}
+  /* 18 copy */
+  .bt-copy{background:transparent; color:var(--cInk); box-shadow:inset 0 0 0 1.5px var(--cDim); font-family:"JetBrains Mono",monospace; font-size:12.5px}
+  .bt-copy.ok{box-shadow:inset 0 0 0 1.5px var(--acc); color:var(--acc)}
+  /* 19 stepper */
+  .step2{display:inline-flex; align-items:center; gap:0; background:var(--cTrack); border-radius:calc(var(--cR)*.6); overflow:hidden}
+  .step2 button{width:38px; height:38px; border:none; background:transparent; color:var(--cInk); font-size:17px; font-weight:700; cursor:pointer;
+    transition:background var(--dur-micro) var(--ease)}
+  .step2 button:hover{background:color-mix(in srgb, var(--acc) 22%, transparent)}
+  .step2 output{min-width:44px; text-align:center; font:700 15px/1 Inter,sans-serif; color:var(--cInk); font-variant-numeric:tabular-nums}
+  /* 20 download progress */
+  .bt-dl{background:var(--cTrack); color:var(--cInk); min-width:170px; position:relative}
+  .bt-dl .fill{position:absolute; inset:0; background:var(--acc); transform:scaleX(0); transform-origin:left; border-radius:inherit}
+  .bt-dl .lb{position:relative; z-index:1; transition:color var(--dur-trans) var(--ease)}
+  .bt-dl.going .fill{transition:transform 2.2s var(--ease); transform:scaleX(1)}
+  .bt-dl.going .lb,.bt-dl.done .lb{color:var(--accInk)}
+  .bt-dl.done .fill{transform:scaleX(1)}
+</style>
+<section id="botoes" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker">02 · Botões</div>
+    <h2>Vinte botões. Todos com resposta.</h2>
+    <p class="lead">Metade reage ao hover, metade ao clique — teste o 8 (carrega), o 10 (ripple), o 17 (FAB) e o 20 (download). O 13 é espécime intencional: borda viva só quando eleita.</p>
+
+    <div class="controls" data-target="cv-btns">
+      <div class="grp"><span class="cap">Estilo</span>
+        <button class="pk th-pk" aria-pressed="true"  data-th="over">OverCore</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="minimal">Minimal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="glass">Glass</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="brutal">Brutal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="clay">Clay</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+    </div>
+
+    <div class="canvas th th-over" id="cv-btns">
+      <div class="btns-grid">
+        <div><div class="bf"><button class="bt bt-solid">Continuar</button></div><div class="bflbl"><b>01 Sólido</b><span>ação primária</span></div></div>
+        <div><div class="bf"><button class="bt bt-out">Saiba mais</button></div><div class="bflbl"><b>02 Outline → fill</b><span>secundária com fome</span></div></div>
+        <div><div class="bf"><button class="bt bt-ghost">Cancelar</button></div><div class="bflbl"><b>03 Ghost</b><span>terciária</span></div></div>
+        <div><div class="bf"><button class="bt bt-ico">Avançar <i>→</i></button></div><div class="bflbl"><b>04 Ícone desliza</b><span>navegação</span></div></div>
+        <div><div class="bf"><button class="bt bt-shine">Assinar agora</button></div><div class="bflbl"><b>05 Shine</b><span>CTA de landing</span></div></div>
+        <div><div class="bf"><button class="bt bt-draw">Explorar</button></div><div class="bflbl"><b>06 Border draw</b><span>hover com tinta</span></div></div>
+        <div><div class="bf"><button class="bt bt-und">Ver todos os planos</button></div><div class="bflbl"><b>07 Underline</b><span>link-botão</span></div></div>
+        <div><div class="bf"><button class="bt bt-load" data-load><span class="sp"></span><span class="tx">Salvar</span></button></div><div class="bflbl"><b>08 Loading morph</b><span>clique: salva → ✓</span></div></div>
+        <div><div class="bf"><button class="bt bt-shake" data-shake>Excluir conta</button></div><div class="bflbl"><b>09 Shake</b><span>clique: recusa com corpo</span></div></div>
+        <div><div class="bf"><button class="bt bt-rip" data-rip>Confirmar</button></div><div class="bflbl"><b>10 Ripple</b><span>clique: onda material</span></div></div>
+        <div><div class="bf" style="min-height:150px"><button class="bt bt-mag" data-mag>Me pegue</button></div><div class="bflbl"><b>11 Magnético</b><span>gruda no cursor</span></div></div>
+        <div><div class="bf"><button class="bt bt-split"><span class="lbls"><span>Adicionar ao carrinho</span><span>Bora! →</span></span></button></div><div class="bflbl"><b>12 Split label</b><span>hover troca a frase</span></div></div>
+        <div><div class="bf"><button class="bt bt-conic">Premium</button></div><div class="bflbl"><b>13 Borda viva</b><span>espécime — use com propósito</span></div></div>
+        <div><div class="bf"><button class="bt bt-3d">Apertar</button></div><div class="bflbl"><b>14 3D pressed</b><span>afunda de verdade</span></div></div>
+        <div><div class="bf"><button class="tgl" aria-pressed="false" data-tgl aria-label="alternar"></button></div><div class="bflbl"><b>15 Toggle</b><span>on/off</span></div></div>
+        <div><div class="bf"><div class="seg" data-seg><span class="ind"></span><button aria-pressed="true">Dia</button><button aria-pressed="false">Semana</button><button aria-pressed="false">Mês</button></div></div><div class="bflbl"><b>16 Segmented</b><span>indicador desliza</span></div></div>
+        <div><div class="bf"><div class="fabwrap" data-fab><button class="mini m1" aria-label="editar">✎</button><button class="mini m2" aria-label="favoritar">♥</button><button class="mini m3" aria-label="compartilhar">↗</button><button class="fab" aria-label="abrir ações">+</button></div></div><div class="bflbl"><b>17 FAB expansível</b><span>clique no +</span></div></div>
+        <div><div class="bf"><button class="bt bt-copy" data-copy>npm i overcore</button></div><div class="bflbl"><b>18 Copy</b><span>clique: copia e confirma</span></div></div>
+        <div><div class="bf"><div class="step2" data-step><button aria-label="menos">−</button><output>2</output><button aria-label="mais">+</button></div></div><div class="bflbl"><b>19 Stepper</b><span>quantidade</span></div></div>
+        <div><div class="bf"><button class="bt bt-dl" data-dl><span class="fill"></span><span class="lb">Baixar relatório</span></button></div><div class="bflbl"><b>20 Download</b><span>clique: progresso no próprio botão</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANCHOR:BOTOES -->
+
+<!-- ============ TEXTOS (20) ============ -->
+<style>
+  .txt-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px}
+  .tf{background:var(--cCard); border:var(--cBorder); border-radius:var(--cR); box-shadow:var(--cShadow);
+    min-height:130px; display:grid; place-items:center; padding:22px 20px; overflow:hidden; position:relative;
+    color:var(--cInk); text-align:center}
+  .tflbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .tflbl b{color:var(--ink); font-weight:600}
+  .tx1{font-size:19px; font-weight:700; letter-spacing:-.01em}
+  .ftb{font-family:var(--tfont, Inter, sans-serif)}
+  .f-serif{font-family:"Playfair Display",Georgia,serif}
+  .f-display{font-family:"Bebas Neue",Impact,sans-serif; letter-spacing:.04em}
+  .f-mono{font-family:"JetBrains Mono",Consolas,monospace}
+  .f-script{font-family:"Caveat",cursive}
+  /* 1 typewriter */
+  .t-type .caret{display:inline-block; width:2px; height:1.1em; background:var(--acc); vertical-align:-2px; margin-left:2px;
+    animation:tcaret 1s steps(1) infinite}
+  @keyframes tcaret{50%{opacity:0}}
+  /* 2 por palavra */
+  .t-words span{display:inline-block; opacity:0; transform:translateY(10px);
+    animation:twd 4.4s var(--ease) infinite; animation-delay:calc(var(--i)*130ms)}
+  @keyframes twd{6%,68%{opacity:1; transform:none}0%,78%,100%{opacity:0; transform:translateY(10px)}}
+  /* 3 por letra */
+  .t-let span{display:inline-block; opacity:0; transform:translateY(8px);
+    animation:tlt 4s var(--ease) infinite; animation-delay:calc(var(--i)*45ms)}
+  @keyframes tlt{8%,70%{opacity:1; transform:none}0%,80%,100%{opacity:0; transform:translateY(8px)}}
+  /* 4 gradiente animado (espécime) */
+  .t-grad{background:linear-gradient(90deg, var(--acc), var(--cInk), var(--acc)); background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent; animation:tgr 3.2s linear infinite}
+  @keyframes tgr{to{background-position:-220% 0}}
+  /* 5 underline draw */
+  .t-und{position:relative}
+  .t-und::after{content:""; position:absolute; left:0; right:0; bottom:-5px; height:3px; border-radius:3px;
+    background:var(--acc); transform:scaleX(0); transform-origin:left; animation:tund 3.4s var(--snap) infinite}
+  @keyframes tund{18%,62%{transform:scaleX(1)}0%,8%{transform:scaleX(0); transform-origin:left}
+    63%,100%{transform-origin:right}90%,100%{transform:scaleX(0)}}
+  /* 6 marca-texto */
+  .t-mark em{font-style:normal; padding:2px 4px; border-radius:4px;
+    background:linear-gradient(color-mix(in srgb, var(--acc) 55%, transparent), color-mix(in srgb, var(--acc) 55%, transparent)) no-repeat 0 60%;
+    background-size:0% 45%; animation:tmk 3.8s var(--ease) infinite}
+  @keyframes tmk{22%,70%{background-size:100% 45%}0%,8%,92%,100%{background-size:0% 45%}}
+  /* 7 contador */
+  .t-count{font-variant-numeric:tabular-nums; font-size:34px; font-weight:800}
+  .t-count small{font-size:14px; color:var(--cDim); display:block; font-weight:600; margin-top:2px}
+  /* 8 decode */
+  .t-code{font-size:17px}
+  /* 9 clip reveal */
+  .t-clip{display:inline-block; clip-path:inset(0 0 100% 0); animation:tcl 3.6s var(--snap) infinite}
+  @keyframes tcl{14%,68%{clip-path:inset(0 0 0 0)}0%,4%{clip-path:inset(0 0 100% 0)}84%,100%{clip-path:inset(100% 0 0 0)}}
+  /* 10 blur-in */
+  .t-blur{animation:tbl 3.4s var(--ease) infinite}
+  @keyframes tbl{0%,6%{filter:blur(10px); opacity:0}22%,70%{filter:blur(0); opacity:1}88%,100%{filter:blur(10px); opacity:0}}
+  /* 11 onda */
+  .t-wave span{display:inline-block; animation:twv 1.8s var(--ease) infinite; animation-delay:calc(var(--i)*70ms)}
+  @keyframes twv{0%,100%{transform:none}30%{transform:translateY(-7px)}}
+  /* 12 rotativas */
+  .t-rot .win{display:inline-block; overflow:hidden; height:1.35em; vertical-align:bottom}
+  .t-rot .roll{display:block; transition:transform .5s var(--snap)}
+  .t-rot .roll span{display:block; height:1.35em; color:var(--acc)}
+  /* 13 letreiro */
+  .t-marq{width:100%; overflow:hidden}
+  .t-marq .in{display:flex; gap:34px; width:max-content; animation:tmar 14s linear infinite;
+    font-size:44px; line-height:1; white-space:nowrap; color:transparent; -webkit-text-stroke:1.5px var(--acc)}
+  @keyframes tmar{to{transform:translateX(-50%)}}
+  /* 14 glitch (espécime) */
+  .t-glitch{position:relative}
+  .t-glitch::before,.t-glitch::after{content:attr(data-t); position:absolute; left:0; top:0; width:100%}
+  .t-glitch::before{color:var(--acc); animation:tgl1 2.6s steps(2) infinite}
+  .t-glitch::after{color:#f87171; animation:tgl2 2.6s steps(2) infinite}
+  @keyframes tgl1{0%,88%,100%{transform:none; opacity:0}90%{transform:translate(-3px,-2px); opacity:.8}94%{transform:translate(2px,1px); opacity:.8}}
+  @keyframes tgl2{0%,88%,100%{transform:none; opacity:0}91%{transform:translate(3px,2px); opacity:.7}95%{transform:translate(-2px,-1px); opacity:.7}}
+  /* 15 neon (espécime) */
+  .t-neon{font-size:34px; color:var(--acc);
+    text-shadow:0 0 6px color-mix(in srgb, var(--acc) 70%, transparent), 0 0 18px color-mix(in srgb, var(--acc) 45%, transparent);
+    animation:tne 3.2s var(--ease) infinite}
+  @keyframes tne{0%,18%,22%,100%{opacity:1}19%,21%{opacity:.35}60%,62%{opacity:.8}}
+  /* 16 tracking-in */
+  .t-track{animation:ttr 3.6s var(--snap) infinite; font-size:22px; text-transform:uppercase}
+  @keyframes ttr{0%,6%{letter-spacing:.5em; opacity:0}28%,72%{letter-spacing:.08em; opacity:1}94%,100%{letter-spacing:.5em; opacity:0}}
+  /* 17 sombra dura */
+  .t-shadow{font-size:36px; color:var(--cInk); animation:tsh 2.8s var(--snap) infinite}
+  @keyframes tsh{0%,100%{text-shadow:2px 2px 0 var(--acc)}45%{text-shadow:7px 7px 0 var(--acc)}}
+  /* 18 risca & troca — JS */
+  .t-strike .old{position:relative; color:var(--cDim); white-space:nowrap}
+  .t-strike .old::after{content:""; position:absolute; left:0; top:52%; height:2.5px; background:#f87171; width:0; transition:width .45s var(--ease)}
+  .t-strike.cut .old::after{width:100%}
+  .t-strike .new{color:var(--acc); opacity:0; transform:translateY(6px); display:inline-block; margin-left:8px;
+    transition:opacity .4s var(--ease) .3s, transform .4s var(--snap) .3s}
+  .t-strike.cut .new{opacity:1; transform:none}
+  /* 19 terminal */
+  .t-term{font-size:14.5px; text-align:left; color:#7ee787}
+  .t-term .p{color:var(--acc)}
+  .t-term .blk{display:inline-block; width:8px; height:15px; background:#7ee787; vertical-align:-2px; margin-left:3px; animation:tcaret 1s steps(1) infinite}
+  /* 20 manuscrito */
+  .t-hand{font-size:34px; display:inline-block; clip-path:inset(0 100% 0 0); animation:thd 4.6s var(--ease) infinite; color:var(--acc)}
+  @keyframes thd{16%,70%{clip-path:inset(0 0 0 0)}0%,4%{clip-path:inset(0 100% 0 0)}88%,100%{clip-path:inset(0 0 0 100%)}}
+</style>
+<section id="textos">
+  <div class="wrap">
+    <div class="kicker">03 · Textos</div>
+    <h2>Vinte jeitos de dar voz a uma frase.</h2>
+    <p class="lead">Tipografia em movimento — do typewriter honesto ao neon eleito de propósito. Troque a fonte-base e a cor de acento; os espécimes de assinatura (Bebas, Playfair, Caveat, Mono) mantêm a própria voz.</p>
+
+    <div class="controls" data-target="cv-txt">
+      <div class="grp"><span class="cap">Fonte</span>
+        <button class="pk ft-pk" aria-pressed="true"  data-ft="Inter, system-ui, sans-serif">Sans</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'Playfair Display', Georgia, serif">Serif</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'Bebas Neue', Impact, sans-serif">Display</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'JetBrains Mono', Consolas, monospace">Mono</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'Caveat', cursive">Script</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+    </div>
+
+    <div class="canvas th th-over" id="cv-txt">
+      <div class="txt-grid">
+        <div><div class="tf"><div class="tx1 ftb"><span data-type='["Design que resolve.","Texto que respira.","Feito no Atelier."]'></span><span class="caret"></span></div></div><div class="tflbl"><b>01 Typewriter</b><span>heros, prompts</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-words"><span style="--i:0">Uma</span> <span style="--i:1">palavra</span> <span style="--i:2">de</span> <span style="--i:3">cada</span> <span style="--i:4">vez.</span></div></div><div class="tflbl"><b>02 Por palavra</b><span>frases de impacto</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-let" data-split>Letra a letra</div></div><div class="tflbl"><b>03 Cascata de letras</b><span>títulos curtos</span></div></div>
+        <div><div class="tf"><div class="tx1 t-grad" style="font-size:26px">Gradiente vivo</div></div><div class="tflbl"><b>04 Gradiente animado</b><span>espécime — A1 só se eleito</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-und">Sublinhado que desenha</div></div><div class="tflbl"><b>05 Underline draw</b><span>links, ênfase</span></div></div>
+        <div><div class="tf"><div class="tx1 f-serif" style="font-weight:600">A parte <em class="t-mark">importante</em> marcada.</div></div><div class="tflbl"><b>06 Marca-texto</b><span>editorial</span></div></div>
+        <div><div class="tf"><div class="t-count ftb"><span data-count-to="1471">0</span><small>skills no hub</small></div></div><div class="tflbl"><b>07 Contador</b><span>métricas, provas</span></div></div>
+        <div><div class="tf"><div class="t-code f-mono" data-decode="OVERCORE">########</div></div><div class="tflbl"><b>08 Decode</b><span>tech, reveals</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb"><span class="t-clip">Revela de baixo pra cima</span></div></div><div class="tflbl"><b>09 Clip reveal</b><span>seções, headings</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-blur">Do desfoque ao foco</div></div><div class="tflbl"><b>10 Blur-in</b><span>aberturas</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-wave" data-split>Onda suave</div></div><div class="tflbl"><b>11 Onda</b><span>lúdico, kids, música</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb">Feito para <span class="win t-rot" style="display:inline-block"><span class="roll" data-rot='["planejar","reservar","aproveitar"]'><span>planejar</span></span></span></div></div><div class="tflbl"><b>12 Palavras rotativas</b><span>heros de produto</span></div></div>
+        <div><div class="tf"><div class="t-marq f-display"><div class="in"><span>ATELIER — DESIGN SEM SLOP —&nbsp;</span><span>ATELIER — DESIGN SEM SLOP —&nbsp;</span></div></div></div><div class="tflbl"><b>13 Letreiro outline</b><span>faixas, rodapés</span></div></div>
+        <div><div class="tf"><div class="tx1 f-mono t-glitch" data-t="SYSTEM://OK" style="font-size:22px">SYSTEM://OK</div></div><div class="tflbl"><b>14 Glitch</b><span>espécime — tech/gaming</span></div></div>
+        <div><div class="tf"><div class="t-neon f-display">OPEN 24H</div></div><div class="tflbl"><b>15 Neon flicker</b><span>espécime — A27 só se eleito</span></div></div>
+        <div><div class="tf"><div class="t-track f-display">Espaçado</div></div><div class="tflbl"><b>16 Tracking-in</b><span>luxo, moda</span></div></div>
+        <div><div class="tf"><div class="t-shadow f-display">IMPACTO</div></div><div class="tflbl"><b>17 Sombra dura</b><span>brutalist, promoções</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-strike" data-strike><span class="old">R$ 499/mês</span><span class="new">R$ 249/mês</span></div></div><div class="tflbl"><b>18 Risca &amp; troca</b><span>preços, correções</span></div></div>
+        <div><div class="tf"><div class="t-term f-mono"><span class="p">overcore&gt;</span> deploy --prod <span class="ok">✓ 1.2s</span><span class="blk"></span></div></div><div class="tflbl"><b>19 Terminal</b><span>dev tools, docs</span></div></div>
+        <div><div class="tf"><div class="t-hand f-script">do seu jeito</div></div><div class="tflbl"><b>20 Manuscrito</b><span>assinaturas, pessoal</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANCHOR:TEXTOS -->
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:var(--ink)">Catálogo do Atelier</b> · cada peça troca de linguagem e acento sem mudar a estrutura.</span>
+    <span>Atelier · OverCore</span>
+  </div>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---- controles: tema + acento (por seção) ---- */
+const SWATCHES=[
+  ['#c8ff3d','#0b0d12'],['#F1C85E','#0b0d12'],['#DB824E','#ffffff'],['#D1517A','#ffffff'],
+  ['#9F5697','#ffffff'],['#4C3D8D','#ffffff'],['#516CB1','#ffffff'],['#6AB0A0','#0b0d12'],
+];
+document.querySelectorAll('.controls').forEach(ctrl=>{
+  const canvas=document.getElementById(ctrl.dataset.target);
+  ctrl.querySelectorAll('.th-pk').forEach(b=>b.addEventListener('click',()=>{
+    ctrl.querySelectorAll('.th-pk').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    canvas.className=canvas.className.replace(/th-\w+/,'th-'+b.dataset.th);
+  }));
+  const grp=ctrl.querySelectorAll('.grp')[1];
+  SWATCHES.forEach(([c,ink],k)=>{
+    const s=document.createElement('button');
+    s.className='sw'; s.style.background=c; s.setAttribute('aria-pressed',k===0?'true':'false');
+    s.setAttribute('aria-label','acento '+c);
+    s.addEventListener('click',()=>{
+      grp.querySelectorAll('.sw').forEach(x=>x.setAttribute('aria-pressed','false'));
+      s.setAttribute('aria-pressed','true');
+      canvas.style.setProperty('--acc',c); canvas.style.setProperty('--accInk',ink);
+    });
+    grp.appendChild(s);
+  });
+});
+
+/* ---- cartões ---- */
+document.querySelectorAll('[data-tilt]').forEach(el=>{
+  el.addEventListener('pointermove',e=>{
+    if(reduced)return;
+    const r=el.getBoundingClientRect();
+    const rx=((e.clientY-r.top)/r.height-.5)*-10, ry=((e.clientX-r.left)/r.width-.5)*12;
+    el.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  });
+  el.addEventListener('pointerleave',()=>{el.style.transform='none'});
+});
+document.querySelectorAll('[data-spot]').forEach(el=>{
+  el.addEventListener('pointermove',e=>{
+    const r=el.getBoundingClientRect();
+    el.style.setProperty('--mx',(e.clientX-r.left)+'px');
+    el.style.setProperty('--my',(e.clientY-r.top)+'px');
+  });
+});
+document.querySelectorAll('[data-skel]').forEach(el=>{
+  const cyc=()=>{el.classList.add('loaded'); setTimeout(()=>{el.classList.remove('loaded'); setTimeout(cyc, reduced?600:1600)}, reduced?1200:3200)};
+  setTimeout(cyc, reduced?600:1800);
+});
+
+/* ---- botões ---- */
+document.querySelectorAll('[data-load]').forEach(b=>{
+  const tx=b.querySelector('.tx'); let busy=false;
+  b.addEventListener('click',()=>{
+    if(busy)return; busy=true;
+    b.classList.add('busy'); tx.textContent='Salvando…';
+    setTimeout(()=>{b.classList.remove('busy'); tx.textContent='Salvo ✓';
+      setTimeout(()=>{tx.textContent='Salvar'; busy=false}, 1400)}, reduced?300:1600);
+  });
+});
+document.querySelectorAll('[data-shake]').forEach(b=>b.addEventListener('click',()=>{
+  b.classList.remove('err'); void b.offsetWidth; b.classList.add('err');
+}));
+document.querySelectorAll('[data-rip]').forEach(b=>b.addEventListener('click',e=>{
+  const r=b.getBoundingClientRect(), d=Math.max(r.width,r.height);
+  const s=document.createElement('span'); s.className='rp';
+  s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
+  b.appendChild(s); setTimeout(()=>s.remove(),600);
+}));
+document.querySelectorAll('[data-mag]').forEach(b=>{
+  const zone=b.parentElement;
+  zone.addEventListener('pointermove',e=>{
+    if(reduced)return;
+    const r=b.getBoundingClientRect();
+    const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+    b.style.transform=`translate(${dx*.25}px,${dy*.3}px)`;
+  });
+  zone.addEventListener('pointerleave',()=>{b.style.transform='none'});
+});
+document.querySelectorAll('[data-tgl]').forEach(t=>t.addEventListener('click',()=>{
+  t.setAttribute('aria-pressed', t.getAttribute('aria-pressed')==='true'?'false':'true');
+}));
+document.querySelectorAll('[data-seg]').forEach(seg=>{
+  const ind=seg.querySelector('.ind'), btns=[...seg.querySelectorAll('button')];
+  function place(b){ind.style.left=b.offsetLeft+'px'; ind.style.width=b.offsetWidth+'px'}
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); place(b);
+  }));
+  requestAnimationFrame(()=>place(btns[0]));
+});
+document.querySelectorAll('[data-fab]').forEach(f=>{
+  f.querySelector('.fab').addEventListener('click',()=>f.classList.toggle('open'));
+});
+document.querySelectorAll('[data-copy]').forEach(b=>{
+  const orig=b.textContent;
+  b.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(orig)}catch(e){}
+    b.classList.add('ok'); b.textContent='copiado ✓';
+    setTimeout(()=>{b.classList.remove('ok'); b.textContent=orig},1400);
+  });
+});
+document.querySelectorAll('[data-step]').forEach(s=>{
+  const out=s.querySelector('output'), [minus,plus]=s.querySelectorAll('button');
+  let v=2;
+  minus.addEventListener('click',()=>{v=Math.max(0,v-1); out.textContent=v});
+  plus.addEventListener('click',()=>{v=Math.min(99,v+1); out.textContent=v});
+});
+document.querySelectorAll('[data-dl]').forEach(b=>{
+  const lb=b.querySelector('.lb'); let going=false;
+  b.addEventListener('click',()=>{
+    if(going)return; going=true;
+    b.classList.add('going'); lb.textContent='Baixando…';
+    setTimeout(()=>{b.classList.remove('going'); b.classList.add('done'); lb.textContent='Pronto ✓';
+      setTimeout(()=>{b.classList.remove('done'); lb.textContent='Baixar relatório'; going=false},1600)}, reduced?300:2300);
+  });
+});
+
+/* ---- textos ---- */
+document.querySelectorAll('.ft-pk').forEach(b=>b.addEventListener('click',()=>{
+  const ctrl=b.closest('.controls'), canvas=document.getElementById(ctrl.dataset.target);
+  ctrl.querySelectorAll('.ft-pk').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  canvas.style.setProperty('--tfont', b.dataset.ft);
+}));
+document.querySelectorAll('[data-split]').forEach(el=>{
+  const t=el.textContent; el.textContent='';
+  [...t].forEach((ch,i)=>{
+    const s=document.createElement('span'); s.style.setProperty('--i',i);
+    s.textContent=ch===' '?' ':ch; el.appendChild(s);
+  });
+});
+document.querySelectorAll('[data-type]').forEach(el=>{
+  const words=JSON.parse(el.dataset.type); let w=0;
+  if(reduced){el.textContent=words[0]; return}
+  (async function loop(){
+    while(true){
+      const word=words[w];
+      for(let i=1;i<=word.length;i++){el.textContent=word.slice(0,i); await new Promise(r=>setTimeout(r,55))}
+      await new Promise(r=>setTimeout(r,1500));
+      for(let i=word.length;i>=0;i--){el.textContent=word.slice(0,i); await new Promise(r=>setTimeout(r,26))}
+      await new Promise(r=>setTimeout(r,350)); w=(w+1)%words.length;
+    }
+  })();
+});
+document.querySelectorAll('[data-count-to]').forEach(el=>{
+  const alvo=+el.dataset.countTo;
+  if(reduced){el.textContent=alvo.toLocaleString('pt-BR'); return}
+  const run=()=>{const t0=performance.now();
+    (function tick(t){const p=Math.min((t-t0)/1400,1), k=1-Math.pow(1-p,3);
+      el.textContent=Math.round(alvo*k).toLocaleString('pt-BR');
+      if(p<1)requestAnimationFrame(tick); else setTimeout(()=>{el.textContent='0'; setTimeout(run,700)},2600);
+    })(t0)};
+  run();
+});
+document.querySelectorAll('[data-decode]').forEach(el=>{
+  const final=el.dataset.decode, CH='!<>-_\\/[]{}—=+*^?#';
+  if(reduced){el.textContent=final; return}
+  const run=()=>{let frame=0;
+    const id=setInterval(()=>{
+      el.textContent=[...final].map((c,i)=> i<frame/2.2 ? c : CH[Math.floor(Math.random()*CH.length)]).join('');
+      frame++;
+      if(frame/2.2>=final.length){clearInterval(id); el.textContent=final; setTimeout(run,2800)}
+    },42)};
+  run();
+});
+document.querySelectorAll('[data-rot]').forEach(roll=>{
+  const words=JSON.parse(roll.dataset.rot);
+  roll.innerHTML=words.concat(words[0]).map(w=>`<span>${w}</span>`).join('');
+  let i=0;
+  if(reduced)return;
+  setInterval(()=>{
+    i++;
+    roll.style.transition=i===words.length?'transform .5s cubic-bezier(.22,1,.36,1)':'transform .5s cubic-bezier(.22,1,.36,1)';
+    roll.style.transform=`translateY(-${i*1.35}em)`;
+    if(i===words.length){setTimeout(()=>{roll.style.transition='none'; roll.style.transform='translateY(0)'; i=0},520)}
+  },1900);
+});
+document.querySelectorAll('[data-strike]').forEach(el=>{
+  const cyc=()=>{el.classList.add('cut'); setTimeout(()=>{el.classList.remove('cut'); setTimeout(cyc,900)},2600)};
+  setTimeout(cyc,1200);
+});
+</script>
+</body>
+</html>
