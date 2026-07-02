@@ -74,6 +74,21 @@
     --cShadow:0 6px 18px rgba(0,0,0,.3); --cInk:#e8ebf2; --cDim:#8b93a7; --cTrack:#171b26; --cBlur:none}
   .canvas{background:var(--cBg); border:1px solid var(--line); border-radius:var(--radius); padding:22px;
     --acc:var(--accDefault,#c8ff3d); --accInk:var(--accInkDefault,#0b0d12)}
+  /* modo claro/escuro — variante oposta de cada tema */
+  .th-minimal.thd{--cBg:#15140f; --cCard:#1d1c16; --cBorder:1px solid #2c2a22; --cShadow:0 1px 3px rgba(0,0,0,.5);
+    --cInk:#eae7de; --cDim:#96917f; --cTrack:#262418}
+  .th-glass.thd{--cBg:linear-gradient(135deg,#1a1440,#3d1030 55%,#402410); --cCard:rgba(255,255,255,.08);
+    --cBorder:1px solid rgba(255,255,255,.22); --cShadow:0 8px 26px rgba(0,0,0,.5)}
+  .th-brutal.thd{--cBg:#111; --cCard:#191919; --cBorder:3px solid #f2f2f2; --cShadow:6px 6px 0 #f2f2f2;
+    --cInk:#f2f2f2; --cDim:#9a9a9a; --cTrack:#242424}
+  .th-clay.thd{--cBg:linear-gradient(160deg,#23233c,#2b2340); --cCard:#2b2b47;
+    --cShadow:8px 8px 18px #1b1b30, -7px -7px 16px #37375c, inset 2px 2px 6px #3d3d63;
+    --cInk:#d9dcf5; --cDim:#8f93b8; --cTrack:#232342}
+  .th-skeu.thl{--cBg:linear-gradient(180deg,#e7eaef,#c8cdd6); --cCard:linear-gradient(180deg,#fbfcfe,#dde2e9);
+    --cShadow:inset 0 1px 0 #fff, inset 0 -2px 5px #b3bac6, 0 10px 20px rgba(60,70,90,.25);
+    --cInk:#242832; --cDim:#6b7280; --cTrack:#c3cad4}
+  .th-over.thl{--cBg:#f2f4f9; --cCard:#fff; --cBorder:1px solid #e2e6ee; --cShadow:0 6px 18px rgba(30,40,60,.08);
+    --cInk:#171a21; --cDim:#6a7284; --cTrack:#eceff5}
 
   /* ============ CARTÕES (10) ============ */
   .cards-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px}
@@ -195,6 +210,10 @@
         <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
       </div>
       <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="true" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="false" data-m="dark">Escuro</button>
+      </div>
     </div>
 
     <div class="canvas th th-minimal" id="cv-cards">
@@ -403,6 +422,10 @@
         <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
       </div>
       <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="false" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="true" data-m="dark">Escuro</button>
+      </div>
     </div>
 
     <div class="canvas th th-over" id="cv-btns">
@@ -546,6 +569,10 @@
         <button class="pk ft-pk" aria-pressed="false" data-ft="'Caveat', cursive">Script</button>
       </div>
       <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="false" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="true" data-m="dark">Escuro</button>
+      </div>
     </div>
 
     <div class="canvas th th-over" id="cv-txt">
@@ -823,8 +850,9 @@
   .strip2 img{height:152px; width:230px; object-fit:cover; border-radius:var(--radius-s);
     filter:grayscale(45%) brightness(.85); transition:filter var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
   .strip2 img:hover{filter:none; transform:translateY(-5px)}
-  .cs{position:relative; height:340px; overflow:hidden; touch-action:pan-y; cursor:grab; background:var(--panel-2)}
-  .cs.grab{cursor:grabbing}
+  .cs{position:relative; height:340px; overflow:hidden; touch-action:pan-y; background:var(--panel-2)}
+  .csl{cursor:grab}
+  .cs.grab .csl{cursor:grabbing}
   .csl{position:absolute; top:26px; bottom:56px; left:50%; width:min(440px,72%); margin-left:calc(min(440px,72%) / -2);
     border-radius:var(--radius-s); overflow:hidden; user-select:none; -webkit-user-select:none}
   .csl img{width:100%; height:100%; object-fit:cover; display:block; pointer-events:none}
@@ -1041,11 +1069,24 @@ const SWATCHES=[
 document.querySelectorAll('.controls').forEach(ctrl=>{
   const canvas=document.getElementById(ctrl.dataset.target||'');
   if(!canvas) return; // barras com switcher próprio (linguagens/loading) não entram aqui
+  const NAT={minimal:'light',glass:'light',brutal:'light',clay:'light',skeu:'dark',over:'dark'};
+  let mode=(ctrl.querySelector('.md[aria-pressed="true"]')||{dataset:{}}).dataset.m||'light';
+  function applyMode(){
+    const th=(canvas.className.match(/th-(\w+)/)||[])[1];
+    canvas.classList.toggle('thd', mode==='dark' && NAT[th]==='light');
+    canvas.classList.toggle('thl', mode==='light' && NAT[th]==='dark');
+  }
+  ctrl.querySelectorAll('.md').forEach(b=>b.addEventListener('click',()=>{
+    ctrl.querySelectorAll('.md').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); mode=b.dataset.m; applyMode();
+  }));
   ctrl.querySelectorAll('.th-pk').forEach(b=>b.addEventListener('click',()=>{
     ctrl.querySelectorAll('.th-pk').forEach(x=>x.setAttribute('aria-pressed','false'));
     b.setAttribute('aria-pressed','true');
     canvas.className=canvas.className.replace(/th-\w+/,'th-'+b.dataset.th);
+    applyMode();
   }));
+  applyMode();
   const grp=ctrl.querySelectorAll('.grp')[1];
   if(!grp) return;
   SWATCHES.forEach(([c,ink],k)=>{
@@ -1279,7 +1320,13 @@ document.querySelectorAll('.ldp2').forEach(b=>b.addEventListener('click',()=>{
     });
     [...dots.children].forEach((d,k)=>d.classList.toggle('on',k===i));
   }
-  cs.addEventListener('pointerdown',e=>{dragging=true; moved=false; sx=e.clientX; cs.classList.add('grab')});
+  sls.forEach((el,k)=>{
+    el.addEventListener('pointerdown',e=>{dragging=true; moved=false; sx=e.clientX; cs.classList.add('grab'); e.preventDefault()});
+    el.addEventListener('click',()=>{ // clique no vizinho = focar (arrasto nao conta como clique)
+      if(moved) return;
+      if(off(k)!==0){ i=k; paint(); restart(); }
+    });
+  });
   window.addEventListener('pointermove',e=>{if(!dragging)return; drag=e.clientX-sx; if(Math.abs(drag)>8)moved=true; paint()});
   window.addEventListener('pointerup',()=>{
     if(!dragging)return; dragging=false; cs.classList.remove('grab');
