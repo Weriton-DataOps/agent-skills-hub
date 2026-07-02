@@ -342,6 +342,60 @@
     --ldInk:#0d2540; --ldDim:rgba(13,37,64,.62); --ldTrack:rgba(13,37,64,.14); --ldShine:rgba(255,255,255,.7); --ldFill:#0d2540;
     --ldBtnBg:#0d2540; --ldBtnInk:#fff; --ldBtnR:14px; --ldBtnRing:rgba(255,255,255,.35)}
 
+  /* ============ FOTOS (4 exposições) ============ */
+  .fotogrid{display:grid; grid-template-columns:1.15fr .85fr; gap:14px; margin-top:44px}
+  @media(max-width:880px){.fotogrid{grid-template-columns:1fr}}
+  .fx{border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--panel); position:relative}
+  .fx.full{grid-column:1/-1}
+  .fxlbl{position:absolute; left:14px; bottom:12px; z-index:6; font-size:12px; color:var(--ink);
+    background:rgba(11,13,18,.72); border:1px solid var(--line); border-radius:999px; padding:6px 12px;
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px)}
+  .fxlbl b{font-weight:700} .fxlbl span{color:var(--dim)}
+  /* 1 · carrossel */
+  .caro{position:relative; aspect-ratio:16/9.4; overflow:hidden; background:var(--panel-2)}
+  .caro .trk{display:flex; height:100%; transition:transform 500ms var(--ease)}
+  .caro .sl{position:relative; flex:none; width:100%; height:100%}
+  .caro img{width:100%; height:100%; object-fit:cover; display:block}
+  .caro .cap{position:absolute; left:16px; bottom:46px; z-index:4; font-size:13px; font-weight:600;
+    background:rgba(11,13,18,.66); padding:6px 12px; border-radius:8px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px)}
+  .caro .arr{position:absolute; top:50%; transform:translateY(-50%); z-index:5; width:38px; height:38px;
+    border-radius:999px; border:1px solid var(--line); background:rgba(11,13,18,.66); color:var(--ink);
+    font-size:16px; cursor:pointer; display:grid; place-items:center;
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); transition:background var(--dur-micro) var(--ease)}
+  .caro .arr:hover{background:rgba(23,27,38,.9)}
+  .caro .arr.l{left:12px} .caro .arr.r{right:12px}
+  .caro .dots2{position:absolute; left:0; right:0; bottom:14px; display:flex; gap:7px; justify-content:center; z-index:5}
+  .caro .dots2 i{width:7px; height:7px; border-radius:999px; background:rgba(232,235,242,.35); cursor:pointer;
+    transition:all var(--dur-trans) var(--ease)}
+  .caro .dots2 i.on{background:var(--accent); width:20px}
+  /* 2 · ken burns */
+  .kb{position:relative; aspect-ratio:16/9.4; overflow:hidden; background:var(--panel-2)}
+  .kb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0;
+    transition:opacity 900ms var(--ease)}
+  .kb img.on{opacity:1; animation:kbz 5s var(--ease) forwards}
+  @keyframes kbz{from{transform:scale(1)}to{transform:scale(1.12) translate(-1.6%,1.2%)}}
+  .kb .grad{position:absolute; inset:auto 0 0 0; height:46%; z-index:2; pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(11,13,18,.72))}
+  /* 3 · accordion */
+  .acc{display:flex; gap:10px; height:300px; padding:14px}
+  .acc .pane{flex:1; min-width:0; overflow:hidden; border-radius:var(--radius-s); position:relative;
+    cursor:pointer; transition:flex 480ms var(--ease)}
+  .acc .pane:hover,.acc .pane:focus-visible{flex:3.4; outline:none}
+  .acc img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:grayscale(40%) brightness(.85); transition:filter 480ms var(--ease)}
+  .acc .pane:hover img,.acc .pane:focus-visible img{filter:none}
+  .acc .cap2{position:absolute; left:12px; bottom:10px; z-index:3; font-size:12px; font-weight:600;
+    background:rgba(11,13,18,.7); padding:5px 10px; border-radius:7px; opacity:0; transform:translateY(6px);
+    transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease); white-space:nowrap}
+  .acc .pane:hover .cap2,.acc .pane:focus-visible .cap2{opacity:1; transform:none}
+  /* 4 · film strip */
+  .strip2{overflow:hidden; padding:16px 0}
+  .strip2 .trk2{display:flex; gap:12px; width:max-content; animation:mq 36s linear infinite}
+  .strip2:hover .trk2{animation-play-state:paused}
+  .strip2 img{height:152px; width:230px; object-fit:cover; border-radius:var(--radius-s);
+    filter:grayscale(45%) brightness(.85); transition:filter var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
+  .strip2 img:hover{filter:none; transform:translateY(-5px)}
+
   /* ============ VARREDURA LAB ============ */
   .lab{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:44px; align-items:start}
   @media(max-width:880px){.lab{grid-template-columns:1fr}}
@@ -395,7 +449,7 @@
     <a class="logo" href="#top">Atelier<b>.</b> <span style="color:var(--dim); font-weight:500; font-size:13px">by OverCore</span></a>
     <div class="links">
       <a href="#slop">O vilão</a><a href="#metodo">Método</a><a href="#artesas">Artesãs</a>
-      <a href="#estilos">Estilos</a><a href="#loading">Loading</a><a href="#varrer">/varrer</a>
+      <a href="#estilos">Estilos</a><a href="#loading">Loading</a><a href="#fotos">Fotos</a><a href="#varrer">/varrer</a>
       <a class="btn primary" href="#instalar">Instalar</a>
     </div>
   </div>
@@ -601,6 +655,62 @@
   </div>
 </section>
 
+<!-- FOTOS -->
+<section id="fotos" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker rv">Exposição de imagem</div>
+    <h2 class="rv" style="--i:1">Quatro jeitos de mostrar fotos.<br>Cada um com seu palco.</h2>
+    <p class="lead rv" style="--i:2">Imagem não se joga na página — se expõe. Carrossel pra narrativa guiada, Ken Burns pra atmosfera, accordion pra exploração, filme corrido pra volume. Movimento só em transform/opacity, como manda a casa.</p>
+
+    <div class="fotogrid">
+      <div class="fx rv" style="--i:0">
+        <div class="caro" id="caro">
+          <div class="trk" id="caro-trk">
+            <div class="sl"><img src="https://picsum.photos/id/1015/900/540" alt="Rio entre montanhas" loading="lazy"><div class="cap">01 · Narrativa guiada — um quadro por vez</div></div>
+            <div class="sl"><img src="https://picsum.photos/id/1018/900/540" alt="Montanhas ao amanhecer" loading="lazy"><div class="cap">02 · Setas, dots e autoplay que respeita o hover</div></div>
+            <div class="sl"><img src="https://picsum.photos/id/1039/900/540" alt="Cachoeira na floresta" loading="lazy"><div class="cap">03 · Transição 500ms no token da casa</div></div>
+            <div class="sl"><img src="https://picsum.photos/id/1043/900/540" alt="Vale com neblina" loading="lazy"><div class="cap">04 · O clássico, feito direito</div></div>
+          </div>
+          <button class="arr l" id="caro-prev" aria-label="anterior">‹</button>
+          <button class="arr r" id="caro-next" aria-label="próxima">›</button>
+          <div class="dots2" id="caro-dots"></div>
+        </div>
+        <span class="fxlbl"><b>Carrossel</b> <span>· hero, cases, depoimentos</span></span>
+      </div>
+
+      <div class="fx rv" style="--i:1">
+        <div class="kb" id="kb">
+          <img src="https://picsum.photos/id/1069/720/540" alt="Lago espelhado" loading="lazy" class="on">
+          <img src="https://picsum.photos/id/1080/720/540" alt="Campo ao pôr do sol" loading="lazy">
+          <img src="https://picsum.photos/id/1050/720/540" alt="Cidade à noite" loading="lazy">
+          <div class="grad"></div>
+        </div>
+        <span class="fxlbl"><b>Ken Burns</b> <span>· atmosfera, aberturas, telas de espera</span></span>
+      </div>
+
+      <div class="fx full rv" style="--i:2">
+        <div class="acc">
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1016/700/600" alt="Cânion" loading="lazy"><span class="cap2">Cânion — expandir é explorar</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1025/700/600" alt="Cão de perfil" loading="lazy"><span class="cap2">Retrato — o hover devolve a cor</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1035/700/600" alt="Montanha nevada" loading="lazy"><span class="cap2">Neve — flex, não width (sem reflow bruto)</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/110/700/600" alt="Estrada no deserto" loading="lazy"><span class="cap2">Estrada — foco por teclado também</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1084/700/600" alt="Morsa no gelo" loading="lazy"><span class="cap2">Vida — 5 painéis, 1 protagonista por vez</span></div>
+        </div>
+        <span class="fxlbl"><b>Accordion</b> <span>· portfólios, coleções, destaques</span></span>
+      </div>
+
+      <div class="fx full rv" style="--i:3">
+        <div class="strip2">
+          <div class="trk2">
+            <img src="https://picsum.photos/id/1015/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1016/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1018/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1025/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1035/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1039/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1043/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1050/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1015/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1016/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1018/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1025/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1035/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1039/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1043/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1050/460/304" alt="" loading="lazy">
+          </div>
+        </div>
+        <span class="fxlbl"><b>Filme corrido</b> <span>· logos, galerias grandes, bastidores — pausa no hover</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- VARREDURA LAB -->
 <section id="varrer">
   <div class="wrap">
@@ -711,6 +821,33 @@ document.querySelectorAll('.ldp').forEach(b=>b.addEventListener('click',()=>{
     els.forEach(e=>e.textContent=Math.round(k*100)+'%');
     requestAnimationFrame(tick);
   })(0);
+})();
+
+/* fotos — carrossel */
+(function(){
+  const trk=$('#caro-trk'), dots=$('#caro-dots'), caro=$('#caro');
+  const n=trk.children.length; let i=0, timer=null;
+  for(let k=0;k<n;k++){const d=document.createElement('i'); d.addEventListener('click',()=>go(k,true)); dots.appendChild(d)}
+  function paint(){trk.style.transform=`translateX(-${i*100}%)`;
+    [...dots.children].forEach((d,k)=>d.classList.toggle('on',k===i))}
+  function go(k,user){i=(k+n)%n; paint(); if(user)restart()}
+  function restart(){clearInterval(timer); if(!reduced)timer=setInterval(()=>go(i+1),3800)}
+  $('#caro-prev').addEventListener('click',()=>go(i-1,true));
+  $('#caro-next').addEventListener('click',()=>go(i+1,true));
+  caro.addEventListener('mouseenter',()=>clearInterval(timer));
+  caro.addEventListener('mouseleave',restart);
+  paint(); restart();
+})();
+
+/* fotos — ken burns */
+(function(){
+  const imgs=[...$('#kb').querySelectorAll('img')]; let i=0;
+  if(reduced) return;
+  setInterval(()=>{
+    imgs[i].classList.remove('on');
+    i=(i+1)%imgs.length;
+    imgs[i].classList.add('on');
+  },4600);
 })();
 
 /* lab do /varrer */
