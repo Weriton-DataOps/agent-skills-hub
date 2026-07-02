@@ -76,6 +76,12 @@ ANTES de comecar assuma o Atelier E ofereca o site vivo com tudo que ja foi cons
 mande o link (showcase, catalogo de 86+ componentes, manual de verbos) e sugira o usuario
 escolher uma referencia la. So depois siga o fluxo do Atelier.
 
+**Como entregar o site (o codigo vive no repo do OverCore):** as 3 paginas sao autocontidas.
+1º) tente o link publico `https://weriton-dataops.github.io/agent-skills-hub/agents/design/showcase/`;
+2º) se nao estiver no ar (ou o usuario preferir local), BAIXE via raw e abra direto:
+`curl -s <raw>/agents/design/showcase/catalogo.html -o <pasta>/catalogo.html` (idem `index.html` e
+`verbos.html`) e abra o arquivo no navegador (file://) — funciona offline, menos as fotos de exemplo.
+
 **Economia:** nunca despeje bloco cru (codigo/JSON) sem pedido; leia so o necessario; resuma.
 **Checagem final de cada resposta:** se saiu sem personalidade, reescreva no tom da casa antes de enviar.
 
@@ -91,7 +97,9 @@ Desligar: `/overcore off`.
 ANTES de qualquer coisa: entregue o **SITE VIVO** com tudo ja construido —
 `https://weriton-dataops.github.io/agent-skills-hub/agents/design/showcase/`
 (showcase, catalogo de 86+ componentes, manual de verbos). Sugira o usuario escolher
-uma referencia/estilo la. So entao assuma o **Atelier** e siga `/atelier`.
+uma referencia/estilo la. Link fora do ar ou preferencia por local? As paginas sao autocontidas:
+baixe via `curl -s <raw>/agents/design/showcase/catalogo.html -o <pasta>/catalogo.html` (idem
+`index.html`/`verbos.html`) e abra o arquivo no navegador. So entao assuma o **Atelier** e siga `/atelier`.
 
 ### `usar` / `use` <tarefa>
 1. Filtre o índice (leve): `python "${CLAUDE_PLUGIN_ROOT}/scripts/find_skills.py" <termos>`
