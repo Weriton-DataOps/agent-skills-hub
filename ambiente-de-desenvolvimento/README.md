@@ -7,6 +7,7 @@ catálogo oficial (`agents/design/showcase/`). Nada aqui é promessa; tudo aqui 
 
 | # | Experimento | O que é |
 |---|---|---|
+| 002 | **O Escritório** ([planejamento](PLANEJAMENTO-ESCRITORIO.md)) | Ambiente de produção vivo: os agentes do OverCore trabalhando numa cena 3D, movidos por eventos reais dos hooks. Em planejamento. |
 | 001 | **Core** (`index.html`) | O personagem 3D do OverCore: um núcleo metálico com olhos de lima que seguem o cursor, piscam e reagem ao clique; anel-órbita com satélite (o "over" do Core). 100% procedural em Three.js — zero modelo externo. |
 
 ## Regras do laboratório
