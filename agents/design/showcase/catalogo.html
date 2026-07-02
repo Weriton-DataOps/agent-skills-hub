@@ -1427,16 +1427,32 @@
   .orb-fallback img{width:100%; height:130px; object-fit:cover; border-radius:var(--radius-s)}
   .orb-stage.no3d canvas,.orb-stage.no3d .orb-hint{display:none}
   .orb-stage.no3d .orb-fallback{display:grid}
+  .d3grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px}
+  @media(max-width:820px){.d3grid{grid-template-columns:1fr}}
+  .d3f canvas{height:320px; cursor:default}
 </style>
 <section id="orbita">
   <div class="wrap">
-    <div class="kicker">09 · Órbita</div>
-    <h2>A galeria que gira no espaço.</h2>
-    <p class="lead">Doze fotos num anel 3D de verdade (Three.js) — <b style="color:var(--ink)">arraste</b> e o anel gira com inércia; solte e ele continua no embalo; a foto da frente acende. Máquina fraca ou movimento reduzido? Cai numa grade honesta, sem drama.</p>
+    <div class="kicker">09 · 3D</div>
+    <h2>Três peças que saem da tela.</h2>
+    <p class="lead">Three.js de verdade — luz, profundidade e câmera no navegador. <b style="color:var(--ink)">Arraste o anel</b>, <b style="color:var(--ink)">passeie o mouse</b> na gema e na malha. Tudo com fallback digno e respeito a movimento reduzido.</p>
+
     <div class="orb-stage" id="orb-stage">
       <canvas id="orb-canvas" aria-label="galeria orbital 3D — arraste para girar"></canvas>
       <div class="orb-hint"><b>arraste</b> para girar · o anel tem embalo</div>
       <div class="orb-fallback" id="orb-fallback"></div>
+      <span class="fxlbl"><b>01 Galeria orbital</b> <span>· vitrines, portfólios de peso</span></span>
+    </div>
+
+    <div class="d3grid">
+      <div class="orb-stage d3f">
+        <canvas id="gem-canvas" aria-label="objeto 3D que segue o mouse"></canvas>
+        <span class="fxlbl"><b>02 Objeto-assinatura</b> <span>· heros, aberturas — inclina com o cursor</span></span>
+      </div>
+      <div class="orb-stage d3f">
+        <canvas id="mesh-canvas" aria-label="malha de pontos ondulando"></canvas>
+        <span class="fxlbl"><b>03 Malha viva</b> <span>· fundos que respiram — reage ao mouse</span></span>
+      </div>
     </div>
   </div>
 </section>
@@ -1713,10 +1729,9 @@ document.querySelectorAll('[data-dd]').forEach(dd=>{
   document.addEventListener('click',()=>dd.classList.remove('on'));
 });
 
-/* ---- órbita 3D (three.js vendorizado — carrega só quando a seção aproxima) ---- */
+/* ---- 3D (three.js vendorizado — carrega quando a seção aproxima; 3 peças) ---- */
 (function(){
   const stage=document.getElementById('orb-stage'); if(!stage)return;
-  const canvas=document.getElementById('orb-canvas');
   const FOTOS=[1015,1016,1018,1025,1035,1039,1043,1050,1069,1080,1084,1057];
   function fallback(){
     stage.classList.add('no3d');
@@ -1728,42 +1743,45 @@ document.querySelectorAll('[data-dd]').forEach(dd=>{
     if(started)return; started=true;
     const s=document.createElement('script');
     s.src='vendor/three.min.js';
-    s.onload=init; s.onerror=fallback;
+    s.onload=()=>{ try{ initOrbit(); initGem(); initMesh(); }catch(e){ fallback() } };
+    s.onerror=fallback;
     document.head.appendChild(s);
   }
   new IntersectionObserver((es,io)=>{if(es[0].isIntersecting){io.disconnect(); boot()}},{rootMargin:'600px'}).observe(stage);
 
-  function init(){
-    let renderer;
-    try{
-      renderer=new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-    }catch(e){ fallback(); return }
-    const W=()=>stage.clientWidth, H=520;
-    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-    renderer.setSize(W(),H,false);
+  function makeRenderer(canvas,h){
+    const r=new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+    r.setPixelRatio(Math.min(devicePixelRatio,2));
+    const w=()=>canvas.parentElement.clientWidth;
+    r.setSize(w(),h,false);
+    addEventListener('resize',()=>r.setSize(w(),h,false));
+    return r;
+  }
+
+  /* 01 · galeria orbital */
+  function initOrbit(){
+    const canvas=document.getElementById('orb-canvas');
+    const renderer=makeRenderer(canvas,520);
     const scene=new THREE.Scene();
     scene.fog=new THREE.Fog(0x0b0d12, 9, 16);
-    const cam=new THREE.PerspectiveCamera(46, W()/H, .1, 60);
-    cam.position.set(0, .6, 11.2);
+    const cam=new THREE.PerspectiveCamera(46, canvas.parentElement.clientWidth/520, .1, 60);
+    cam.position.set(0,.6,11.2);
     const ring=new THREE.Group(); scene.add(ring);
     const N=FOTOS.length, R=6.2, loader=new THREE.TextureLoader();
     loader.crossOrigin='anonymous';
     const planes=[];
     FOTOS.forEach((id,i)=>{
       const a=i/N*Math.PI*2;
-      const geo=new THREE.PlaneGeometry(2.9,1.95);
       const mat=new THREE.MeshBasicMaterial({color:0x232a38, side:THREE.DoubleSide});
       loader.load(`https://picsum.photos/id/${id}/580/390`, tex=>{
         tex.colorSpace!==undefined?tex.colorSpace=THREE.SRGBColorSpace:tex.encoding=THREE.sRGBEncoding;
         mat.map=tex; mat.color.set(0xffffff); mat.needsUpdate=true;
       });
-      const m=new THREE.Mesh(geo,mat);
-      m.position.set(Math.sin(a)*R, 0, Math.cos(a)*R);
-      m.rotation.y=a;             // face para fora do anel
+      const m=new THREE.Mesh(new THREE.PlaneGeometry(2.9,1.95),mat);
+      m.position.set(Math.sin(a)*R,0,Math.cos(a)*R); m.rotation.y=a;
       ring.add(m); planes.push(m);
     });
-    // interação: arrasto 1:1 com inércia (a mecânica da casa)
-    let vel=0, dragging=false, lastX=0, idle=reduced?0:0.0022;
+    let vel=0,dragging=false,lastX=0,idle=reduced?0:0.0022;
     canvas.addEventListener('pointerdown',e=>{dragging=true; lastX=e.clientX; canvas.classList.add('grab')});
     window.addEventListener('pointermove',e=>{
       if(!dragging)return;
@@ -1771,22 +1789,88 @@ document.querySelectorAll('[data-dd]').forEach(dd=>{
       ring.rotation.y+=dx*0.005; vel=dx*0.005;
     });
     window.addEventListener('pointerup',()=>{dragging=false; canvas.classList.remove('grab')});
-    addEventListener('resize',()=>{cam.aspect=W()/H; cam.updateProjectionMatrix(); renderer.setSize(W(),H,false)});
     const front=new THREE.Vector3();
     (function frame(){
       requestAnimationFrame(frame);
       if(!dragging){ ring.rotation.y+=vel+idle; vel*=0.95; }
-      // foco: a foto mais proxima da camera cresce e acende
       planes.forEach(m=>{
         m.getWorldPosition(front);
-        const f=(front.z+R)/(2*R);            // 0 atras, 1 na frente
-        const k=0.86+f*0.3;
+        const f=(front.z+R)/(2*R), k=0.86+f*0.3, b=0.45+f*0.55;
         m.scale.setScalar(k);
-        const b=0.45+f*0.55;
         if(m.material.map) m.material.color.setRGB(b,b,b);
       });
       renderer.render(scene,cam);
     })();
+  }
+
+  /* 02 · objeto-assinatura */
+  function initGem(){
+    const canvas=document.getElementById('gem-canvas'); if(!canvas)return;
+    const H=320, renderer=makeRenderer(canvas,H);
+    const scene=new THREE.Scene();
+    const cam=new THREE.PerspectiveCamera(45, canvas.parentElement.clientWidth/H, .1, 40);
+    cam.position.set(0,0,4.6);
+    const gem=new THREE.Group();
+    const core=new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.35,0),
+      new THREE.MeshStandardMaterial({color:0x141824, metalness:.9, roughness:.28, flatShading:true}));
+    const edges=new THREE.LineSegments(
+      new THREE.EdgesGeometry(core.geometry),
+      new THREE.LineBasicMaterial({color:0xc8ff3d, transparent:true, opacity:.55}));
+    gem.add(core,edges); scene.add(gem);
+    scene.add(new THREE.AmbientLight(0xffffff,.45));
+    const key=new THREE.DirectionalLight(0xc8ff3d,.75); key.position.set(4,6,6); scene.add(key);
+    const fill=new THREE.DirectionalLight(0x516cb1,.55); fill.position.set(-5,2,4); scene.add(fill);
+    let mx=0,my=0;
+    canvas.parentElement.addEventListener('pointermove',e=>{
+      const r=canvas.getBoundingClientRect();
+      mx=(e.clientX-r.left)/r.width-.5; my=(e.clientY-r.top)/r.height-.5;
+    },{passive:true});
+    function paint(tms){
+      const tt=tms*0.00045;
+      gem.rotation.y=tt*0.9+mx*0.9; gem.rotation.x=0.3+my*0.7;
+      gem.position.y=Math.sin(tt*1.4)*0.12;
+      renderer.render(scene,cam);
+    }
+    if(reduced){ paint(1200); return }
+    (function loop(tms){ paint(tms||0); requestAnimationFrame(loop) })(0);
+  }
+
+  /* 03 · malha viva */
+  function initMesh(){
+    const canvas=document.getElementById('mesh-canvas'); if(!canvas)return;
+    const H=320, renderer=makeRenderer(canvas,H);
+    const scene=new THREE.Scene();
+    const cam=new THREE.PerspectiveCamera(50, canvas.parentElement.clientWidth/H, .1, 60);
+    cam.position.set(0,2.6,7.5); cam.lookAt(0,0,0);
+    const COLS=90, ROWS=42, SP=0.3;
+    const geo=new THREE.BufferGeometry();
+    const pos=new Float32Array(COLS*ROWS*3);
+    let k=0;
+    for(let i=0;i<COLS;i++)for(let j=0;j<ROWS;j++){
+      pos[k++]=(i-COLS/2)*SP; pos[k++]=0; pos[k++]=(j-ROWS/2)*SP;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    scene.add(new THREE.Points(geo, new THREE.PointsMaterial({color:0x4a5670, size:0.05, transparent:true, opacity:.9})));
+    let mx=0;
+    canvas.parentElement.addEventListener('pointermove',e=>{
+      const r=canvas.getBoundingClientRect();
+      mx=(e.clientX-r.left)/r.width-.5;
+    },{passive:true});
+    const p=geo.attributes.position;
+    function paint(tms){
+      const tt=tms*0.00055;
+      let k2=1;
+      for(let i=0;i<COLS;i++)for(let j=0;j<ROWS;j++){
+        const x=(i-COLS/2)*SP, z=(j-ROWS/2)*SP;
+        p.array[k2]=Math.sin(x*0.6+tt*2.2+mx*3)*0.3+Math.cos(z*0.8+tt*1.5)*0.24;
+        k2+=3;
+      }
+      p.needsUpdate=true;
+      renderer.render(scene,cam);
+    }
+    if(reduced){ paint(900); return }
+    (function loop(tms){ paint(tms||0); requestAnimationFrame(loop) })(0);
   }
 })();
 
