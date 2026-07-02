@@ -181,7 +181,7 @@
     <a class="logo" href="index.html">Atelier<b>.</b> <span style="color:var(--dim); font-weight:500; font-size:13px">catálogo</span></a>
     <div class="links">
       <a href="#linguagens">Linguagens</a><a href="#cartoes">Cartões</a><a href="#botoes">Botões</a>
-      <a href="#textos">Textos</a><a href="#loading">Loading</a><a href="#fotos">Fotos</a>
+      <a href="#textos">Textos</a><a href="#loading">Loading</a><a href="#fotos">Fotos</a><a href="#efeitos">Efeitos</a>
       <a href="index.html" style="color:var(--accent)">← showcase</a>
     </div>
   </div>
@@ -1049,12 +1049,249 @@
 </section>
 <div class="lbov" id="lbov" aria-modal="true" role="dialog"><img src="" alt="Foto ampliada"><span class="lbxx">clique ou Esc para fechar</span></div>
 
+<!-- ============ EFEITOS (Magic CSS, MIT) ============ -->
+<style>
+  .fx-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(196px,1fr)); gap:14px}
+  .fxt{position:relative; width:100%; background:var(--cCard); border:var(--cBorder); border-radius:var(--cR);
+    box-shadow:var(--cShadow); min-height:150px; display:grid; place-items:center; padding:20px; cursor:pointer;
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur); overflow:hidden;
+    transition:border-color var(--dur-micro) var(--ease)}
+  .fxt:hover{border-color:#31394a}
+  .fxt:focus-visible{outline:2px solid var(--acc); outline-offset:2px}
+  .fxchip{width:76px; height:76px; border-radius:16px; background:var(--acc); color:var(--accInk);
+    display:grid; place-items:center; font-weight:800; font-size:22px; will-change:transform,opacity}
+  .fxt .esp{position:absolute; top:10px; right:10px; font-size:12px; font-weight:700; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--warn); border:1px solid rgba(251,191,36,.35);
+    background:rgba(251,191,36,.08); border-radius:999px; padding:2px 8px}
+@keyframes puffIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
+}
+@keyframes vanishIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(90px);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
+}
+@keyframes swashIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0);
+  }
+  90% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(0.9, 0.9);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+  }
+}
+@keyframes spaceInUp {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 0%;
+    transform: scale(0.2) translate(0%, -200%);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 0%;
+    transform: scale(1) translate(0%, 0%);
+  }
+}
+@keyframes twisterInDown {
+  0% {
+    opacity: 0;
+    transform-origin: 0 100%;
+    transform: scale(0, 0) rotate(360deg) translateY(-100%);
+  }
+  30% {
+    transform-origin: 0 100%;
+    transform: scale(0, 0) rotate(360deg) translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 100% 100%;
+    transform: scale(1, 1) rotate(0deg) translateY(0%);
+  }
+}
+@keyframes tinRightIn {
+  0% {
+    opacity: 0;
+    transform: scale(1, 1) translateX(900%);
+  }
+  50%, 70%, 90% {
+    opacity: 1;
+    transform: scale(1.1, 1.1) translateX(0);
+  }
+  60%, 80%, 100% {
+    opacity: 1;
+    transform: scale(1, 1) translateX(0);
+  }
+}
+@keyframes puffOut {
+  0% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(2px);
+  }
+}
+@keyframes holeOut {
+  0% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1) rotateY(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0) rotateY(180deg);
+  }
+}
+@keyframes bombRightOut {
+  0% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: rotate(0deg);
+    filter: blur(0px);
+  }
+  50% {
+    opacity: 1;
+    transform-origin: 200% 50%;
+    transform: rotate(160deg);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 200% 50%;
+    transform: rotate(160deg);
+    filter: blur(20px);
+  }
+}
+@keyframes boingInUp {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(-90deg);
+  }
+  50% {
+    opacity: 1;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(50deg);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(0deg);
+  }
+}
+@keyframes foolishIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0) rotate(360deg);
+  }
+  20% {
+    opacity: 1;
+    transform-origin: 0% 100%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  40% {
+    opacity: 1;
+    transform-origin: 100% 100%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  60% {
+    opacity: 1;
+    transform-origin: 0%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  80% {
+    opacity: 1;
+    transform-origin: 0% 0%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1) rotate(0deg);
+  }
+}
+@keyframes magic {
+  0% {
+    opacity: 1;
+    transform-origin: 100% 200%;
+    transform: scale(1, 1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 200% 500%;
+    transform: scale(0, 0) rotate(270deg);
+  }
+}
+</style>
+<section id="efeitos">
+  <div class="wrap">
+    <div class="kicker">07 · Efeitos</div>
+    <h2>Doze feitiços do Magic CSS.</h2>
+    <p class="lead">Minerados da biblioteca <b style="color:var(--ink)">magic.css</b> (MIT, © Christian Pucci) — keyframes originais, palco nosso. Clique em cada um pra reproduzir. Os marcados <b style="color:var(--warn)">espécime</b> têm overshoot/salto (A26): entram só quando eleitos de propósito.</p>
+    <div class="controls" data-target="cv-fx">
+      <div class="grp"><span class="cap">Ação</span><button class="pk" id="fx-all">Reproduzir todos</button></div>
+      <div class="grp"><span class="cap">Acento</span></div>
+    </div>
+    <div class="canvas th th-over" id="cv-fx">
+      <div class="fx-grid">
+        <div><button class="fxt" data-fx="puffIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Puff In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="vanishIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Vanish In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="swashIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Swash In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="spaceInUp"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Space In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="twisterInDown"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Twister</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="tinRightIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Tin In</b><span>atenção</span></div></div>
+        <div><button class="fxt" data-fx="puffOut"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Puff Out</b><span>saída</span></div></div>
+        <div><button class="fxt" data-fx="holeOut"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Hole Out</b><span>saída</span></div></div>
+        <div><button class="fxt" data-fx="magic"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Magic</b><span>saída-assinatura</span></div></div>
+        <div><button class="fxt" data-fx="boingInUp"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Boing In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="foolishIn"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Foolish</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="bombRightOut"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Bomb Out</b><span>saída</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ANCHOR:TEXTOS -->
 
 <footer>
   <div class="wrap">
     <span><b style="color:var(--ink)">Catálogo do Atelier</b> · cada peça troca de linguagem e acento sem mudar a estrutura.</span>
-    <span>Atelier · OverCore</span>
+    <span>efeitos da seção 07 derivados de magic.css (MIT, © Christian Pucci) · Atelier · OverCore</span>
   </div>
 </footer>
 
@@ -1256,6 +1493,19 @@ document.querySelectorAll('[data-rot]').forEach(roll=>{
 document.querySelectorAll('[data-strike]').forEach(el=>{
   const cyc=()=>{el.classList.add('cut'); setTimeout(()=>{el.classList.remove('cut'); setTimeout(cyc,900)},2600)};
   setTimeout(cyc,1200);
+});
+
+/* ---- efeitos (Magic CSS) ---- */
+function fxPlay(tile){
+  const chip=tile.querySelector('.fxchip');
+  chip.style.animation='none'; void chip.offsetWidth;
+  chip.style.animation=tile.dataset.fx+' .9s cubic-bezier(.4,0,.2,1) both';
+  chip.addEventListener('animationend',()=>setTimeout(()=>{chip.style.animation='none'},430),{once:true});
+}
+document.querySelectorAll('.fxt').forEach(t=>t.addEventListener('click',()=>fxPlay(t)));
+const fxAll=document.getElementById('fx-all');
+if(fxAll)fxAll.addEventListener('click',()=>{
+  document.querySelectorAll('.fxt').forEach((t,i)=>setTimeout(()=>fxPlay(t), reduced?0:i*100));
 });
 
 /* ---- linguagens (sample switcher) ---- */

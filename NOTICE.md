@@ -25,6 +25,12 @@ Parte das skills desta biblioteca foi originada de projetos open-source de terce
 - **Creative Commons Attribution 4.0 (CC BY 4.0)** — conteúdo não-código
 - **Apache License 2.0** — algumas skills
 
+## Derivação de magic.css (MIT)
+
+A seção "Efeitos" do catálogo do Atelier (`agents/design/showcase/catalogo.html`) inclui
+keyframes derivados de [`magic.css`](https://github.com/miniMAC/magic)
+(Copyright © Christian Pucci, MIT License), adaptados ao palco do catálogo.
+
 ## Derivações de pbakaus/impeccable (Apache-2.0)
 
 Parte do agente **Atelier** e um conjunto de skills derivam de
