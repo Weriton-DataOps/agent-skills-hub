@@ -25,6 +25,11 @@ Parte das skills desta biblioteca foi originada de projetos open-source de terce
 - **Creative Commons Attribution 4.0 (CC BY 4.0)** — conteúdo não-código
 - **Apache License 2.0** — algumas skills
 
+## Three.js (MIT)
+
+O catálogo do Atelier embarca `three.min.js` r147 (`agents/design/showcase/vendor/`) —
+Copyright 2010-2022 Three.js Authors, MIT License — usado na galeria orbital 3D.
+
 ## Derivação de magic.css (MIT)
 
 A seção "Efeitos" do catálogo do Atelier (`agents/design/showcase/catalogo.html`) inclui
