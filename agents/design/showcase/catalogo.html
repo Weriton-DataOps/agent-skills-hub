@@ -1,0 +1,2003 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo — Atelier · OverCore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Bebas+Neue&family=Caveat:wght@600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --panel-2:#171b26; --line:#242a36;
+    --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d;
+    --radius:18px; --radius-s:10px;
+    --dur-micro:100ms; --dur-trans:300ms; --dur-enter:500ms; --ease:cubic-bezier(.4,0,.2,1);
+    --snap:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  section{padding:84px 24px}
+  .wrap{max-width:1160px; margin:0 auto}
+  .kicker{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  h2{font-size:clamp(26px,3.6vw,38px); font-weight:800; letter-spacing:-.02em; margin:12px 0 8px; text-wrap:balance}
+  .lead{color:var(--dim); max-width:64ch; font-size:15.5px; margin:0}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}}
+
+  nav{position:fixed; top:0; left:0; right:0; z-index:60; backdrop-filter:blur(10px);
+    background:rgba(11,13,18,.8); border-bottom:1px solid var(--line)}
+  nav .bar{max-width:1160px; margin:0 auto; padding:13px 24px; display:flex; justify-content:space-between; align-items:center}
+  .logo{font-weight:800; font-size:15px; text-decoration:none}
+  .logo b{color:var(--accent)}
+  nav .links{display:flex; gap:18px; font-size:13px}
+  nav .links a{color:var(--dim); text-decoration:none; transition:color var(--dur-micro) var(--ease)}
+  nav .links a:hover{color:var(--ink)}
+
+  header.hero{padding:130px 24px 30px}
+  header.hero h1{font-size:clamp(32px,5vw,52px); font-weight:800; letter-spacing:-.03em; line-height:1.04; margin:14px 0 12px; text-wrap:balance}
+  header.hero h1 em{font-style:normal; color:var(--accent)}
+  header.hero p{color:var(--dim); max-width:58ch; font-size:16px}
+
+  /* ---- controles (estilo + cor) ---- */
+  .controls{display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin:26px 0 20px;
+    border:1px solid var(--line); background:rgba(18,21,29,.94); border-radius:var(--radius); padding:12px 14px;
+    position:sticky; top:62px; z-index:35; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    box-shadow:0 8px 22px rgba(0,0,0,.28)}
+  .controls .grp{display:flex; flex-wrap:wrap; gap:7px; align-items:center}
+  .controls .cap{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-weight:700; margin-right:4px}
+  .pk{font:600 12.5px/1 inherit; padding:8px 13px; border-radius:999px; cursor:pointer;
+    border:1px solid var(--line); background:transparent; color:var(--dim); transition:all var(--dur-micro) var(--ease)}
+  .pk:hover{color:var(--ink); border-color:#31394a}
+  .pk[aria-pressed=true]{background:var(--accent); border-color:var(--accent); color:#0b0d12}
+  .sw{width:26px; height:26px; border-radius:999px; cursor:pointer; border:2px solid transparent;
+    transition:transform var(--dur-micro) var(--ease), border-color var(--dur-micro) var(--ease)}
+  .sw:hover{transform:scale(1.12)}
+  .sw[aria-pressed=true]{border-color:var(--ink)}
+
+  /* ---- temas (6 linguagens, vars compartilhadas) ---- */
+  .th{transition:background var(--dur-trans) var(--ease)}
+  .th-minimal{--cBg:#faf9f7; --cCard:#fff; --cBorder:1px solid #e6e2db; --cR:6px;
+    --cShadow:0 1px 3px rgba(0,0,0,.06); --cInk:#1a1a1a; --cDim:#8a857c; --cTrack:#eee9e1; --cBlur:none}
+  .th-glass{--cBg:linear-gradient(135deg,#4638a8,#a83a7e 55%,#c77b3f); --cCard:rgba(255,255,255,.13);
+    --cBorder:1px solid rgba(255,255,255,.36); --cR:18px; --cShadow:0 8px 26px rgba(0,0,0,.24);
+    --cInk:#fff; --cDim:rgba(255,255,255,.72); --cTrack:rgba(255,255,255,.22); --cBlur:blur(14px) saturate(1.35)}
+  .th-brutal{--cBg:#a6f0c6; --cCard:#fff; --cBorder:3px solid #111; --cR:4px; --cShadow:6px 6px 0 #111;
+    --cInk:#111; --cDim:#555; --cTrack:#efefef; --cBlur:none}
+  .th-clay{--cBg:linear-gradient(160deg,#dfe6ff,#f4e8ff); --cCard:#eef1ff; --cBorder:1px solid transparent; --cR:24px;
+    --cShadow:8px 8px 18px #c3c9e6,-7px -7px 16px #fff; --cInk:#4a4e69; --cDim:#7a7f9c; --cTrack:#dde1f7; --cBlur:none}
+  .th-skeu{--cBg:linear-gradient(180deg,#2b2f36,#15171b); --cCard:linear-gradient(180deg,#3a3f47,#23272e);
+    --cBorder:1px solid transparent; --cR:12px; --cShadow:inset 0 1px 0 #5a616c, inset 0 -2px 5px #0a0c0f, 0 10px 20px rgba(0,0,0,.5);
+    --cInk:#e8ebf2; --cDim:#8b93a7; --cTrack:#1a1d23; --cBlur:none}
+  .th-over{--cBg:#0e1118; --cCard:#12151d; --cBorder:1px solid #242a36; --cR:18px;
+    --cShadow:0 6px 18px rgba(0,0,0,.3); --cInk:#e8ebf2; --cDim:#8b93a7; --cTrack:#171b26; --cBlur:none}
+  .canvas{background:var(--cBg); border:1px solid var(--line); border-radius:var(--radius); padding:22px;
+    --acc:var(--accDefault,#c8ff3d); --accInk:var(--accInkDefault,#0b0d12)}
+  /* modo claro/escuro — variante oposta de cada tema */
+  .th-minimal.thd{--cBg:#15140f; --cCard:#1d1c16; --cBorder:1px solid #2c2a22; --cShadow:0 1px 3px rgba(0,0,0,.5);
+    --cInk:#eae7de; --cDim:#96917f; --cTrack:#262418}
+  .th-glass.thd{--cBg:linear-gradient(135deg,#1a1440,#3d1030 55%,#402410); --cCard:rgba(255,255,255,.08);
+    --cBorder:1px solid rgba(255,255,255,.22); --cShadow:0 8px 26px rgba(0,0,0,.5)}
+  .th-brutal.thd{--cBg:#111; --cCard:#191919; --cBorder:3px solid #f2f2f2; --cShadow:6px 6px 0 #f2f2f2;
+    --cInk:#f2f2f2; --cDim:#9a9a9a; --cTrack:#242424}
+  .th-clay.thd{--cBg:linear-gradient(160deg,#23233c,#2b2340); --cCard:#2b2b47;
+    --cShadow:8px 8px 18px #1b1b30, -7px -7px 16px #37375c, inset 2px 2px 6px #3d3d63;
+    --cInk:#d9dcf5; --cDim:#8f93b8; --cTrack:#232342}
+  .th-skeu.thl{--cBg:linear-gradient(180deg,#e7eaef,#c8cdd6); --cCard:linear-gradient(180deg,#fbfcfe,#dde2e9);
+    --cShadow:inset 0 1px 0 #fff, inset 0 -2px 5px #b3bac6, 0 10px 20px rgba(60,70,90,.25);
+    --cInk:#242832; --cDim:#6b7280; --cTrack:#c3cad4}
+  .th-over.thl{--cBg:#f2f4f9; --cCard:#fff; --cBorder:1px solid #e2e6ee; --cShadow:0 6px 18px rgba(30,40,60,.08);
+    --cInk:#171a21; --cDim:#6a7284; --cTrack:#eceff5}
+
+  /* ============ CARTÕES (10) ============ */
+  .cards-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px}
+  .cd{position:relative; background:var(--cCard); border:var(--cBorder); border-radius:var(--cR);
+    box-shadow:var(--cShadow), inset 0 0 0 999px color-mix(in srgb, var(--acc) 28%, transparent);
+    color:var(--cInk); padding:20px; min-height:210px;
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur);
+    display:flex; flex-direction:column; overflow:hidden}
+  .cd h4{margin:0 0 6px; font-size:16px; letter-spacing:-.01em}
+  .cd p{margin:0; font-size:13px; color:var(--cDim); line-height:1.5}
+  .cd .tag{position:absolute; top:14px; right:14px; font-size:12px; font-weight:800; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--acc)}
+  .cd .foot{margin-top:auto; padding-top:14px; font-size:12.5px; font-weight:600; color:var(--acc)}
+  .cdlbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .cdlbl b{color:var(--ink); font-weight:600}
+  /* 1 lift */
+  .cd-lift{transition:transform var(--dur-trans) var(--snap), box-shadow var(--dur-trans) var(--ease)}
+  .cd-lift:hover{transform:translateY(-8px)}
+  /* 2 tilt 3d */
+  .cd-tilt{transition:transform 150ms linear; transform-style:preserve-3d}
+  .cd-tilt .foot{transform:translateZ(24px)}
+  /* 3 flip */
+  .cd-flipwrap{perspective:1100px; min-height:210px; position:relative}
+  .cd-flip{position:absolute; inset:0; transition:transform .7s var(--snap); transform-style:preserve-3d}
+  .cd-flipwrap:hover .cd-flip{transform:rotateY(180deg)}
+  .cd-face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden}
+  .cd-face.back{transform:rotateY(180deg); display:flex; flex-direction:column; justify-content:center; text-align:center}
+  .cd-face.back .foot{margin:14px auto 0}
+  /* 4 reveal */
+  .cd-reveal{padding:0}
+  .cd-reveal img{width:100%; height:210px; object-fit:cover; display:block; transition:transform .5s var(--snap)}
+  .cd-reveal:hover img{transform:scale(1.06)}
+  .cd-reveal .rv-body{position:absolute; inset:auto 0 0 0; padding:16px 18px;
+    background:linear-gradient(to top, rgba(8,10,14,.88), rgba(8,10,14,.4) 70%, transparent); color:#fff;
+    transform:translateY(38px); transition:transform .45s var(--snap)}
+  .cd-reveal:hover .rv-body{transform:none}
+  .cd-reveal .rv-body p{color:rgba(255,255,255,.75); opacity:0; transition:opacity .35s var(--ease) .1s}
+  .cd-reveal:hover .rv-body p{opacity:1}
+  /* 5 border-draw */
+  .cd-draw::before,.cd-draw::after{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    border:2px solid transparent}
+  .cd-draw:hover::before{border-top-color:var(--acc); border-right-color:var(--acc);
+    transition:border-top-color 0s, width .3s var(--ease); animation:drawA .5s var(--ease) forwards}
+  .cd-draw:hover::after{animation:drawB .5s var(--ease) .25s forwards}
+  @keyframes drawA{from{clip-path:inset(0 100% 100% 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes drawB{from{clip-path:inset(100% 0 0 100%); border-bottom-color:var(--acc); border-left-color:var(--acc)}
+    to{clip-path:inset(0 0 0 0); border-bottom-color:var(--acc); border-left-color:var(--acc)}}
+  /* 6 spotlight */
+  .cd-spot::before{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0;
+    background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%), color-mix(in srgb, var(--acc) 16%, transparent), transparent 65%);
+    transition:opacity var(--dur-trans) var(--ease)}
+  .cd-spot:hover::before{opacity:1}
+  /* 7 expand */
+  .cd-exp .more{display:grid; grid-template-rows:0fr; transition:grid-template-rows .45s var(--snap)}
+  .cd-exp .more>div{overflow:hidden}
+  .cd-exp:hover .more{grid-template-rows:1fr}
+  .cd-exp .more p{padding-top:10px}
+  /* 8 underline-grow */
+  .cd-ul .bar{height:3px; width:34px; background:var(--acc); border-radius:3px; margin-bottom:14px;
+    transition:width .45s var(--snap)}
+  .cd-ul:hover .bar{width:100%}
+  /* 9 skeleton→conteudo (loop) */
+  .cd-skel .real{opacity:0; transition:opacity .4s var(--ease)}
+  .cd-skel.loaded .real{opacity:1}
+  .cd-skel .bones{position:absolute; inset:20px; opacity:1; transition:opacity .4s var(--ease)}
+  .cd-skel.loaded .bones{opacity:0}
+  .cd-skel .bn{position:relative; overflow:hidden; background:var(--cTrack); border-radius:6px; height:12px; margin:9px 0}
+  .cd-skel .bn::after{content:""; position:absolute; inset:0; transform:translateX(-100%);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cbsh 1.3s var(--ease) infinite}
+  @keyframes cbsh{to{transform:translateX(100%)}}
+  /* 10 notificação (loop) */
+  .cd-notif{justify-content:center}
+  .cd-notif .toast{display:flex; align-items:center; gap:12px; background:var(--cTrack); border-radius:calc(var(--cR)*.6);
+    padding:12px 14px; opacity:0; transform:translateY(14px); animation:toastIn 4.2s var(--ease) infinite}
+  .cd-notif .toast:nth-child(2){animation-delay:1.4s}
+  .cd-notif .toast+.toast{margin-top:10px}
+  @keyframes toastIn{5%,60%{opacity:1; transform:none}0%,72%,100%{opacity:0; transform:translateY(14px)}}
+  .cd-notif .dotn{width:34px; height:34px; border-radius:999px; background:var(--acc); color:var(--accInk);
+    display:grid; place-items:center; font-weight:800; font-size:14px; flex:none}
+  .cd-notif .toast b{display:block; font-size:13px} .cd-notif .toast span{font-size:12px; color:var(--cDim)}
+
+  footer{border-top:1px solid var(--line); padding:34px 24px; margin-top:30px}
+  footer .wrap{display:flex; justify-content:space-between; gap:12px; font-size:13px; color:var(--dim); flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="bar">
+    <a class="logo" href="index.html">Atelier<b>.</b> <span style="color:var(--dim); font-weight:500; font-size:13px">catálogo</span></a>
+    <div class="links">
+      <a href="#linguagens">Linguagens</a><a href="#cartoes">Cartões</a><a href="#botoes">Botões</a>
+      <a href="#textos">Textos</a><a href="#loading">Loading</a><a href="#fotos">Fotos</a><a href="#efeitos">Efeitos</a><a href="#menus">Menus</a><a href="#orbita">3D</a><a href="verbos.html">Verbos</a>
+      <a href="index.html" style="color:var(--accent)">← showcase</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="kicker">Atelier · catálogo de componentes</div>
+  <h1>Escolha a peça. Troque a roupa. <em>Leve a receita.</em></h1>
+  <p>Cada componente abaixo troca de <b style="color:var(--ink)">linguagem</b> e de <b style="color:var(--ink)">cor de acento</b> ao vivo — a estrutura nunca muda, só a pele. É o catálogo que alimenta o <span style="color:var(--accent)">/overcore</span>.</p>
+</header>
+
+<!-- ============ LINGUAGENS (6 estilos, 1 estrutura) ============ -->
+<style>
+  .stage2{margin-top:26px; border-radius:var(--radius); border:1px solid var(--line); overflow:hidden}
+  .scv{min-height:420px; display:grid; place-items:center; padding:44px 20px; transition:background var(--dur-trans) var(--ease)}
+  .sample{width:min(400px,92%); padding:26px; transition:all var(--dur-trans) var(--ease)}
+  .sc-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px}
+  .sc-title{font-weight:700; font-size:15px}
+  .sc-badge{font-size:12px; font-weight:700; padding:3px 10px; border-radius:999px}
+  .sc-num{font-size:38px; font-weight:800; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin:6px 0 14px}
+  .sc-bar{height:8px; border-radius:6px; overflow:hidden; margin-bottom:20px}
+  .sc-bar i{display:block; height:100%; width:64%}
+  .sc-btn{font:700 14px/1 Inter,sans-serif; padding:12px 18px; cursor:pointer; transition:transform var(--dur-micro) var(--ease)}
+  .sc-btn:active{transform:translateY(1px)}
+  .scv-minimal{background:#faf9f7}
+  .s-minimal{background:#fff; border:1px solid #e6e2db; border-radius:4px; color:#1a1a1a; font-family:Georgia,serif}
+  .s-minimal .sc-title{font-family:Georgia,serif; font-weight:400; font-size:17px}
+  .s-minimal .sc-badge{background:#f4f1ec; color:#1a1a1a}
+  .s-minimal .sc-bar{background:#eee9e1} .s-minimal .sc-bar i{background:#e0623d}
+  .s-minimal .sc-btn{background:none; border:none; border-bottom:1px solid #1a1a1a; border-radius:0; padding:6px 2px; font-family:Inter,sans-serif; font-size:13px}
+  .scv-glass{background:linear-gradient(135deg,#5b2be0,#ff5db1 55%,#ffb14d)}
+  .s-glass{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.4); border-radius:20px;
+    -webkit-backdrop-filter:blur(16px) saturate(1.4); backdrop-filter:blur(16px) saturate(1.4); color:#fff; box-shadow:0 8px 28px rgba(0,0,0,.22)}
+  .s-glass .sc-badge{background:rgba(255,255,255,.2); color:#fff}
+  .s-glass .sc-bar{background:rgba(255,255,255,.2)} .s-glass .sc-bar i{background:#fff}
+  .s-glass .sc-btn{background:rgba(255,255,255,.92); border:none; border-radius:12px; color:#4c1d95}
+  .scv-brutal{background:#a6f0c6}
+  .s-brutal{background:#fff; border:3px solid #111; border-radius:4px; color:#111; box-shadow:8px 8px 0 #111}
+  .s-brutal .sc-title{text-transform:uppercase; font-weight:900}
+  .s-brutal .sc-badge{background:#ffe14d; border:2px solid #111; color:#111}
+  .s-brutal .sc-bar{background:#eee; border:2px solid #111} .s-brutal .sc-bar i{background:#ff5c5c}
+  .s-brutal .sc-btn{background:#ff5c5c; border:3px solid #111; border-radius:4px; box-shadow:4px 4px 0 #111; text-transform:uppercase}
+  .scv-clay{background:linear-gradient(160deg,#dfe6ff,#f4e8ff)}
+  .s-clay{background:#eef1ff; border:none; border-radius:28px; color:#4a4e69;
+    box-shadow:10px 10px 22px #c3c9e6, -8px -8px 20px #fff, inset 2px 2px 6px #fff}
+  .s-clay .sc-badge{background:#dfe3fb; color:#5b5f82}
+  .s-clay .sc-bar{background:#dde1f7} .s-clay .sc-bar i{background:#6c5ce7}
+  .s-clay .sc-btn{background:#6c5ce7; color:#fff; border:none; border-radius:18px; box-shadow:6px 6px 14px #c3c9e6,-4px -4px 10px #fff}
+  .scv-skeu{background:linear-gradient(180deg,#2b2f36,#15171b)}
+  .s-skeu{background:linear-gradient(180deg,#3a3f47,#23272e); border:none; border-radius:14px; color:#e8ebf2;
+    box-shadow:inset 0 1px 0 #5a616c, inset 0 -2px 6px #0a0c0f, 0 14px 26px rgba(0,0,0,.55)}
+  .s-skeu .sc-badge{background:radial-gradient(circle at 40% 35%,#c8ff9d,#3fbf2d 65%,#1f6b16); color:#0b2107; box-shadow:inset 0 -1px 2px #145b0d}
+  .s-skeu .sc-bar{background:#1a1d23; box-shadow:inset 0 2px 4px #0a0c0f} .s-skeu .sc-bar i{background:linear-gradient(180deg,#9fe045,#6ab010)}
+  .s-skeu .sc-btn{background:linear-gradient(180deg,#f2f4f7,#c3c8d0); color:#1a1d23; border:none; border-radius:8px;
+    box-shadow:inset 0 1px 0 #fff, 0 3px 6px rgba(0,0,0,.5)}
+  .scv-liquid{background:linear-gradient(120deg,#7db2ff,#a99bff 50%,#7ee8e0)}
+  .s-liquid{background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.25)); border:1px solid rgba(255,255,255,.75);
+    border-radius:24px; color:#0d2540; -webkit-backdrop-filter:blur(20px) saturate(1.6); backdrop-filter:blur(20px) saturate(1.6);
+    box-shadow:0 12px 32px rgba(20,40,80,.25), inset 0 1px 0 rgba(255,255,255,.95)}
+  .s-liquid .sc-badge{background:rgba(13,37,64,.1); color:#0d2540}
+  .s-liquid .sc-bar{background:rgba(13,37,64,.14)} .s-liquid .sc-bar i{background:#0d2540}
+  .s-liquid .sc-btn{background:#0d2540; color:#fff; border:none; border-radius:14px}
+</style>
+<section id="linguagens" style="padding-top:30px">
+  <div class="wrap">
+    <div class="kicker">01 · Linguagens</div>
+    <h2>Mesma estrutura. Seis linguagens.</h2>
+    <p class="lead">Estilo é escolha, não default — glassmorphism eleito deixa de ser slop e vira intenção. A estrutura do componente nunca muda; só a pele.</p>
+    <div class="stage2">
+      <div class="scv scv-minimal" id="scv">
+        <div class="sample s-minimal" id="ssample">
+          <div class="sc-head"><span class="sc-title">Receita do mês</span><span class="sc-badge">+12%</span></div>
+          <div class="sc-num">R$ 84,2k</div>
+          <div class="sc-bar"><i></i></div>
+          <button class="sc-btn">Ver detalhes</button>
+        </div>
+      </div>
+      <div class="controls" style="margin:0; border:none; border-top:1px solid var(--line); border-radius:0" data-noctl>
+        <div class="grp"><span class="cap">Estilo</span>
+          <button class="pk st2" aria-pressed="true"  data-s="minimal">Minimalism</button>
+          <button class="pk st2" aria-pressed="false" data-s="glass">Glassmorphism</button>
+          <button class="pk st2" aria-pressed="false" data-s="brutal">Neo-Brutalism</button>
+          <button class="pk st2" aria-pressed="false" data-s="clay">Claymorphism</button>
+          <button class="pk st2" aria-pressed="false" data-s="skeu">Skeuomorphism</button>
+          <button class="pk st2" aria-pressed="false" data-s="liquid">Liquid Glass</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ CARTÕES ============ -->
+<section id="cartoes" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker">02 · Cartões</div>
+    <h2>Dez cartões, dez comportamentos.</h2>
+    <p class="lead">Hover em cada um. O 2 segue seu mouse em 3D, o 3 vira, o 9 carrega em loop.</p>
+
+    <div class="controls" data-target="cv-cards">
+      <div class="grp"><span class="cap">Estilo</span>
+        <button class="pk th-pk" aria-pressed="false" data-th="over">OverCore</button>
+        <button class="pk th-pk" aria-pressed="true"  data-th="minimal">Minimal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="glass">Glass</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="brutal">Brutal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="clay">Clay</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="true" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="false" data-m="dark">Escuro</button>
+      </div>
+    </div>
+
+    <div class="canvas th th-minimal" id="cv-cards">
+      <div class="cards-grid">
+
+        <div>
+          <div class="cd cd-lift"><span class="tag">01</span><h4>Hover lift</h4><p>O clássico honesto: sobe 8px no ease-out da casa e volta sem drama.</p><div class="foot">Ver detalhes →</div></div>
+          <div class="cdlbl"><b>Lift</b><span>listas, produtos</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-tilt" data-tilt><span class="tag">02</span><h4>Tilt 3D</h4><p>Perspectiva que segue o cursor — profundidade sem sombra falsa.</p><div class="foot">Segure o mouse aqui</div></div>
+          <div class="cdlbl"><b>Tilt 3D</b><span>destaques, capas</span></div>
+        </div>
+
+        <div>
+          <div class="cd-flipwrap">
+            <div class="cd-flip">
+              <div class="cd cd-face"><span class="tag">03</span><h4>Flip</h4><p>Frente com o resumo. Passe o mouse pra virar a carta.</p><div class="foot">vire-me</div></div>
+              <div class="cd cd-face back"><h4>O verso.</h4><p>Specs, preço, o que não coube na frente.</p><div class="foot">Voltar ←</div></div>
+            </div>
+          </div>
+          <div class="cdlbl"><b>Flip</b><span>frente/verso, specs</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-reveal"><img src="https://picsum.photos/id/1018/640/430" alt="Montanha" loading="lazy">
+            <div class="rv-body"><h4 style="color:#fff">Reveal sobre imagem</h4><p>A descrição sobe junto com sua curiosidade.</p></div>
+          </div>
+          <div class="cdlbl"><b>Reveal</b><span>galerias, cases</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-draw"><span class="tag">05</span><h4>Border draw</h4><p>A borda se desenha em dois tempos ao redor do card — tinta na cor de acento.</p><div class="foot">Repare no contorno</div></div>
+          <div class="cdlbl"><b>Border draw</b><span>seleção, foco</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-spot" data-spot><span class="tag">06</span><h4>Spotlight</h4><p>Um facho da cor de acento segue o mouse pelo card. Discreto, caro.</p><div class="foot">Passeie por aqui</div></div>
+          <div class="cdlbl"><b>Spotlight</b><span>dark UIs, feature grids</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-exp"><span class="tag">07</span><h4>Expansível</h4><p>O essencial sempre visível.</p>
+            <div class="more"><div><p>O resto expande no hover — via grid-rows, sem animar height na marra. Cabe changelog, specs, contexto.</p></div></div>
+            <div class="foot">Hover pra expandir</div></div>
+          <div class="cdlbl"><b>Expansível</b><span>FAQs, changelogs</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-ul"><div class="bar"></div><span class="tag">08</span><h4>Underline grow</h4><p>O traço de acento cresce até virar régua do card inteiro. Hierarquia em movimento.</p><div class="foot">Cresce comigo</div></div>
+          <div class="cdlbl"><b>Underline</b><span>artigos, categorias</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-skel" data-skel><span class="tag">09</span>
+            <div class="bones"><div class="bn" style="width:52%"></div><div class="bn" style="width:88%"></div><div class="bn" style="width:74%"></div><div class="bn" style="width:40%; margin-top:26px"></div></div>
+            <div class="real"><h4>Skeleton → conteúdo</h4><p>Carrega com a geometria exata e troca sem pulo — zero CLS, como manda a skill loading-states.</p><div class="foot">Recarrega em loop</div></div>
+          </div>
+          <div class="cdlbl"><b>Skeleton</b><span>qualquer card com fetch</span></div>
+        </div>
+
+        <div>
+          <div class="cd cd-notif"><span class="tag">10</span>
+            <div class="toast"><div class="dotn">✓</div><div><b>Reserva confirmada</b><span>Semana 32 · Serra Azul</span></div></div>
+            <div class="toast"><div class="dotn">2</div><div><b>Novos comunicados</b><span>há 5 minutos</span></div></div>
+          </div>
+          <div class="cdlbl"><b>Notificação</b><span>toasts, feeds ao vivo</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOTÕES (20) ============ -->
+<style>
+  .btns-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(252px,1fr)); gap:14px}
+  .bf{background:var(--cCard); border:var(--cBorder); border-radius:var(--cR);
+    box-shadow:var(--cShadow), inset 0 0 0 999px color-mix(in srgb, var(--acc) 14%, transparent);
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur);
+    min-height:132px; display:grid; place-items:center; padding:20px; position:relative; overflow:hidden}
+  .bflbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .bflbl b{color:var(--ink); font-weight:600}
+  .bt{font:700 13.5px/1 Inter,system-ui,sans-serif; padding:12px 20px; border-radius:calc(var(--cR)*.6);
+    cursor:pointer; border:none; position:relative; overflow:hidden;
+    transition:transform var(--dur-micro) var(--ease), filter var(--dur-micro) var(--ease),
+      background var(--dur-trans) var(--ease), color var(--dur-trans) var(--ease), box-shadow var(--dur-trans) var(--ease)}
+  .bt:active{transform:translateY(1px)}
+  .bt:focus-visible{outline:2px solid var(--acc); outline-offset:2px}
+  /* 1 sólido */
+  .bt-solid{background:var(--acc); color:var(--accInk)}
+  .bt-solid:hover{filter:brightness(1.08)}
+  /* 2 outline→fill */
+  .bt-out{background:transparent; color:var(--cInk); box-shadow:inset 0 0 0 2px var(--acc)}
+  .bt-out:hover{background:var(--acc); color:var(--accInk)}
+  /* 3 ghost */
+  .bt-ghost{background:transparent; color:var(--cInk)}
+  .bt-ghost:hover{background:color-mix(in srgb, var(--acc) 16%, transparent)}
+  /* 4 ícone desliza */
+  .bt-ico{background:var(--acc); color:var(--accInk); display:inline-flex; align-items:center; gap:8px}
+  .bt-ico i{font-style:normal; transition:transform var(--dur-trans) var(--snap)}
+  .bt-ico:hover i{transform:translateX(5px)}
+  /* 5 shine */
+  .bt-shine{background:var(--acc); color:var(--accInk)}
+  .bt-shine::after{content:""; position:absolute; inset:0; transform:translateX(-110%) skewX(-18deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent); width:60%}
+  .bt-shine:hover::after{animation:btshine .7s var(--ease)}
+  @keyframes btshine{to{transform:translateX(260%) skewX(-18deg)}}
+  /* 6 border draw */
+  .bt-draw{background:transparent; color:var(--cInk)}
+  .bt-draw::before{content:""; position:absolute; inset:0; border-radius:inherit; border:2px solid var(--acc);
+    clip-path:inset(0 100% 0 0); transition:clip-path .45s var(--snap)}
+  .bt-draw:hover::before{clip-path:inset(0 0 0 0)}
+  /* 7 underline */
+  .bt-und{background:none; color:var(--cInk); padding:8px 2px; border-radius:0}
+  .bt-und::after{content:""; position:absolute; left:0; right:100%; bottom:2px; height:2px; background:var(--acc);
+    transition:right .35s var(--snap)}
+  .bt-und:hover::after{right:0}
+  /* 8 loading morph */
+  .bt-load{background:var(--acc); color:var(--accInk); min-width:150px}
+  .bt-load .sp{display:none; width:13px; height:13px; border-radius:999px; border:2px solid color-mix(in srgb, var(--accInk) 35%, transparent);
+    border-top-color:var(--accInk); animation:btsp .8s linear infinite; vertical-align:-2px; margin-right:8px}
+  @keyframes btsp{to{transform:rotate(360deg)}}
+  .bt-load.busy .sp{display:inline-block}
+  /* 9 shake */
+  .bt-shake{background:transparent; color:#f87171; box-shadow:inset 0 0 0 2px #f87171}
+  .bt-shake.err{animation:btshk .4s var(--ease)}
+  @keyframes btshk{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  /* 10 ripple */
+  .bt-rip{background:var(--acc); color:var(--accInk)}
+  .bt-rip .rp{position:absolute; border-radius:999px; background:rgba(255,255,255,.45); transform:scale(0);
+    animation:btrp .55s var(--ease) forwards; pointer-events:none}
+  @keyframes btrp{to{transform:scale(3.4); opacity:0}}
+  /* 11 magnético */
+  .bt-mag{background:var(--acc); color:var(--accInk); transition:transform 140ms var(--ease)}
+  /* 12 split label */
+  .bt-split{background:var(--acc); color:var(--accInk); height:41px; padding:0 20px}
+  .bt-split .lbls{display:block; overflow:hidden; height:41px}
+  .bt-split .lbls span{display:flex; align-items:center; justify-content:center; height:41px;
+    transition:transform .35s var(--snap)}
+  .bt-split:hover .lbls span{transform:translateY(-41px)}
+  /* 13 conic border (espécime) */
+  .bt-conic{background:var(--cCard); color:var(--cInk); border-radius:999px}
+  .bt-conic::before{content:""; position:absolute; inset:-2px; border-radius:999px; padding:2px; z-index:-1;
+    background:conic-gradient(from var(--cba,0deg), var(--acc), transparent 30%, var(--acc) 60%, transparent 90%, var(--acc));
+    animation:btconic 3s linear infinite}
+  @property --cba{syntax:'<angle>'; initial-value:0deg; inherits:false}
+  @keyframes btconic{to{--cba:360deg}}
+  /* 14 3D pressed */
+  .bt-3d{background:var(--acc); color:var(--accInk);
+    box-shadow:0 5px 0 color-mix(in srgb, var(--acc) 55%, #000), 0 8px 14px rgba(0,0,0,.3)}
+  .bt-3d:active{transform:translateY(4px); box-shadow:0 1px 0 color-mix(in srgb, var(--acc) 55%, #000), 0 2px 5px rgba(0,0,0,.3)}
+  /* 15 toggle */
+  .tgl{width:56px; height:30px; border-radius:999px; background:var(--cTrack); border:none; position:relative; cursor:pointer;
+    transition:background var(--dur-trans) var(--ease)}
+  .tgl::after{content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:999px; background:#fff;
+    box-shadow:0 1px 4px rgba(0,0,0,.35); transition:transform var(--dur-trans) var(--snap)}
+  .tgl[aria-pressed=true]{background:var(--acc)}
+  .tgl[aria-pressed=true]::after{transform:translateX(26px)}
+  /* 16 segmented */
+  .seg{display:inline-flex; position:relative; background:var(--cTrack); border-radius:999px; padding:4px}
+  .seg .ind{position:absolute; top:4px; bottom:4px; border-radius:999px; background:var(--acc); transition:left .3s var(--snap), width .3s var(--snap)}
+  .seg button{position:relative; z-index:1; background:none; border:none; font:600 12.5px/1 Inter,sans-serif;
+    color:var(--cDim); padding:8px 16px; cursor:pointer; border-radius:999px; transition:color var(--dur-trans) var(--ease)}
+  .seg button[aria-pressed=true]{color:var(--accInk)}
+  /* 17 FAB */
+  .fabwrap{position:relative; height:70px; display:grid; place-items:center}
+  .fab{width:46px; height:46px; border-radius:999px; background:var(--acc); color:var(--accInk); border:none;
+    font-size:20px; font-weight:800; cursor:pointer; transition:transform .35s var(--snap)}
+  .fabwrap.open .fab{transform:rotate(45deg)}
+  .fabwrap .mini{position:absolute; width:34px; height:34px; border-radius:999px; background:var(--cCard); border:var(--cBorder);
+    color:var(--cInk); display:grid; place-items:center; font-size:13px; cursor:pointer; opacity:0; transform:scale(.4); pointer-events:none;
+    transition:transform .3s var(--snap), opacity .3s var(--ease)}
+  .fabwrap.open .mini{opacity:1; transform:scale(1); pointer-events:auto}
+  .fabwrap .m1{left:calc(50% - 76px)} .fabwrap .m2{top:-8px; left:calc(50% - 17px)} .fabwrap .m3{left:calc(50% + 42px)}
+  /* 18 copy */
+  .bt-copy{background:transparent; color:var(--cInk); box-shadow:inset 0 0 0 1.5px var(--cDim); font-family:"JetBrains Mono",monospace; font-size:12.5px}
+  .bt-copy.ok{box-shadow:inset 0 0 0 1.5px var(--acc); color:var(--acc)}
+  /* 19 stepper */
+  .step2{display:inline-flex; align-items:center; gap:0; background:var(--cTrack); border-radius:calc(var(--cR)*.6); overflow:hidden}
+  .step2 button{width:38px; height:38px; border:none; background:transparent; color:var(--cInk); font-size:17px; font-weight:700; cursor:pointer;
+    transition:background var(--dur-micro) var(--ease)}
+  .step2 button:hover{background:color-mix(in srgb, var(--acc) 22%, transparent)}
+  .step2 output{min-width:44px; text-align:center; font:700 15px/1 Inter,sans-serif; color:var(--cInk); font-variant-numeric:tabular-nums}
+  /* 20 download progress */
+  .bt-dl{background:var(--cTrack); color:var(--cInk); min-width:170px; position:relative}
+  .bt-dl .fill{position:absolute; inset:0; background:var(--acc); transform:scaleX(0); transform-origin:left; border-radius:inherit}
+  .bt-dl .lb{position:relative; z-index:1; transition:color var(--dur-trans) var(--ease)}
+  .bt-dl.going .fill{transition:transform 2.2s var(--ease); transform:scaleX(1)}
+  .bt-dl.going .lb,.bt-dl.done .lb{color:var(--accInk)}
+  .bt-dl.done .fill{transform:scaleX(1)}
+</style>
+<section id="botoes" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker">03 · Botões</div>
+    <h2>Vinte botões. Todos com resposta.</h2>
+    <p class="lead">Metade reage ao hover, metade ao clique — teste o 8 (carrega), o 10 (ripple), o 17 (FAB) e o 20 (download). O 13 é espécime intencional: borda viva só quando eleita.</p>
+
+    <div class="controls" data-target="cv-btns">
+      <div class="grp"><span class="cap">Estilo</span>
+        <button class="pk th-pk" aria-pressed="true"  data-th="over">OverCore</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="minimal">Minimal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="glass">Glass</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="brutal">Brutal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="clay">Clay</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="false" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="true" data-m="dark">Escuro</button>
+      </div>
+    </div>
+
+    <div class="canvas th th-over" id="cv-btns">
+      <div class="btns-grid">
+        <div><div class="bf"><button class="bt bt-solid">Continuar</button></div><div class="bflbl"><b>01 Sólido</b><span>ação primária</span></div></div>
+        <div><div class="bf"><button class="bt bt-out">Saiba mais</button></div><div class="bflbl"><b>02 Outline → fill</b><span>secundária com fome</span></div></div>
+        <div><div class="bf"><button class="bt bt-ghost">Cancelar</button></div><div class="bflbl"><b>03 Ghost</b><span>terciária</span></div></div>
+        <div><div class="bf"><button class="bt bt-ico">Avançar <i>→</i></button></div><div class="bflbl"><b>04 Ícone desliza</b><span>navegação</span></div></div>
+        <div><div class="bf"><button class="bt bt-shine">Assinar agora</button></div><div class="bflbl"><b>05 Shine</b><span>CTA de landing</span></div></div>
+        <div><div class="bf"><button class="bt bt-draw">Explorar</button></div><div class="bflbl"><b>06 Border draw</b><span>hover com tinta</span></div></div>
+        <div><div class="bf"><button class="bt bt-und">Ver todos os planos</button></div><div class="bflbl"><b>07 Underline</b><span>link-botão</span></div></div>
+        <div><div class="bf"><button class="bt bt-load" data-load><span class="sp"></span><span class="tx">Salvar</span></button></div><div class="bflbl"><b>08 Loading morph</b><span>clique: salva → ✓</span></div></div>
+        <div><div class="bf"><button class="bt bt-shake" data-shake>Excluir conta</button></div><div class="bflbl"><b>09 Shake</b><span>clique: recusa com corpo</span></div></div>
+        <div><div class="bf"><button class="bt bt-rip" data-rip>Confirmar</button></div><div class="bflbl"><b>10 Ripple</b><span>clique: onda material</span></div></div>
+        <div><div class="bf" style="min-height:150px"><button class="bt bt-mag" data-mag>Me pegue</button></div><div class="bflbl"><b>11 Magnético</b><span>gruda no cursor</span></div></div>
+        <div><div class="bf"><button class="bt bt-split"><span class="lbls"><span>Adicionar ao carrinho</span><span>Bora! →</span></span></button></div><div class="bflbl"><b>12 Split label</b><span>hover troca a frase</span></div></div>
+        <div><div class="bf"><button class="bt bt-conic">Premium</button></div><div class="bflbl"><b>13 Borda viva</b><span>espécime — use com propósito</span></div></div>
+        <div><div class="bf"><button class="bt bt-3d">Apertar</button></div><div class="bflbl"><b>14 3D pressed</b><span>afunda de verdade</span></div></div>
+        <div><div class="bf"><button class="tgl" aria-pressed="false" data-tgl aria-label="alternar"></button></div><div class="bflbl"><b>15 Toggle</b><span>on/off</span></div></div>
+        <div><div class="bf"><div class="seg" data-seg><span class="ind"></span><button aria-pressed="true">Dia</button><button aria-pressed="false">Semana</button><button aria-pressed="false">Mês</button></div></div><div class="bflbl"><b>16 Segmented</b><span>indicador desliza</span></div></div>
+        <div><div class="bf"><div class="fabwrap" data-fab><button class="mini m1" aria-label="editar">✎</button><button class="mini m2" aria-label="favoritar">♥</button><button class="mini m3" aria-label="compartilhar">↗</button><button class="fab" aria-label="abrir ações">+</button></div></div><div class="bflbl"><b>17 FAB expansível</b><span>clique no +</span></div></div>
+        <div><div class="bf"><button class="bt bt-copy" data-copy>npm i overcore</button></div><div class="bflbl"><b>18 Copy</b><span>clique: copia e confirma</span></div></div>
+        <div><div class="bf"><div class="step2" data-step><button aria-label="menos">−</button><output>2</output><button aria-label="mais">+</button></div></div><div class="bflbl"><b>19 Stepper</b><span>quantidade</span></div></div>
+        <div><div class="bf"><button class="bt bt-dl" data-dl><span class="fill"></span><span class="lb">Baixar relatório</span></button></div><div class="bflbl"><b>20 Download</b><span>clique: progresso no próprio botão</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANCHOR:BOTOES -->
+
+<!-- ============ TEXTOS (20) ============ -->
+<style>
+  .txt-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px}
+  .tf{background:var(--cCard); border:var(--cBorder); border-radius:var(--cR);
+    box-shadow:var(--cShadow), inset 0 0 0 999px color-mix(in srgb, var(--acc) 14%, transparent);
+    min-height:130px; display:grid; place-items:center; padding:22px 20px; overflow:hidden; position:relative;
+    color:var(--cInk); text-align:center}
+  .tflbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .tflbl b{color:var(--ink); font-weight:600}
+  .tx1{font-size:19px; font-weight:700; letter-spacing:-.01em}
+  .ftb{font-family:var(--tfont, Inter, sans-serif)}
+  .f-serif{font-family:"Playfair Display",Georgia,serif}
+  .f-display{font-family:"Bebas Neue",Impact,sans-serif; letter-spacing:.04em}
+  .f-mono{font-family:"JetBrains Mono",Consolas,monospace}
+  .f-script{font-family:"Caveat",cursive}
+  /* 1 typewriter */
+  .t-type .caret{display:inline-block; width:2px; height:1.1em; background:var(--acc); vertical-align:-2px; margin-left:2px;
+    animation:tcaret 1s steps(1) infinite}
+  @keyframes tcaret{50%{opacity:0}}
+  /* 2 por palavra */
+  .t-words span{display:inline-block; opacity:0; transform:translateY(10px);
+    animation:twd 4.4s var(--ease) infinite; animation-delay:calc(var(--i)*130ms)}
+  @keyframes twd{6%,68%{opacity:1; transform:none}0%,78%,100%{opacity:0; transform:translateY(10px)}}
+  /* 3 por letra */
+  .t-let span{display:inline-block; opacity:0; transform:translateY(8px);
+    animation:tlt 4s var(--ease) infinite; animation-delay:calc(var(--i)*45ms)}
+  @keyframes tlt{8%,70%{opacity:1; transform:none}0%,80%,100%{opacity:0; transform:translateY(8px)}}
+  /* 4 gradiente animado (espécime) */
+  .t-grad{background:linear-gradient(90deg, var(--acc), var(--cInk), var(--acc)); background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent; animation:tgr 3.2s linear infinite}
+  @keyframes tgr{to{background-position:-220% 0}}
+  /* 5 underline draw */
+  .t-und{position:relative}
+  .t-und::after{content:""; position:absolute; left:0; right:0; bottom:-5px; height:3px; border-radius:3px;
+    background:var(--acc); transform:scaleX(0); transform-origin:left; animation:tund 3.4s var(--snap) infinite}
+  @keyframes tund{18%,62%{transform:scaleX(1)}0%,8%{transform:scaleX(0); transform-origin:left}
+    63%,100%{transform-origin:right}90%,100%{transform:scaleX(0)}}
+  /* 6 marca-texto */
+  .t-mark em{font-style:normal; padding:2px 4px; border-radius:4px;
+    background:linear-gradient(color-mix(in srgb, var(--acc) 55%, transparent), color-mix(in srgb, var(--acc) 55%, transparent)) no-repeat 0 60%;
+    background-size:0% 45%; animation:tmk 3.8s var(--ease) infinite}
+  @keyframes tmk{22%,70%{background-size:100% 45%}0%,8%,92%,100%{background-size:0% 45%}}
+  /* 7 contador */
+  .t-count{font-variant-numeric:tabular-nums; font-size:34px; font-weight:800}
+  .t-count small{font-size:14px; color:var(--cDim); display:block; font-weight:600; margin-top:2px}
+  /* 8 decode */
+  .t-code{font-size:17px}
+  /* 9 clip reveal */
+  .t-clip{display:inline-block; clip-path:inset(0 0 100% 0); animation:tcl 3.6s var(--snap) infinite}
+  @keyframes tcl{14%,68%{clip-path:inset(0 0 0 0)}0%,4%{clip-path:inset(0 0 100% 0)}84%,100%{clip-path:inset(100% 0 0 0)}}
+  /* 10 blur-in */
+  .t-blur{animation:tbl 3.4s var(--ease) infinite}
+  @keyframes tbl{0%,6%{filter:blur(10px); opacity:0}22%,70%{filter:blur(0); opacity:1}88%,100%{filter:blur(10px); opacity:0}}
+  /* 11 onda */
+  .t-wave span{display:inline-block; animation:twv 1.8s var(--ease) infinite; animation-delay:calc(var(--i)*70ms)}
+  @keyframes twv{0%,100%{transform:none}30%{transform:translateY(-7px)}}
+  /* 12 rotativas */
+  .win.t-rot{display:inline-block; overflow:hidden; height:1.35em; vertical-align:bottom}
+  .t-rot .roll{display:block; transition:transform .5s var(--snap)}
+  .t-rot .roll span{display:block; height:1.35em; color:var(--acc)}
+  /* 13 letreiro */
+  .t-marq{width:100%; overflow:hidden}
+  .t-marq .in{display:flex; gap:34px; width:max-content; animation:tmar 14s linear infinite;
+    font-size:44px; line-height:1; white-space:nowrap; color:transparent; -webkit-text-stroke:1.5px var(--acc)}
+  @keyframes tmar{to{transform:translateX(-50%)}}
+  /* 14 glitch (espécime) */
+  .t-glitch{position:relative}
+  .t-glitch::before,.t-glitch::after{content:attr(data-t); position:absolute; left:0; top:0; width:100%}
+  .t-glitch::before{color:var(--acc); animation:tgl1 2.6s steps(2) infinite}
+  .t-glitch::after{color:#f87171; animation:tgl2 2.6s steps(2) infinite}
+  @keyframes tgl1{0%,88%,100%{transform:none; opacity:0}90%{transform:translate(-3px,-2px); opacity:.8}94%{transform:translate(2px,1px); opacity:.8}}
+  @keyframes tgl2{0%,88%,100%{transform:none; opacity:0}91%{transform:translate(3px,2px); opacity:.7}95%{transform:translate(-2px,-1px); opacity:.7}}
+  /* 15 neon (espécime) */
+  .t-neon{font-size:34px; color:var(--acc);
+    text-shadow:0 0 6px color-mix(in srgb, var(--acc) 70%, transparent), 0 0 18px color-mix(in srgb, var(--acc) 45%, transparent);
+    animation:tne 3.2s var(--ease) infinite}
+  @keyframes tne{0%,18%,22%,100%{opacity:1}19%,21%{opacity:.35}60%,62%{opacity:.8}}
+  /* 16 tracking-in */
+  .t-track{animation:ttr 3.6s var(--snap) infinite; font-size:22px; text-transform:uppercase}
+  @keyframes ttr{0%,6%{letter-spacing:.5em; opacity:0}28%,72%{letter-spacing:.08em; opacity:1}94%,100%{letter-spacing:.5em; opacity:0}}
+  /* 17 sombra dura */
+  .t-shadow{font-size:36px; color:var(--cInk); animation:tsh 2.8s var(--snap) infinite}
+  @keyframes tsh{0%,100%{text-shadow:2px 2px 0 var(--acc)}45%{text-shadow:7px 7px 0 var(--acc)}}
+  /* 18 risca & troca — JS */
+  .t-strike .old{position:relative; color:var(--cDim); white-space:nowrap}
+  .t-strike .old::after{content:""; position:absolute; left:0; top:52%; height:2.5px; background:#f87171; width:0; transition:width .45s var(--ease)}
+  .t-strike.cut .old::after{width:100%}
+  .t-strike .new{color:var(--acc); opacity:0; transform:translateY(6px); display:inline-block; margin-left:8px;
+    transition:opacity .4s var(--ease) .3s, transform .4s var(--snap) .3s}
+  .t-strike.cut .new{opacity:1; transform:none}
+  /* 19 terminal */
+  .t-term{font-size:14.5px; text-align:left; color:#7ee787}
+  .t-term .p{color:var(--acc)}
+  .t-term .blk{display:inline-block; width:8px; height:15px; background:#7ee787; vertical-align:-2px; margin-left:3px; animation:tcaret 1s steps(1) infinite}
+  /* 20 manuscrito */
+  .t-hand{font-size:34px; display:inline-block; clip-path:inset(0 100% 0 0); animation:thd 4.6s var(--ease) infinite; color:var(--acc)}
+  @keyframes thd{16%,70%{clip-path:inset(0 0 0 0)}0%,4%{clip-path:inset(0 100% 0 0)}88%,100%{clip-path:inset(0 0 0 100%)}}
+</style>
+<section id="textos">
+  <div class="wrap">
+    <div class="kicker">04 · Textos</div>
+    <h2>Vinte jeitos de dar voz a uma frase.</h2>
+    <p class="lead">Tipografia em movimento — do typewriter honesto ao neon eleito de propósito. Troque a fonte-base e a cor de acento; os espécimes de assinatura (Bebas, Playfair, Caveat, Mono) mantêm a própria voz.</p>
+
+    <div class="controls" data-target="cv-txt">
+      <div class="grp"><span class="cap">Fonte</span>
+        <button class="pk ft-pk" aria-pressed="true"  data-ft="Inter, system-ui, sans-serif">Sans</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'Playfair Display', Georgia, serif">Serif</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'Bebas Neue', Impact, sans-serif">Display</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'JetBrains Mono', Consolas, monospace">Mono</button>
+        <button class="pk ft-pk" aria-pressed="false" data-ft="'Caveat', cursive">Script</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="false" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="true" data-m="dark">Escuro</button>
+      </div>
+    </div>
+
+    <div class="canvas th th-over" id="cv-txt">
+      <div class="txt-grid">
+        <div><div class="tf"><div class="tx1 ftb"><span data-type='["Design que resolve.","Texto que respira.","Feito no Atelier."]'></span><span class="caret"></span></div></div><div class="tflbl"><b>01 Typewriter</b><span>heros, prompts</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-words"><span style="--i:0">Uma</span> <span style="--i:1">palavra</span> <span style="--i:2">de</span> <span style="--i:3">cada</span> <span style="--i:4">vez.</span></div></div><div class="tflbl"><b>02 Por palavra</b><span>frases de impacto</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-let" data-split>Letra a letra</div></div><div class="tflbl"><b>03 Cascata de letras</b><span>títulos curtos</span></div></div>
+        <div><div class="tf"><div class="tx1 t-grad" style="font-size:26px">Gradiente vivo</div></div><div class="tflbl"><b>04 Gradiente animado</b><span>espécime — A1 só se eleito</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-und">Sublinhado que desenha</div></div><div class="tflbl"><b>05 Underline draw</b><span>links, ênfase</span></div></div>
+        <div><div class="tf"><div class="tx1 f-serif" style="font-weight:600">A parte <em class="t-mark">importante</em> marcada.</div></div><div class="tflbl"><b>06 Marca-texto</b><span>editorial</span></div></div>
+        <div><div class="tf"><div class="t-count ftb"><span data-count-to="1471">0</span><small>skills no hub</small></div></div><div class="tflbl"><b>07 Contador</b><span>métricas, provas</span></div></div>
+        <div><div class="tf"><div class="t-code f-mono" data-decode="OVERCORE">########</div></div><div class="tflbl"><b>08 Decode</b><span>tech, reveals</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb"><span class="t-clip">Revela de baixo pra cima</span></div></div><div class="tflbl"><b>09 Clip reveal</b><span>seções, headings</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-blur">Do desfoque ao foco</div></div><div class="tflbl"><b>10 Blur-in</b><span>aberturas</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-wave" data-split>Onda suave</div></div><div class="tflbl"><b>11 Onda</b><span>lúdico, kids, música</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb">Feito para <span class="win t-rot" style="display:inline-block"><span class="roll" data-rot='["planejar","reservar","aproveitar"]'><span>planejar</span></span></span></div></div><div class="tflbl"><b>12 Palavras rotativas</b><span>heros de produto</span></div></div>
+        <div><div class="tf"><div class="t-marq f-display"><div class="in"><span>ATELIER — DESIGN SEM SLOP —&nbsp;</span><span>ATELIER — DESIGN SEM SLOP —&nbsp;</span></div></div></div><div class="tflbl"><b>13 Letreiro outline</b><span>faixas, rodapés</span></div></div>
+        <div><div class="tf"><div class="tx1 f-mono t-glitch" data-t="SYSTEM://OK" style="font-size:22px">SYSTEM://OK</div></div><div class="tflbl"><b>14 Glitch</b><span>espécime — tech/gaming</span></div></div>
+        <div><div class="tf"><div class="t-neon f-display">OPEN 24H</div></div><div class="tflbl"><b>15 Neon flicker</b><span>espécime — A27 só se eleito</span></div></div>
+        <div><div class="tf"><div class="t-track f-display">Espaçado</div></div><div class="tflbl"><b>16 Tracking-in</b><span>luxo, moda</span></div></div>
+        <div><div class="tf"><div class="t-shadow f-display">IMPACTO</div></div><div class="tflbl"><b>17 Sombra dura</b><span>brutalist, promoções</span></div></div>
+        <div><div class="tf"><div class="tx1 ftb t-strike" data-strike><span class="old">R$ 499/mês</span><span class="new">R$ 249/mês</span></div></div><div class="tflbl"><b>18 Risca &amp; troca</b><span>preços, correções</span></div></div>
+        <div><div class="tf"><div class="t-term f-mono"><span class="p">overcore&gt;</span> deploy --prod <span class="ok">✓ 1.2s</span><span class="blk"></span></div></div><div class="tflbl"><b>19 Terminal</b><span>dev tools, docs</span></div></div>
+        <div><div class="tf"><div class="t-hand f-script">do seu jeito</div></div><div class="tflbl"><b>20 Manuscrito</b><span>assinaturas, pessoal</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOADING (10 × 6) ============ -->
+<style>
+  .ldstage{margin-top:26px; border-radius:var(--radius); border:1px solid var(--line); overflow:hidden}
+  .ldcanvas{background:var(--ldBg); transition:background var(--dur-trans) var(--ease);
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(205px,1fr)); gap:14px; padding:20px}
+  .ldf{background:var(--ldCard); border:var(--ldBorder); border-radius:var(--ldR);
+    box-shadow:var(--ldShadow); color:var(--ldInk); -webkit-backdrop-filter:var(--ldBlur,none); backdrop-filter:var(--ldBlur,none);
+    padding:16px; min-height:168px; display:flex; flex-direction:column; justify-content:center;
+    position:relative; overflow:hidden; transition:all var(--dur-trans) var(--ease)}
+  .ldf .lbl{position:absolute; left:14px; right:14px; bottom:10px; font-size:12px; color:var(--ldDim);
+    display:flex; justify-content:space-between; gap:8px; font-family:Inter,sans-serif}
+  .ldf .lbl b{color:var(--ldInk); font-weight:600}
+  .ldf .zone{margin-bottom:26px}
+  .bone{position:relative; overflow:hidden; background:var(--ldTrack); border-radius:6px; height:11px; margin:7px 0}
+  .bone::after{content:""; position:absolute; inset:0; transform:translateX(-100%);
+    background:linear-gradient(90deg,transparent,var(--ldShine),transparent); animation:sh2 1.4s var(--ease) infinite}
+  @keyframes sh2{to{transform:translateX(100%)}}
+  .bone.round{width:40px; height:40px; border-radius:999px; float:left; margin:0 12px 0 0}
+  .ring{width:40px; height:40px; margin:0 auto; border-radius:999px;
+    border:3.5px solid var(--ldTrack); border-top-color:var(--ldFill); animation:sp2 .8s linear infinite}
+  @keyframes sp2{to{transform:rotate(360deg)}}
+  .dbar{height:9px; border-radius:6px; background:var(--ldTrack); overflow:hidden}
+  .dbar i{display:block; height:100%; width:100%; border-radius:6px; background:var(--ldFill);
+    transform-origin:left; animation:dfill 2.4s var(--ease) infinite}
+  @keyframes dfill{0%{transform:scaleX(.04)}55%{transform:scaleX(.62)}85%{transform:scaleX(.9)}100%{transform:scaleX(.97)}}
+  .pctrow{display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px; color:var(--ldDim)}
+  .pctrow .pct{color:var(--ldInk); font-weight:700; font-variant-numeric:tabular-nums}
+  .ldots{display:flex; gap:9px; justify-content:center}
+  .ldots i{width:11px; height:11px; border-radius:999px; background:var(--ldFill); animation:dot2 1.2s var(--ease) infinite}
+  .ldots i:nth-child(2){animation-delay:.15s} .ldots i:nth-child(3){animation-delay:.3s}
+  @keyframes dot2{0%,100%{transform:scale(.6); opacity:.4}40%{transform:scale(1); opacity:1}}
+  .splashz{text-align:center}
+  .splashz .mk{font-weight:800; letter-spacing:-.02em; font-size:19px; margin-bottom:14px}
+  .splashz .mk b{color:var(--ldFill)}
+  .splashz .dbar{width:76%; margin:0 auto}
+  .splashz .msg{font-size:12px; color:var(--ldDim); margin-top:10px; min-height:1.2em; position:relative}
+  .splashz .msg span{position:absolute; inset:0; opacity:0; animation:msgs 4.8s var(--ease) infinite}
+  .splashz .msg span:nth-child(2){animation-delay:2.4s}
+  @keyframes msgs{6%,44%{opacity:1}0%,50%,100%{opacity:0}}
+  .tsk .bone{height:9px}
+  .tsk .trow{display:flex; gap:8px}
+  .tsk .trow .bone:nth-child(1){flex:2} .tsk .trow .bone:nth-child(2){flex:1} .tsk .trow .bone:nth-child(3){flex:.7}
+  .pring{position:relative; width:64px; height:64px; margin:0 auto}
+  .pring svg{width:100%; height:100%; transform:rotate(-90deg)}
+  .pring circle{fill:none; stroke-width:6}
+  .pring .trk{stroke:var(--ldTrack)}
+  .pring .fll{stroke:var(--ldFill); stroke-linecap:round; stroke-dasharray:163; animation:ringp 2.4s var(--ease) infinite}
+  @keyframes ringp{0%{stroke-dashoffset:157}55%{stroke-dashoffset:62}85%{stroke-dashoffset:16}100%{stroke-dashoffset:5}}
+  .pring .pv{position:absolute; inset:0; display:grid; place-items:center; font-size:13px; font-weight:700; font-variant-numeric:tabular-nums}
+  .lbtnz{text-align:center}
+  .lbtn{display:inline-flex; align-items:center; gap:9px; font:700 13px/1 Inter,sans-serif; padding:11px 18px;
+    border-radius:var(--ldBtnR,10px); background:var(--ldBtnBg); color:var(--ldBtnInk); border:var(--ldBtnBorder,none); box-shadow:var(--ldBtnShadow,none)}
+  .lbtn .rg{width:13px; height:13px; border-radius:999px; border:2px solid var(--ldBtnRing,rgba(0,0,0,.3)); border-top-color:var(--ldBtnInk); animation:sp2 .8s linear infinite}
+  .pagez .mini-page{border:var(--ldBorder); border-radius:8px; overflow:hidden; background:var(--ldTrack)}
+  .pagez .tb{height:4px; position:relative; background:transparent; overflow:hidden}
+  .pagez .tb i{position:absolute; top:0; bottom:0; width:38%; border-radius:4px; background:var(--ldFill); animation:tbar 1.5s var(--ease) infinite}
+  @keyframes tbar{0%{transform:translateX(-110%)}100%{transform:translateX(300%)}}
+  .pagez .pgl{height:8px; margin:10px 12px; border-radius:5px; background:var(--ldCard); opacity:.85}
+  .stepsz .srow{display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--ldDim); padding:5px 0; opacity:.4; animation:srow 4.2s var(--ease) infinite}
+  .stepsz .srow:nth-child(2){animation-delay:1.4s} .stepsz .srow:nth-child(3){animation-delay:2.8s}
+  @keyframes srow{8%,38%{opacity:1; color:var(--ldInk)}0%,45%,100%{opacity:.4}}
+  .stepsz .sdot{width:9px; height:9px; border-radius:999px; background:var(--ldFill); flex:none}
+  .ld-minimal{--ldBg:#faf9f7; --ldCard:#fff; --ldBorder:1px solid #e6e2db; --ldR:4px; --ldShadow:none;
+    --ldInk:#1a1a1a; --ldDim:#9a958c; --ldTrack:#eee9e1; --ldShine:rgba(255,255,255,.75); --ldFill:#e0623d;
+    --ldBtnBg:#1a1a1a; --ldBtnInk:#fff; --ldBtnR:4px; --ldBtnRing:rgba(255,255,255,.35)}
+  .ld-glass{--ldBg:linear-gradient(135deg,#5b2be0,#ff5db1 55%,#ffb14d); --ldCard:rgba(255,255,255,.14);
+    --ldBorder:1px solid rgba(255,255,255,.38); --ldR:20px; --ldShadow:0 8px 28px rgba(0,0,0,.22); --ldBlur:blur(14px) saturate(1.4);
+    --ldInk:#fff; --ldDim:rgba(255,255,255,.72); --ldTrack:rgba(255,255,255,.22); --ldShine:rgba(255,255,255,.5); --ldFill:#fff;
+    --ldBtnBg:rgba(255,255,255,.92); --ldBtnInk:#4c1d95; --ldBtnR:12px; --ldBtnRing:rgba(76,29,149,.3)}
+  .ld-brutal{--ldBg:#a6f0c6; --ldCard:#fff; --ldBorder:3px solid #111; --ldR:4px; --ldShadow:6px 6px 0 #111;
+    --ldInk:#111; --ldDim:#555; --ldTrack:#efefef; --ldShine:rgba(255,255,255,.9); --ldFill:#ff5c5c;
+    --ldBtnBg:#ffe14d; --ldBtnInk:#111; --ldBtnR:4px; --ldBtnBorder:3px solid #111; --ldBtnShadow:4px 4px 0 #111; --ldBtnRing:rgba(17,17,17,.3)}
+  .ld-clay{--ldBg:linear-gradient(160deg,#dfe6ff,#f4e8ff); --ldCard:#eef1ff; --ldBorder:none; --ldR:26px;
+    --ldShadow:8px 8px 18px #c3c9e6, -7px -7px 16px #fff, inset 2px 2px 6px #fff;
+    --ldInk:#4a4e69; --ldDim:#7a7f9c; --ldTrack:#dde1f7; --ldShine:rgba(255,255,255,.85); --ldFill:#6c5ce7;
+    --ldBtnBg:#6c5ce7; --ldBtnInk:#fff; --ldBtnR:16px; --ldBtnShadow:5px 5px 12px #c3c9e6; --ldBtnRing:rgba(255,255,255,.4)}
+  .ld-skeu{--ldBg:linear-gradient(180deg,#2b2f36,#15171b); --ldCard:linear-gradient(180deg,#3a3f47,#23272e);
+    --ldBorder:none; --ldR:12px; --ldShadow:inset 0 1px 0 #5a616c, inset 0 -2px 5px #0a0c0f, 0 10px 20px rgba(0,0,0,.5);
+    --ldInk:#e8ebf2; --ldDim:#8b93a7; --ldTrack:#1a1d23; --ldShine:rgba(255,255,255,.12); --ldFill:#7ec33a;
+    --ldBtnBg:linear-gradient(180deg,#f2f4f7,#c3c8d0); --ldBtnInk:#1a1d23; --ldBtnR:8px; --ldBtnShadow:0 3px 6px rgba(0,0,0,.5); --ldBtnRing:rgba(26,29,35,.3)}
+  .ld-liquid{--ldBg:linear-gradient(120deg,#7db2ff,#a99bff 50%,#7ee8e0);
+    --ldCard:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.28)); --ldBorder:1px solid rgba(255,255,255,.75);
+    --ldR:22px; --ldShadow:0 10px 26px rgba(20,40,80,.22), inset 0 1px 0 rgba(255,255,255,.95); --ldBlur:blur(18px) saturate(1.6);
+    --ldInk:#0d2540; --ldDim:rgba(13,37,64,.62); --ldTrack:rgba(13,37,64,.14); --ldShine:rgba(255,255,255,.7); --ldFill:#0d2540;
+    --ldBtnBg:#0d2540; --ldBtnInk:#fff; --ldBtnR:14px; --ldBtnRing:rgba(255,255,255,.35)}
+</style>
+<section id="loading">
+  <div class="wrap">
+    <div class="kicker">05 · Loading</div>
+    <h2>Dez jeitos de esperar. Nenhum deles mente.</h2>
+    <p class="lead">A skill <span style="color:var(--accent)">loading-states</span> escolhe o padrão pelo tempo da espera, nunca pelo gosto. Troque a linguagem — o ofício não muda, só a roupa.</p>
+    <div class="ldstage">
+      <div class="ldcanvas ld-minimal" id="ldcv">
+        <div class="ldf"><div class="zone"><div class="bone round"></div><div class="bone" style="width:62%"></div><div class="bone" style="width:40%"></div><div style="clear:both"></div><div class="bone" style="width:88%; margin-top:12px"></div></div><div class="lbl"><b>Skeleton fiel</b><span>300ms–3s</span></div></div>
+        <div class="ldf"><div class="zone"><div class="ring"></div></div><div class="lbl"><b>Spinner clássico</b><span>curto &amp; local</span></div></div>
+        <div class="ldf"><div class="zone"><div class="pctrow"><span>Importando registros…</span><span class="pct">0%</span></div><div class="dbar"><i></i></div></div><div class="lbl"><b>Barra determinada</b><span>&gt;3s</span></div></div>
+        <div class="ldf"><div class="zone"><div class="ldots"><i></i><i></i><i></i></div></div><div class="lbl"><b>Dots pulsantes</b><span>chat / digitando</span></div></div>
+        <div class="ldf"><div class="zone splashz"><div class="mk">Atelier<b>.</b></div><div class="dbar"><i></i></div><div class="msg"><span>Conectando ao servidor…</span><span>Preparando seu workspace…</span></div></div><div class="lbl"><b>Splash de marca</b><span>boot · &gt;3s</span></div></div>
+        <div class="ldf"><div class="zone tsk"><div class="trow"><div class="bone"></div><div class="bone"></div><div class="bone"></div></div><div class="trow"><div class="bone"></div><div class="bone"></div><div class="bone"></div></div><div class="trow"><div class="bone"></div><div class="bone"></div><div class="bone"></div></div></div><div class="lbl"><b>Skeleton de tabela</b><span>mesma geometria</span></div></div>
+        <div class="ldf"><div class="zone"><div class="pring"><svg viewBox="0 0 64 64"><circle class="trk" cx="32" cy="32" r="26"></circle><circle class="fll" cx="32" cy="32" r="26"></circle></svg><span class="pv pct">0%</span></div></div><div class="lbl"><b>Anel de progresso</b><span>upload / export</span></div></div>
+        <div class="ldf"><div class="zone lbtnz"><span class="lbtn"><span class="rg"></span>Salvando…</span></div><div class="lbl"><b>Botão inline</b><span>carrega onde disparou</span></div></div>
+        <div class="ldf"><div class="zone pagez"><div class="mini-page"><div class="tb"><i></i></div><div class="pgl" style="width:70%"></div><div class="pgl" style="width:50%"></div><div class="pgl" style="width:62%"></div></div></div><div class="lbl"><b>Barra de topo</b><span>navegação entre rotas</span></div></div>
+        <div class="ldf"><div class="zone stepsz"><div class="srow"><span class="sdot"></span>Conectando ao banco…</div><div class="srow"><span class="sdot"></span>Sincronizando alterações…</div><div class="srow"><span class="sdot"></span>Montando o dashboard…</div></div><div class="lbl"><b>Passos nomeados</b><span>diz O QUE acontece</span></div></div>
+      </div>
+      <div class="controls" style="margin:0; border:none; border-top:1px solid var(--line); border-radius:0">
+        <div class="grp"><span class="cap">Estilo</span>
+          <button class="pk ldp2" aria-pressed="true"  data-ls="minimal">Minimalism</button>
+          <button class="pk ldp2" aria-pressed="false" data-ls="glass">Glassmorphism</button>
+          <button class="pk ldp2" aria-pressed="false" data-ls="brutal">Neo-Brutalism</button>
+          <button class="pk ldp2" aria-pressed="false" data-ls="clay">Claymorphism</button>
+          <button class="pk ldp2" aria-pressed="false" data-ls="skeu">Skeuomorphism</button>
+          <button class="pk ldp2" aria-pressed="false" data-ls="liquid">Liquid Glass</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOTOS (10 exposições) ============ -->
+<style>
+  .fotogrid{display:grid; grid-template-columns:1.15fr .85fr; gap:14px; margin-top:26px}
+  @media(max-width:880px){.fotogrid{grid-template-columns:1fr}}
+  .fx{border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--panel); position:relative}
+  .fx.full{grid-column:1/-1}
+  .fxlbl{position:absolute; left:14px; bottom:12px; z-index:6; font-size:12px; color:var(--ink);
+    background:rgba(11,13,18,.72); border:1px solid var(--line); border-radius:999px; padding:6px 12px;
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px)}
+  .fxlbl b{font-weight:700} .fxlbl span{color:var(--dim)}
+  .caro{position:relative; aspect-ratio:16/9.4; overflow:hidden; background:var(--panel-2)}
+  .caro .trk{display:flex; height:100%; transition:transform 500ms var(--ease)}
+  .caro .sl{position:relative; flex:none; width:100%; height:100%}
+  .caro img{width:100%; height:100%; object-fit:cover; display:block}
+  .caro .cap{position:absolute; left:16px; bottom:46px; z-index:4; font-size:13px; font-weight:600;
+    background:rgba(11,13,18,.66); padding:6px 12px; border-radius:8px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px)}
+  .caro .arr{position:absolute; top:50%; transform:translateY(-50%); z-index:5; width:38px; height:38px;
+    border-radius:999px; border:1px solid var(--line); background:rgba(11,13,18,.66); color:var(--ink);
+    font-size:16px; cursor:pointer; display:grid; place-items:center;
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); transition:background var(--dur-micro) var(--ease)}
+  .caro .arr:hover{background:rgba(23,27,38,.9)}
+  .caro .arr.l{left:12px} .caro .arr.r{right:12px}
+  .caro .dots2{position:absolute; left:0; right:0; bottom:14px; display:flex; gap:7px; justify-content:center; z-index:5}
+  .caro .dots2 i{width:7px; height:7px; border-radius:999px; background:rgba(232,235,242,.35); cursor:pointer;
+    transition:all var(--dur-trans) var(--ease)}
+  .caro .dots2 i.on{background:var(--accent); width:20px}
+  .kb{position:relative; aspect-ratio:16/9.4; overflow:hidden; background:var(--panel-2)}
+  .kb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 900ms var(--ease)}
+  .kb img.on{opacity:1; animation:kbz 5s var(--ease) forwards}
+  @keyframes kbz{from{transform:scale(1)}to{transform:scale(1.12) translate(-1.6%,1.2%)}}
+  .kb .grad{position:absolute; inset:auto 0 0 0; height:46%; z-index:2; pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(11,13,18,.72))}
+  .acc{display:flex; gap:10px; height:300px; padding:14px}
+  .acc .pane{flex:1; min-width:0; overflow:hidden; border-radius:var(--radius-s); position:relative;
+    cursor:pointer; transition:flex 480ms var(--ease)}
+  .acc .pane:hover,.acc .pane:focus-visible{flex:3.4; outline:none}
+  .acc img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:grayscale(40%) brightness(.85); transition:filter 480ms var(--ease)}
+  .acc .pane:hover img,.acc .pane:focus-visible img{filter:none}
+  .acc .cap2{position:absolute; left:12px; bottom:10px; z-index:3; font-size:12px; font-weight:600; color:#fff;
+    background:rgba(11,13,18,.7); padding:5px 10px; border-radius:7px; opacity:0; transform:translateY(6px);
+    transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease); white-space:nowrap}
+  .acc .pane:hover .cap2,.acc .pane:focus-visible .cap2{opacity:1; transform:none}
+  .strip2{overflow:hidden; padding:16px 0}
+  .strip2 .trk2{display:flex; gap:12px; width:max-content; animation:mq2 36s linear infinite}
+  .strip2:hover .trk2{animation-play-state:paused}
+  @keyframes mq2{to{transform:translateX(-50%)}}
+  .strip2 img{height:152px; width:230px; object-fit:cover; border-radius:var(--radius-s);
+    filter:grayscale(45%) brightness(.85); transition:filter var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
+  .strip2 img:hover{filter:none; transform:translateY(-5px)}
+  .cs{position:relative; height:340px; overflow:hidden; touch-action:pan-y; background:var(--panel-2)}
+  .csl{cursor:grab}
+  .cs.grab .csl{cursor:grabbing}
+  .csl{position:absolute; top:26px; bottom:56px; left:50%; width:min(440px,72%); margin-left:calc(min(440px,72%) / -2);
+    border-radius:var(--radius-s); overflow:hidden; user-select:none; -webkit-user-select:none}
+  .csl img{width:100%; height:100%; object-fit:cover; display:block; pointer-events:none}
+  .cscap{position:absolute; left:12px; bottom:10px; font-size:12px; font-weight:600; color:var(--ink);
+    background:rgba(11,13,18,.72); padding:5px 10px; border-radius:7px}
+  .csdots{position:absolute; bottom:16px; left:0; right:0; display:flex; justify-content:center; gap:7px; z-index:40}
+  .csdots i{width:7px; height:7px; border-radius:999px; background:rgba(232,235,242,.35); cursor:pointer; transition:all var(--dur-trans) var(--ease)}
+  .csdots i.on{background:var(--accent); width:20px}
+  .xp{display:flex; gap:10px; height:330px; padding:14px}
+  .xpp{position:relative; flex:1; min-width:52px; overflow:hidden; border-radius:var(--radius-s); cursor:pointer;
+    outline:3px solid transparent; outline-offset:-3px; transition:flex .7s var(--ease), outline-color .5s var(--ease)}
+  .xpp.on{flex:7; outline-color:var(--accent)}
+  .xpp img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.07);
+    transition:opacity .55s var(--ease), transform .55s var(--ease)}
+  .xpp img.cur{opacity:1; transform:scale(1)}
+  .xpp .scrim{position:absolute; inset:0; z-index:2; pointer-events:none;
+    background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.08) 45%, transparent)}
+  .xpp .xlbl{position:absolute; z-index:3; left:16px; bottom:14px; color:#fff; font-weight:700; font-size:13px;
+    white-space:nowrap; text-shadow:0 1px 8px rgba(0,0,0,.85); transform-origin:left bottom; transition:transform .5s var(--ease)}
+  .xpp:not(.on) .xlbl{transform:rotate(-90deg) translateX(10px)}
+  .xarr{position:absolute; top:50%; transform:translateY(-50%); z-index:4; width:32px; height:32px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.3); background:rgba(0,0,0,.45); color:#fff; font-size:14px; display:grid;
+    place-items:center; cursor:pointer; opacity:0; transition:opacity var(--dur-trans) var(--ease)}
+  .xpp.on .xarr{opacity:1}
+  .xarr.l{left:10px} .xarr.r{right:10px}
+  .bento{display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:92px; gap:10px; padding:14px}
+  .bento figure{position:relative; overflow:hidden; border-radius:var(--radius-s); margin:0; cursor:pointer}
+  .bento .b1{grid-column:span 2; grid-row:span 2}
+  .bento .b4{grid-row:span 2}
+  .bento img{width:100%; height:100%; object-fit:cover; transition:transform .45s var(--ease)}
+  .bento figure:hover img{transform:scale(1.07)}
+  .bento figcaption{position:absolute; left:10px; bottom:8px; z-index:2; font-size:12px; font-weight:600; color:#fff;
+    background:rgba(11,13,18,.7); padding:4px 9px; border-radius:6px; opacity:0; transform:translateY(6px);
+    transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
+  .bento figure:hover figcaption{opacity:1; transform:none}
+  .deck{position:relative; height:330px; display:grid; place-items:center; cursor:pointer}
+  .dcard{position:absolute; width:min(320px,68%); aspect-ratio:4/2.9; border-radius:var(--radius-s); overflow:hidden;
+    box-shadow:0 12px 26px rgba(0,0,0,.4); transition:transform .5s var(--ease), opacity .45s var(--ease)}
+  .dcard img{width:100%; height:100%; object-fit:cover; display:block}
+  .dcard .dcap{position:absolute; left:12px; bottom:10px; font-size:12px; font-weight:600; color:#fff;
+    background:rgba(11,13,18,.7); padding:4px 10px; border-radius:7px}
+  .deckhint{position:absolute; bottom:12px; left:0; right:0; text-align:center; font-size:12px; color:var(--dim)}
+  .ba{position:relative; aspect-ratio:16/9.4; overflow:hidden; user-select:none; -webkit-user-select:none}
+  .ba img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none}
+  .ba .antes{filter:grayscale(1) contrast(.92) brightness(.9)}
+  .ba .depois{clip-path:inset(0 0 0 var(--bacut,50%))}
+  .ba .bal{position:absolute; top:0; bottom:0; width:2px; background:var(--accent); left:var(--bacut,50%); z-index:3; pointer-events:none}
+  .ba .bal::after{content:"⇔"; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:34px; height:34px;
+    border-radius:999px; background:var(--accent); color:#0b0d12; font-weight:800; display:grid; place-items:center; font-size:14px}
+  .ba .batag{position:absolute; top:12px; z-index:2; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    background:rgba(11,13,18,.72); color:#fff; padding:4px 10px; border-radius:999px}
+  .ba .batag.l{left:12px} .ba .batag.r{right:12px}
+  .ba input[type=range]{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:ew-resize; z-index:5; margin:0}
+  .lbx2{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:14px}
+  @media(max-width:720px){.lbx2{grid-template-columns:repeat(2,1fr)}}
+  .lbx2 img{width:100%; height:124px; object-fit:cover; border-radius:var(--radius-s); cursor:zoom-in;
+    transition:transform var(--dur-trans) var(--ease)}
+  .lbx2 img:hover{transform:translateY(-4px)}
+  .lbov{position:fixed; inset:0; z-index:99; background:rgba(11,13,18,.92); display:grid; place-items:center;
+    opacity:0; pointer-events:none; transition:opacity var(--dur-trans) var(--ease); cursor:zoom-out}
+  .lbov.on{opacity:1; pointer-events:auto}
+  .lbov img{max-width:88vw; max-height:82vh; border-radius:var(--radius); transform:scale(.96);
+    transition:transform var(--dur-trans) var(--ease)}
+  .lbov.on img{transform:scale(1)}
+  .lbov .lbxx{position:absolute; top:18px; right:22px; font-size:13px; color:var(--dim)}
+</style>
+<section id="fotos" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker">06 · Fotos</div>
+    <h2>Dez jeitos de mostrar fotos.</h2>
+    <p class="lead">Incluindo <b style="color:var(--ink)">dois padrões extraídos de produtos reais em produção</b> que viraram skills do hub.</p>
+    <div class="fotogrid">
+      <div class="fx">
+        <div class="caro" id="caro">
+          <div class="trk" id="caro-trk">
+            <div class="sl"><img src="https://picsum.photos/id/1015/900/540" alt="Rio entre montanhas" loading="lazy"><div class="cap">01 · Narrativa guiada</div></div>
+            <div class="sl"><img src="https://picsum.photos/id/1018/900/540" alt="Montanhas" loading="lazy"><div class="cap">02 · Setas, dots e autoplay educado</div></div>
+            <div class="sl"><img src="https://picsum.photos/id/1039/900/540" alt="Cachoeira" loading="lazy"><div class="cap">03 · Transição no token da casa</div></div>
+            <div class="sl"><img src="https://picsum.photos/id/1043/900/540" alt="Vale" loading="lazy"><div class="cap">04 · O clássico, feito direito</div></div>
+          </div>
+          <button class="arr l" id="caro-prev" aria-label="anterior">‹</button>
+          <button class="arr r" id="caro-next" aria-label="próxima">›</button>
+          <div class="dots2" id="caro-dots"></div>
+        </div>
+        <span class="fxlbl"><b>Carrossel</b> <span>· hero, cases</span></span>
+      </div>
+      <div class="fx">
+        <div class="kb" id="kb">
+          <img src="https://picsum.photos/id/1069/720/540" alt="Lago" loading="lazy" class="on">
+          <img src="https://picsum.photos/id/1080/720/540" alt="Campo" loading="lazy">
+          <img src="https://picsum.photos/id/1050/720/540" alt="Cidade" loading="lazy">
+          <div class="grad"></div>
+        </div>
+        <span class="fxlbl"><b>Ken Burns</b> <span>· atmosfera</span></span>
+      </div>
+      <div class="fx full">
+        <div class="acc">
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1016/700/600" alt="Cânion" loading="lazy"><span class="cap2">Cânion — expandir é explorar</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1025/700/600" alt="Retrato" loading="lazy"><span class="cap2">Retrato — o hover devolve a cor</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1035/700/600" alt="Neve" loading="lazy"><span class="cap2">Neve — flex, sem reflow bruto</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/110/700/600" alt="Estrada" loading="lazy"><span class="cap2">Estrada — teclado também</span></div>
+          <div class="pane" tabindex="0"><img src="https://picsum.photos/id/1084/700/600" alt="Vida" loading="lazy"><span class="cap2">Vida — 1 protagonista por vez</span></div>
+        </div>
+        <span class="fxlbl"><b>Accordion</b> <span>· portfólios, coleções</span></span>
+      </div>
+      <div class="fx full">
+        <div class="strip2"><div class="trk2">
+          <img src="https://picsum.photos/id/1015/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1016/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1018/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1025/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1035/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1039/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1043/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1050/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1015/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1016/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1018/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1025/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1035/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1039/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1043/460/304" alt="" loading="lazy"><img src="https://picsum.photos/id/1050/460/304" alt="" loading="lazy">
+        </div></div>
+        <span class="fxlbl"><b>Filme corrido</b> <span>· logos, bastidores — pausa no hover</span></span>
+      </div>
+      <div class="fx full">
+        <div class="cs" id="cs">
+          <div class="csl"><img src="https://picsum.photos/id/1011/880/560" alt="Caiaque" loading="lazy"><div class="cscap">Comunicado 01 — arraste-me</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1036/880/560" alt="Montanha" loading="lazy"><div class="cscap">Comunicado 02 — snap de 800ms</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1041/880/560" alt="Ponte" loading="lazy"><div class="cscap">Comunicado 03 — clique no vizinho: foca</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1044/880/560" alt="Céu" loading="lazy"><div class="cscap">Comunicado 04 — autoplay pausa no hover</div></div>
+          <div class="csl"><img src="https://picsum.photos/id/1057/880/560" alt="Estrada" loading="lazy"><div class="cscap">Comunicado 05 — peek de 55%</div></div>
+          <div class="csdots" id="csdots"></div>
+        </div>
+        <span class="fxlbl"><b>Center-stage arrastável</b> <span>· padrão de produção · skill <code>center-stage-carousel</code></span></span>
+      </div>
+      <div class="fx full">
+        <div class="xp" id="xp">
+          <div class="xpp on" tabindex="0" role="button" aria-label="Serra Azul">
+            <img src="https://picsum.photos/id/1019/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1039/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1043/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Serra Azul</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+          <div class="xpp" tabindex="0" role="button" aria-label="Vale do Sol">
+            <img src="https://picsum.photos/id/1020/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1024/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Vale do Sol</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+          <div class="xpp" tabindex="0" role="button" aria-label="Lagoa Real">
+            <img src="https://picsum.photos/id/1031/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1035/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Lagoa Real</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+          <div class="xpp" tabindex="0" role="button" aria-label="Costa Norte">
+            <img src="https://picsum.photos/id/1040/800/620" alt="" loading="lazy"><img src="https://picsum.photos/id/1047/800/620" alt="" loading="lazy">
+            <div class="scrim"></div><span class="xlbl">Costa Norte</span>
+            <button class="xarr l" aria-label="foto anterior">‹</button><button class="xarr r" aria-label="próxima foto">›</button>
+          </div>
+        </div>
+        <span class="fxlbl"><b>Expansível com carrossel aninhado</b> <span>· padrão de produção · skill <code>expanding-gallery</code></span></span>
+      </div>
+      <div class="fx">
+        <div class="bento">
+          <figure class="b1"><img src="https://picsum.photos/id/1015/700/500" alt="Rio" loading="lazy"><figcaption>Destaque — 2×2</figcaption></figure>
+          <figure><img src="https://picsum.photos/id/1016/400/300" alt="Cânion" loading="lazy"><figcaption>Apoio</figcaption></figure>
+          <figure class="b4"><img src="https://picsum.photos/id/1018/400/560" alt="Montanha" loading="lazy"><figcaption>Vertical</figcaption></figure>
+          <figure><img src="https://picsum.photos/id/1025/400/300" alt="Cão" loading="lazy"><figcaption>Apoio</figcaption></figure>
+          <figure><img src="https://picsum.photos/id/1050/400/300" alt="Cidade" loading="lazy"><figcaption>Apoio</figcaption></figure>
+        </div>
+        <span class="fxlbl"><b>Bento mosaico</b> <span>· hierarquia sem carrossel</span></span>
+      </div>
+      <div class="fx">
+        <div class="deck" id="deck">
+          <div class="dcard"><img src="https://picsum.photos/id/1051/660/480" alt="Escalada" loading="lazy"><span class="dcap">Topo do baralho — clique</span></div>
+          <div class="dcard"><img src="https://picsum.photos/id/1052/660/480" alt="Barco" loading="lazy"><span class="dcap">A próxima da pilha</span></div>
+          <div class="dcard"><img src="https://picsum.photos/id/1053/660/480" alt="Templo" loading="lazy"><span class="dcap">Sempre 4 no maço</span></div>
+          <div class="dcard"><img src="https://picsum.photos/id/1055/660/480" alt="Floresta" loading="lazy"><span class="dcap">E volta pro fundo</span></div>
+          <div class="deckhint">clique na carta do topo</div>
+        </div>
+        <span class="fxlbl"><b>Deck de cartas</b> <span>· stories, revisão</span></span>
+      </div>
+      <div class="fx">
+        <div class="ba" id="ba" style="--bacut:50%">
+          <img class="antes" src="https://picsum.photos/id/1060/880/560" alt="Antes" loading="lazy">
+          <img class="depois" src="https://picsum.photos/id/1060/880/560" alt="Depois" loading="lazy">
+          <span class="batag l">antes</span><span class="batag r">depois</span>
+          <div class="bal"></div>
+          <input type="range" min="4" max="96" value="50" aria-label="comparar antes e depois">
+        </div>
+        <span class="fxlbl"><b>Antes / depois</b> <span>· reformas, edição</span></span>
+      </div>
+      <div class="fx">
+        <div class="lbx2" id="lb">
+          <img src="https://picsum.photos/id/1061/460/304" alt="Miniatura 1" loading="lazy">
+          <img src="https://picsum.photos/id/1062/460/304" alt="Miniatura 2" loading="lazy">
+          <img src="https://picsum.photos/id/1063/460/304" alt="Miniatura 3" loading="lazy">
+          <img src="https://picsum.photos/id/1065/460/304" alt="Miniatura 4" loading="lazy">
+          <img src="https://picsum.photos/id/1067/460/304" alt="Miniatura 5" loading="lazy">
+          <img src="https://picsum.photos/id/1069/460/304" alt="Miniatura 6" loading="lazy">
+          <img src="https://picsum.photos/id/1070/460/304" alt="Miniatura 7" loading="lazy">
+          <img src="https://picsum.photos/id/1074/460/304" alt="Miniatura 8" loading="lazy">
+        </div>
+        <span class="fxlbl"><b>Lightbox</b> <span>· clique amplia · Esc fecha</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="lbov" id="lbov" aria-modal="true" role="dialog"><img src="" alt="Foto ampliada"><span class="lbxx">clique ou Esc para fechar</span></div>
+
+<!-- ============ EFEITOS (Magic CSS, MIT) ============ -->
+<style>
+  .fx-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(196px,1fr)); gap:14px}
+  .fxt{position:relative; width:100%; background:var(--cCard); border:var(--cBorder); border-radius:var(--cR);
+    box-shadow:var(--cShadow), inset 0 0 0 999px color-mix(in srgb, var(--acc) 14%, transparent);
+    min-height:150px; display:grid; place-items:center; padding:20px; cursor:pointer;
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur); overflow:hidden;
+    transition:border-color var(--dur-micro) var(--ease)}
+  .fxt:hover{border-color:#31394a}
+  .fxt:focus-visible{outline:2px solid var(--acc); outline-offset:2px}
+  .fxchip{width:76px; height:76px; border-radius:16px; background:var(--acc); color:var(--accInk);
+    display:grid; place-items:center; font-weight:800; font-size:22px; will-change:transform,opacity}
+  .fxt .esp{position:absolute; top:10px; right:10px; font-size:12px; font-weight:700; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--warn); border:1px solid rgba(251,191,36,.35);
+    background:rgba(251,191,36,.08); border-radius:999px; padding:2px 8px}
+@keyframes puffIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
+}
+@keyframes vanishIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(90px);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
+}
+@keyframes swashIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0);
+  }
+  90% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(0.9, 0.9);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+  }
+}
+@keyframes spaceInUp {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 0%;
+    transform: scale(0.2) translate(0%, -200%);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 0%;
+    transform: scale(1) translate(0%, 0%);
+  }
+}
+@keyframes twisterInDown {
+  0% {
+    opacity: 0;
+    transform-origin: 0 100%;
+    transform: scale(0, 0) rotate(360deg) translateY(-100%);
+  }
+  30% {
+    transform-origin: 0 100%;
+    transform: scale(0, 0) rotate(360deg) translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 100% 100%;
+    transform: scale(1, 1) rotate(0deg) translateY(0%);
+  }
+}
+@keyframes tinRightIn {
+  0% {
+    opacity: 0;
+    transform: scale(1, 1) translateX(900%);
+  }
+  50%, 70%, 90% {
+    opacity: 1;
+    transform: scale(1.1, 1.1) translateX(0);
+  }
+  60%, 80%, 100% {
+    opacity: 1;
+    transform: scale(1, 1) translateX(0);
+  }
+}
+@keyframes puffOut {
+  0% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(2px);
+  }
+}
+@keyframes holeOut {
+  0% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1) rotateY(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0) rotateY(180deg);
+  }
+}
+@keyframes bombRightOut {
+  0% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: rotate(0deg);
+    filter: blur(0px);
+  }
+  50% {
+    opacity: 1;
+    transform-origin: 200% 50%;
+    transform: rotate(160deg);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 200% 50%;
+    transform: rotate(160deg);
+    filter: blur(20px);
+  }
+}
+@keyframes boingInUp {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(-90deg);
+  }
+  50% {
+    opacity: 1;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(50deg);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(0deg);
+  }
+}
+@keyframes foolishIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0) rotate(360deg);
+  }
+  20% {
+    opacity: 1;
+    transform-origin: 0% 100%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  40% {
+    opacity: 1;
+    transform-origin: 100% 100%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  60% {
+    opacity: 1;
+    transform-origin: 0%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  80% {
+    opacity: 1;
+    transform-origin: 0% 0%;
+    transform: scale(0.5, 0.5) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1) rotate(0deg);
+  }
+}
+@keyframes magic {
+  0% {
+    opacity: 1;
+    transform-origin: 100% 200%;
+    transform: scale(1, 1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 200% 500%;
+    transform: scale(0, 0) rotate(270deg);
+  }
+}
+</style>
+<section id="efeitos">
+  <div class="wrap">
+    <div class="kicker">07 · Efeitos</div>
+    <h2>Doze feitiços do Magic CSS.</h2>
+    <p class="lead">Minerados da biblioteca <b style="color:var(--ink)">magic.css</b> (MIT, © Christian Pucci) — keyframes originais, palco nosso. Clique em cada um pra reproduzir. Os marcados <b style="color:var(--warn)">espécime</b> têm overshoot/salto (A26): entram só quando eleitos de propósito.</p>
+    <div class="controls" data-target="cv-fx">
+      <div class="grp"><span class="cap">Ação</span><button class="pk" id="fx-all">Reproduzir todos</button></div>
+      <div class="grp"><span class="cap">Acento</span></div>
+    </div>
+    <div class="canvas th th-over" id="cv-fx">
+      <div class="fx-grid">
+        <div><button class="fxt" data-fx="puffIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Puff In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="vanishIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Vanish In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="swashIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Swash In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="spaceInUp"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Space In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="twisterInDown"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Twister</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="tinRightIn"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Tin In</b><span>atenção</span></div></div>
+        <div><button class="fxt" data-fx="puffOut"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Puff Out</b><span>saída</span></div></div>
+        <div><button class="fxt" data-fx="holeOut"><span class="fxchip">Aa</span></button><div class="bflbl"><b>Hole Out</b><span>saída</span></div></div>
+        <div><button class="fxt" data-fx="magic"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Magic</b><span>saída-assinatura</span></div></div>
+        <div><button class="fxt" data-fx="boingInUp"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Boing In</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="foolishIn"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Foolish</b><span>entrada</span></div></div>
+        <div><button class="fxt" data-fx="bombRightOut"><span class="fxchip">Aa</span><span class="esp">espécime</span></button><div class="bflbl"><b>Bomb Out</b><span>saída</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MENUS (10 padrões de navegação) ============ -->
+<style>
+  .mn-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px}
+  .mnf{background:var(--cCard); border:var(--cBorder); border-radius:var(--cR);
+    box-shadow:var(--cShadow), inset 0 0 0 999px color-mix(in srgb, var(--acc) 14%, transparent);
+    -webkit-backdrop-filter:var(--cBlur); backdrop-filter:var(--cBlur); color:var(--cInk);
+    min-height:190px; padding:16px; position:relative; overflow:hidden; display:flex; flex-direction:column; gap:10px}
+  .mnlbl{margin-top:8px; font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px}
+  .mnlbl b{color:var(--ink); font-weight:600}
+  .mn-a{font-size:13px; color:var(--cDim); text-decoration:none; padding:6px 10px; border-radius:8px; cursor:pointer;
+    transition:color var(--dur-micro) var(--ease), background var(--dur-micro) var(--ease)}
+  .mn-a:hover{color:var(--cInk); background:color-mix(in srgb, var(--acc) 12%, transparent)}
+  .mn-a.on{color:var(--cInk); font-weight:600}
+  .mn-top{display:flex; align-items:center; gap:4px; border-bottom:1px solid var(--cTrack); padding-bottom:12px}
+  .mn-top .lg{font-weight:800; margin-right:auto} .mn-top .lg b{color:var(--acc)}
+  .mn-top .cta{background:var(--acc); color:var(--accInk); font:700 12.5px/1 Inter,sans-serif; border:none;
+    border-radius:999px; padding:9px 14px; cursor:pointer}
+  .mn-burg{width:38px; height:38px; border-radius:10px; border:1px solid var(--cTrack); background:transparent;
+    color:var(--cInk); font-size:16px; cursor:pointer}
+  .mn-drawer{position:absolute; inset:0 34% 0 0; background:var(--cCard); border-right:var(--cBorder);
+    box-shadow:8px 0 24px rgba(0,0,0,.3); z-index:5; padding:16px; transform:translateX(-105%);
+    transition:transform .35s var(--snap); display:flex; flex-direction:column; gap:2px}
+  .mn-drawer.on{transform:none}
+  .mn-drawer .x{align-self:flex-end; background:none; border:none; color:var(--cDim); font-size:15px; cursor:pointer}
+  .mn-tabs{display:flex; gap:2px; position:relative; border-bottom:2px solid var(--cTrack)}
+  .mn-tabs button{background:none; border:none; font:600 13px/1 Inter,sans-serif; color:var(--cDim);
+    padding:10px 14px; cursor:pointer; transition:color var(--dur-micro) var(--ease)}
+  .mn-tabs button[aria-selected=true]{color:var(--cInk)}
+  .mn-tabs .tind{position:absolute; bottom:-2px; height:2px; background:var(--acc); transition:left .3s var(--snap), width .3s var(--snap)}
+  .mn-tabbody{font-size:13px; color:var(--cDim); padding:6px 2px}
+  .mn-rail{display:flex; gap:0; height:150px; border:1px solid var(--cTrack); border-radius:10px; overflow:hidden}
+  .mn-rail .rail{width:52px; background:color-mix(in srgb, var(--cInk) 4%, transparent); display:flex; flex-direction:column;
+    gap:4px; padding:10px 8px; transition:width .35s var(--snap); overflow:hidden}
+  .mn-rail.open .rail{width:170px}
+  .mn-rail .ritem{display:flex; align-items:center; gap:10px; padding:8px 9px; border-radius:8px; cursor:pointer;
+    white-space:nowrap; font-size:13px; color:var(--cDim)}
+  .mn-rail .ritem:hover{background:color-mix(in srgb, var(--acc) 12%, transparent); color:var(--cInk)}
+  .mn-rail .ritem.on{background:var(--acc); color:var(--accInk); font-weight:700}
+  .mn-rail .ric{width:18px; text-align:center; flex:none}
+  .mn-rail .body{flex:1; padding:12px; font-size:12.5px; color:var(--cDim)}
+  .mn-bot{margin-top:auto; display:flex; border-top:1px solid var(--cTrack); padding-top:10px}
+  .mn-bot button{flex:1; background:none; border:none; color:var(--cDim); font:600 12px/1.6 Inter,sans-serif; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0; border-radius:10px;
+    transition:color var(--dur-micro) var(--ease)}
+  .mn-bot button .bic{font-size:16px}
+  .mn-bot button.on{color:var(--acc)}
+  .mn-mega{position:relative}
+  .mn-megapanel{position:absolute; top:calc(100% + 8px); left:0; right:0; z-index:6; background:var(--cCard);
+    border:var(--cBorder); border-radius:12px; box-shadow:0 14px 34px rgba(0,0,0,.35); padding:14px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:8px; opacity:0; transform:translateY(-6px);
+    pointer-events:none; transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease)}
+  .mn-mega.on .mn-megapanel{opacity:1; transform:none; pointer-events:auto}
+  .mn-megapanel .col b{display:block; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--acc); margin-bottom:6px}
+  .mn-megapanel .col a{display:block; font-size:12.5px; color:var(--cDim); text-decoration:none; padding:4px 0}
+  .mn-megapanel .col a:hover{color:var(--cInk)}
+  .mn-bc{display:flex; align-items:center; gap:8px; font-size:13px; flex-wrap:wrap}
+  .mn-bc .sep{color:var(--cDim); opacity:.6}
+  .mn-bc .here{color:var(--cInk); font-weight:600}
+  .mn-palbtn{display:inline-flex; align-items:center; gap:10px; background:color-mix(in srgb, var(--cInk) 5%, transparent);
+    border:1px solid var(--cTrack); border-radius:10px; color:var(--cDim); font:500 13px/1 Inter,sans-serif;
+    padding:10px 14px; cursor:pointer}
+  .mn-palbtn kbd{font:600 12px/1 ui-monospace,monospace; border:1px solid var(--cTrack); border-radius:5px; padding:3px 6px}
+  .mn-pal{position:absolute; inset:12px; z-index:7; background:var(--cCard); border:var(--cBorder); border-radius:12px;
+    box-shadow:0 18px 44px rgba(0,0,0,.45); padding:12px; display:none; flex-direction:column; gap:8px}
+  .mn-pal.on{display:flex}
+  .mn-pal input{background:transparent; border:none; border-bottom:1px solid var(--cTrack); color:var(--cInk);
+    font:500 14px/1.4 Inter,sans-serif; padding:8px 4px; outline:none}
+  .mn-pal .it{font-size:13px; color:var(--cDim); padding:8px 10px; border-radius:8px; cursor:pointer}
+  .mn-pal .it:hover{background:color-mix(in srgb, var(--acc) 14%, transparent); color:var(--cInk)}
+  .mn-pal .it kbd{float:right; font:600 12px/1 ui-monospace,monospace; color:var(--cDim)}
+  .mn-chips{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px}
+  .mn-chip{flex:none; font:600 12.5px/1 Inter,sans-serif; padding:9px 14px; border-radius:999px; cursor:pointer;
+    border:1px solid var(--cTrack); background:transparent; color:var(--cDim); transition:all var(--dur-micro) var(--ease)}
+  .mn-chip .n{opacity:.65; font-weight:500; margin-left:5px}
+  .mn-chip.on{background:var(--acc); border-color:var(--acc); color:var(--accInk)}
+  .mn-dd{position:relative; align-self:flex-start}
+  .mn-ddbtn{background:color-mix(in srgb, var(--cInk) 5%, transparent); border:1px solid var(--cTrack); border-radius:10px;
+    color:var(--cInk); font:600 13px/1 Inter,sans-serif; padding:10px 14px; cursor:pointer}
+  .mn-ddmenu{position:absolute; top:calc(100% + 6px); left:0; min-width:190px; z-index:6; background:var(--cCard);
+    border:var(--cBorder); border-radius:12px; box-shadow:0 14px 30px rgba(0,0,0,.35); padding:6px; display:none}
+  .mn-dd.on .mn-ddmenu{display:block}
+  .mn-ddmenu button{display:block; width:100%; text-align:left; background:none; border:none; color:var(--cDim);
+    font:500 13px/1 Inter,sans-serif; padding:9px 11px; border-radius:8px; cursor:pointer}
+  .mn-ddmenu button:hover{background:color-mix(in srgb, var(--acc) 14%, transparent); color:var(--cInk)}
+  .mn-ddmenu hr{border:none; border-top:1px solid var(--cTrack); margin:5px 4px}
+</style>
+<section id="menus" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker">08 · Menus</div>
+    <h2>Dez jeitos de navegar.</h2>
+    <p class="lead">Do topbar honesto ao command palette — cada padrão com seu palco e sua escala. Teste o hamburger (2), o mega menu (6) e o palette (8).</p>
+    <div class="controls" data-target="cv-menus">
+      <div class="grp"><span class="cap">Estilo</span>
+        <button class="pk th-pk" aria-pressed="true"  data-th="over">OverCore</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="minimal">Minimal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="glass">Glass</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="brutal">Brutal</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="clay">Clay</button>
+        <button class="pk th-pk" aria-pressed="false" data-th="skeu">Skeu</button>
+      </div>
+      <div class="grp"><span class="cap">Acento</span></div>
+      <div class="grp"><span class="cap">Modo</span>
+        <button class="pk md" aria-pressed="false" data-m="light">Claro</button>
+        <button class="pk md" aria-pressed="true" data-m="dark">Escuro</button>
+      </div>
+    </div>
+    <div class="canvas th th-over" id="cv-menus">
+      <div class="mn-grid">
+        <div><div class="mnf"><div class="mn-top"><span class="lg">Marca<b>.</b></span><a class="mn-a on">Home</a><a class="mn-a">Produto</a><a class="mn-a">Preços</a><button class="cta">Entrar</button></div><div class="mn-tabbody">O clássico: logo à esquerda, links, 1 CTA — só um primário por viewport (A16).</div></div><div class="mnlbl"><b>01 Topbar</b><span>sites, apps</span></div></div>
+        <div><div class="mnf" style="justify-content:flex-start"><div><button class="mn-burg" data-drawer>☰</button></div><div class="mn-tabbody">Clique no hamburger: o drawer desliza por cima, com X pra sair.</div><div class="mn-drawer"><button class="x" aria-label="fechar">✕</button><a class="mn-a on">Início</a><a class="mn-a">Minhas reservas</a><a class="mn-a">Documentos</a><a class="mn-a">Ajuda</a></div></div><div class="mnlbl"><b>02 Drawer</b><span>mobile, apps densos</span></div></div>
+        <div><div class="mnf"><div class="mn-tabs" data-tabs><span class="tind"></span><button aria-selected="true">Visão geral</button><button aria-selected="false">Atividade</button><button aria-selected="false">Config</button></div><div class="mn-tabbody" data-tabbody>Conteúdo da primeira aba — o indicador desliza no snap da casa.</div></div><div class="mnlbl"><b>03 Tabs</b><span>seções irmãs</span></div></div>
+        <div><div class="mnf"><div class="mn-rail" data-rail><div class="rail"><div class="ritem" data-railtoggle><span class="ric">☰</span><span>Recolher</span></div><div class="ritem on"><span class="ric">▤</span><span>Dashboard</span></div><div class="ritem"><span class="ric">◎</span><span>Relatórios</span></div><div class="ritem"><span class="ric">⚙</span><span>Ajustes</span></div></div><div class="body">Rail de ícones → clique no ☰ pra expandir com rótulos.</div></div></div><div class="mnlbl"><b>04 Sidebar rail</b><span>dashboards</span></div></div>
+        <div><div class="mnf"><div class="mn-tabbody" style="flex:1">A navegação mora embaixo, no alcance do polegar — ativo na cor de acento.</div><div class="mn-bot" data-bot><button class="on"><span class="bic">⌂</span>Início</button><button><span class="bic">☆</span>Favoritos</button><button><span class="bic">⊕</span>Novo</button><button><span class="bic">⚙</span>Perfil</button></div></div><div class="mnlbl"><b>05 Bottom nav</b><span>mobile-first</span></div></div>
+        <div><div class="mnf" style="overflow:visible"><div class="mn-mega" data-mega><a class="mn-a" style="display:inline-block">Produtos ▾</a><div class="mn-megapanel"><div class="col"><b>Criar</b><a>Editor</a><a>Templates</a><a>Assets</a></div><div class="col"><b>Gerir</b><a>Projetos</a><a>Times</a><a>Permissões</a></div><div class="col"><b>Medir</b><a>Analytics</a><a>Relatórios</a><a>Exportar</a></div></div></div><div class="mn-tabbody">Clique em "Produtos": painel largo com colunas temáticas.</div></div><div class="mnlbl"><b>06 Mega menu</b><span>portais, e-commerce</span></div></div>
+        <div><div class="mnf" style="justify-content:center"><div class="mn-bc"><a class="mn-a" style="padding:2px 4px">Home</a><span class="sep">/</span><a class="mn-a" style="padding:2px 4px">…</a><span class="sep">/</span><a class="mn-a" style="padding:2px 4px">Relatórios</a><span class="sep">/</span><span class="here">Julho 2026</span></div><div class="mn-tabbody" style="text-align:center">Onde estou e como volto — com elipse quando o caminho é longo.</div></div><div class="mnlbl"><b>07 Breadcrumb</b><span>hierarquias fundas</span></div></div>
+        <div><div class="mnf" style="justify-content:center; align-items:flex-start"><button class="mn-palbtn" data-palopen>⌕ Buscar… <kbd>Ctrl K</kbd></button><div class="mn-tabbody">Um atalho, tudo ao alcance — digite pra filtrar.</div><div class="mn-pal" data-pal><input placeholder="digite um comando…" data-palq><div class="it">Ir para Dashboard <kbd>G D</kbd></div><div class="it">Criar relatório <kbd>C R</kbd></div><div class="it">Convidar pessoa <kbd>I</kbd></div><div class="it">Alternar tema <kbd>T</kbd></div><div class="it">Abrir configurações <kbd>,</kbd></div></div></div><div class="mnlbl"><b>08 Command palette</b><span>power users</span></div></div>
+        <div><div class="mnf" style="justify-content:center"><div class="mn-chips" data-chips><button class="mn-chip on">Todos<span class="n">128</span></button><button class="mn-chip">Abertos<span class="n">37</span></button><button class="mn-chip">Urgentes<span class="n">5</span></button><button class="mn-chip">Concluídos<span class="n">86</span></button><button class="mn-chip">Arquivados</button></div><div class="mn-tabbody">Filtros como navegação — contadores honestos.</div></div><div class="mnlbl"><b>09 Chips de filtro</b><span>listas, inboxes</span></div></div>
+        <div><div class="mnf" style="overflow:visible; justify-content:center"><div class="mn-dd" data-dd><button class="mn-ddbtn" data-ddlabel>Ordenar: Recentes ▾</button><div class="mn-ddmenu"><button>Recentes</button><button>Mais antigos</button><button>A–Z</button><hr><button>Personalizado…</button></div></div><div class="mn-tabbody">O dropdown que não clipa (A30): fecha no clique fora.</div></div><div class="mnlbl"><b>10 Dropdown</b><span>ordenação, ações</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÓRBITA (galeria 3D · three.js vendorizado, MIT) ============ -->
+<style>
+  .orb-stage{margin-top:26px; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    background:radial-gradient(900px 480px at 50% 0%, #171b26 0%, var(--bg) 70%); position:relative}
+  .orb-stage canvas{display:block; width:100%; height:520px; touch-action:pan-y; cursor:grab}
+  .orb-stage canvas.grab{cursor:grabbing}
+  .orb-hint{position:absolute; left:0; right:0; bottom:14px; text-align:center; font-size:12px; color:var(--dim);
+    pointer-events:none}
+  .orb-hint b{color:var(--accent)}
+  .orb-fallback{display:none; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px}
+  .orb-fallback img{width:100%; height:130px; object-fit:cover; border-radius:var(--radius-s)}
+  .orb-stage.no3d canvas,.orb-stage.no3d .orb-hint{display:none}
+  .orb-stage.no3d .orb-fallback{display:grid}
+  .d3grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px}
+  @media(max-width:820px){.d3grid{grid-template-columns:1fr}}
+  .d3f canvas{height:320px; cursor:default}
+</style>
+<section id="orbita">
+  <div class="wrap">
+    <div class="kicker">09 · 3D</div>
+    <h2>Três peças que saem da tela.</h2>
+    <p class="lead">Three.js de verdade — luz, profundidade e câmera no navegador. <b style="color:var(--ink)">Arraste o anel</b>, <b style="color:var(--ink)">passeie o mouse</b> na gema e na malha. Tudo com fallback digno e respeito a movimento reduzido.</p>
+
+    <div class="orb-stage" id="orb-stage">
+      <canvas id="orb-canvas" aria-label="galeria orbital 3D — arraste para girar"></canvas>
+      <div class="orb-hint"><b>arraste</b> para girar · o anel tem embalo</div>
+      <div class="orb-fallback" id="orb-fallback"></div>
+      <span class="fxlbl"><b>01 Galeria orbital</b> <span>· vitrines, portfólios de peso</span></span>
+    </div>
+
+    <div class="d3grid">
+      <div class="orb-stage d3f">
+        <canvas id="gem-canvas" aria-label="objeto 3D que segue o mouse"></canvas>
+        <span class="fxlbl"><b>02 Objeto-assinatura</b> <span>· heros, aberturas — inclina com o cursor</span></span>
+      </div>
+      <div class="orb-stage d3f">
+        <canvas id="mesh-canvas" aria-label="malha de pontos ondulando"></canvas>
+        <span class="fxlbl"><b>03 Malha viva</b> <span>· fundos que respiram — reage ao mouse</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANCHOR:TEXTOS -->
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:var(--ink)">Catálogo do Atelier</b> · cada peça troca de linguagem e acento sem mudar a estrutura.</span>
+    <span>efeitos da seção 07 derivados de magic.css (MIT, © Christian Pucci) · Atelier · OverCore</span>
+  </div>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---- controles: tema + acento (por seção) ---- */
+const SWATCHES=[
+  ['#c8ff3d','#0b0d12'],['#facc15','#0b0d12'],['#fb923c','#0b0d12'],['#f472b6','#0b0d12'],
+  ['#e879f9','#ffffff'],['#a78bfa','#ffffff'],['#818cf8','#ffffff'],['#60a5fa','#0b0d12'],
+  ['#22d3ee','#0b0d12'],['#2dd4bf','#0b0d12'],['#34d399','#0b0d12'],['#4ade80','#0b0d12'],
+  ['#f87171','#ffffff'],['#e8ebf2','#0b0d12'],
+];
+document.querySelectorAll('.controls').forEach(ctrl=>{
+  const canvas=document.getElementById(ctrl.dataset.target||'');
+  if(!canvas) return; // barras com switcher próprio (linguagens/loading) não entram aqui
+  const NAT={minimal:'light',glass:'light',brutal:'light',clay:'light',skeu:'dark',over:'dark'};
+  let mode=(ctrl.querySelector('.md[aria-pressed="true"]')||{dataset:{}}).dataset.m||'light';
+  function applyMode(){
+    const th=(canvas.className.match(/th-(\w+)/)||[])[1];
+    canvas.classList.toggle('thd', mode==='dark' && NAT[th]==='light');
+    canvas.classList.toggle('thl', mode==='light' && NAT[th]==='dark');
+  }
+  ctrl.querySelectorAll('.md').forEach(b=>b.addEventListener('click',()=>{
+    ctrl.querySelectorAll('.md').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); mode=b.dataset.m; applyMode();
+  }));
+  ctrl.querySelectorAll('.th-pk').forEach(b=>b.addEventListener('click',()=>{
+    ctrl.querySelectorAll('.th-pk').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    canvas.className=canvas.className.replace(/th-\w+/,'th-'+b.dataset.th);
+    applyMode();
+  }));
+  applyMode();
+  const grp=ctrl.querySelectorAll('.grp')[1];
+  if(!grp) return;
+  SWATCHES.forEach(([c,ink],k)=>{
+    const s=document.createElement('button');
+    s.className='sw'; s.style.background=c; s.setAttribute('aria-pressed',k===0?'true':'false');
+    s.setAttribute('aria-label','acento '+c);
+    s.addEventListener('click',()=>{
+      grp.querySelectorAll('.sw').forEach(x=>x.setAttribute('aria-pressed','false'));
+      s.setAttribute('aria-pressed','true');
+      canvas.style.setProperty('--acc',c); canvas.style.setProperty('--accInk',ink);
+    });
+    grp.appendChild(s);
+  });
+});
+
+/* ---- cartões ---- */
+document.querySelectorAll('[data-tilt]').forEach(el=>{
+  el.addEventListener('pointermove',e=>{
+    if(reduced)return;
+    const r=el.getBoundingClientRect();
+    const rx=((e.clientY-r.top)/r.height-.5)*-10, ry=((e.clientX-r.left)/r.width-.5)*12;
+    el.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  });
+  el.addEventListener('pointerleave',()=>{el.style.transform='none'});
+});
+document.querySelectorAll('[data-spot]').forEach(el=>{
+  el.addEventListener('pointermove',e=>{
+    const r=el.getBoundingClientRect();
+    el.style.setProperty('--mx',(e.clientX-r.left)+'px');
+    el.style.setProperty('--my',(e.clientY-r.top)+'px');
+  });
+});
+document.querySelectorAll('[data-skel]').forEach(el=>{
+  const cyc=()=>{el.classList.add('loaded'); setTimeout(()=>{el.classList.remove('loaded'); setTimeout(cyc, reduced?600:1600)}, reduced?1200:3200)};
+  setTimeout(cyc, reduced?600:1800);
+});
+
+/* ---- botões ---- */
+document.querySelectorAll('[data-load]').forEach(b=>{
+  const tx=b.querySelector('.tx'); let busy=false;
+  b.addEventListener('click',()=>{
+    if(busy)return; busy=true;
+    b.classList.add('busy'); tx.textContent='Salvando…';
+    setTimeout(()=>{b.classList.remove('busy'); tx.textContent='Salvo ✓';
+      setTimeout(()=>{tx.textContent='Salvar'; busy=false}, 1400)}, reduced?300:1600);
+  });
+});
+document.querySelectorAll('[data-shake]').forEach(b=>b.addEventListener('click',()=>{
+  b.classList.remove('err'); void b.offsetWidth; b.classList.add('err');
+}));
+document.querySelectorAll('[data-rip]').forEach(b=>b.addEventListener('click',e=>{
+  const r=b.getBoundingClientRect(), d=Math.max(r.width,r.height);
+  const s=document.createElement('span'); s.className='rp';
+  s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
+  b.appendChild(s); setTimeout(()=>s.remove(),600);
+}));
+document.querySelectorAll('[data-mag]').forEach(b=>{
+  const zone=b.parentElement;
+  zone.addEventListener('pointermove',e=>{
+    if(reduced)return;
+    const r=b.getBoundingClientRect();
+    const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+    b.style.transform=`translate(${dx*.25}px,${dy*.3}px)`;
+  });
+  zone.addEventListener('pointerleave',()=>{b.style.transform='none'});
+});
+document.querySelectorAll('[data-tgl]').forEach(t=>t.addEventListener('click',()=>{
+  t.setAttribute('aria-pressed', t.getAttribute('aria-pressed')==='true'?'false':'true');
+}));
+document.querySelectorAll('[data-seg]').forEach(seg=>{
+  const ind=seg.querySelector('.ind'), btns=[...seg.querySelectorAll('button')];
+  function place(b){ind.style.left=b.offsetLeft+'px'; ind.style.width=b.offsetWidth+'px'}
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); place(b);
+  }));
+  requestAnimationFrame(()=>place(btns[0]));
+});
+document.querySelectorAll('[data-fab]').forEach(f=>{
+  f.querySelector('.fab').addEventListener('click',()=>f.classList.toggle('open'));
+});
+document.querySelectorAll('[data-copy]').forEach(b=>{
+  const orig=b.textContent;
+  b.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(orig)}catch(e){}
+    b.classList.add('ok'); b.textContent='copiado ✓';
+    setTimeout(()=>{b.classList.remove('ok'); b.textContent=orig},1400);
+  });
+});
+document.querySelectorAll('[data-step]').forEach(s=>{
+  const out=s.querySelector('output'), [minus,plus]=s.querySelectorAll('button');
+  let v=2;
+  minus.addEventListener('click',()=>{v=Math.max(0,v-1); out.textContent=v});
+  plus.addEventListener('click',()=>{v=Math.min(99,v+1); out.textContent=v});
+});
+document.querySelectorAll('[data-dl]').forEach(b=>{
+  const lb=b.querySelector('.lb'); let going=false;
+  b.addEventListener('click',()=>{
+    if(going)return; going=true;
+    b.classList.add('going'); lb.textContent='Baixando…';
+    setTimeout(()=>{b.classList.remove('going'); b.classList.add('done'); lb.textContent='Pronto ✓';
+      setTimeout(()=>{b.classList.remove('done'); lb.textContent='Baixar relatório'; going=false},1600)}, reduced?300:2300);
+  });
+});
+
+/* ---- textos ---- */
+document.querySelectorAll('.ft-pk').forEach(b=>b.addEventListener('click',()=>{
+  const ctrl=b.closest('.controls'), canvas=document.getElementById(ctrl.dataset.target);
+  ctrl.querySelectorAll('.ft-pk').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  canvas.style.setProperty('--tfont', b.dataset.ft);
+}));
+document.querySelectorAll('[data-split]').forEach(el=>{
+  const t=el.textContent; el.textContent='';
+  [...t].forEach((ch,i)=>{
+    const s=document.createElement('span'); s.style.setProperty('--i',i);
+    s.textContent=ch===' '?' ':ch; el.appendChild(s);
+  });
+});
+document.querySelectorAll('[data-type]').forEach(el=>{
+  const words=JSON.parse(el.dataset.type); let w=0;
+  if(reduced){el.textContent=words[0]; return}
+  (async function loop(){
+    while(true){
+      const word=words[w];
+      for(let i=1;i<=word.length;i++){el.textContent=word.slice(0,i); await new Promise(r=>setTimeout(r,55))}
+      await new Promise(r=>setTimeout(r,1500));
+      for(let i=word.length;i>=0;i--){el.textContent=word.slice(0,i); await new Promise(r=>setTimeout(r,26))}
+      await new Promise(r=>setTimeout(r,350)); w=(w+1)%words.length;
+    }
+  })();
+});
+document.querySelectorAll('[data-count-to]').forEach(el=>{
+  const alvo=+el.dataset.countTo;
+  if(reduced){el.textContent=alvo.toLocaleString('pt-BR'); return}
+  const run=()=>{const t0=performance.now();
+    (function tick(t){const p=Math.min((t-t0)/1400,1), k=1-Math.pow(1-p,3);
+      el.textContent=Math.round(alvo*k).toLocaleString('pt-BR');
+      if(p<1)requestAnimationFrame(tick); else setTimeout(()=>{el.textContent='0'; setTimeout(run,700)},2600);
+    })(t0)};
+  run();
+});
+document.querySelectorAll('[data-decode]').forEach(el=>{
+  const final=el.dataset.decode, CH='!<>-_\\/[]{}—=+*^?#';
+  if(reduced){el.textContent=final; return}
+  const run=()=>{let frame=0;
+    const id=setInterval(()=>{
+      el.textContent=[...final].map((c,i)=> i<frame/2.2 ? c : CH[Math.floor(Math.random()*CH.length)]).join('');
+      frame++;
+      if(frame/2.2>=final.length){clearInterval(id); el.textContent=final; setTimeout(run,2800)}
+    },42)};
+  run();
+});
+document.querySelectorAll('[data-rot]').forEach(roll=>{
+  const words=JSON.parse(roll.dataset.rot);
+  roll.innerHTML=words.concat(words[0]).map(w=>`<span>${w}</span>`).join('');
+  let i=0;
+  if(reduced)return;
+  setInterval(()=>{
+    i++;
+    roll.style.transition=i===words.length?'transform .5s cubic-bezier(.22,1,.36,1)':'transform .5s cubic-bezier(.22,1,.36,1)';
+    roll.style.transform=`translateY(-${i*1.35}em)`;
+    if(i===words.length){setTimeout(()=>{roll.style.transition='none'; roll.style.transform='translateY(0)'; i=0},520)}
+  },1900);
+});
+document.querySelectorAll('[data-strike]').forEach(el=>{
+  const cyc=()=>{el.classList.add('cut'); setTimeout(()=>{el.classList.remove('cut'); setTimeout(cyc,900)},2600)};
+  setTimeout(cyc,1200);
+});
+
+/* ---- efeitos (Magic CSS) ---- */
+function fxPlay(tile){
+  const chip=tile.querySelector('.fxchip');
+  chip.style.animation='none'; void chip.offsetWidth;
+  chip.style.animation=tile.dataset.fx+' .9s cubic-bezier(.4,0,.2,1) both';
+  chip.addEventListener('animationend',()=>setTimeout(()=>{chip.style.animation='none'},430),{once:true});
+}
+document.querySelectorAll('.fxt').forEach(t=>t.addEventListener('click',()=>fxPlay(t)));
+const fxAll=document.getElementById('fx-all');
+if(fxAll)fxAll.addEventListener('click',()=>{
+  document.querySelectorAll('.fxt').forEach((t,i)=>setTimeout(()=>fxPlay(t), reduced?0:i*100));
+});
+
+/* ---- menus ---- */
+document.querySelectorAll('[data-drawer]').forEach(b=>{
+  const f=b.closest('.mnf'), d=f.querySelector('.mn-drawer');
+  b.addEventListener('click',()=>d.classList.add('on'));
+  d.querySelector('.x').addEventListener('click',()=>d.classList.remove('on'));
+});
+document.querySelectorAll('[data-tabs]').forEach(tabs=>{
+  const ind=tabs.querySelector('.tind'), btns=[...tabs.querySelectorAll('button')];
+  const body=tabs.closest('.mnf').querySelector('[data-tabbody]');
+  const TXT=['Conteúdo da primeira aba — o indicador desliza no snap da casa.','Atividade recente: 3 entregas, 1 revisão pendente.','Preferências, notificações e integrações.'];
+  function place(b){ind.style.left=b.offsetLeft+'px'; ind.style.width=b.offsetWidth+'px'}
+  btns.forEach((b,i)=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.setAttribute('aria-selected','false'));
+    b.setAttribute('aria-selected','true'); place(b); if(body)body.textContent=TXT[i]||'';
+  }));
+  requestAnimationFrame(()=>place(btns[0]));
+});
+document.querySelectorAll('[data-railtoggle]').forEach(b=>b.addEventListener('click',()=>{
+  b.closest('.mn-rail').classList.toggle('open');
+}));
+document.querySelectorAll('[data-bot]').forEach(bot=>bot.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  bot.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+})));
+document.querySelectorAll('[data-mega]').forEach(m=>{
+  m.querySelector('.mn-a').addEventListener('click',e=>{e.stopPropagation(); m.classList.toggle('on')});
+  document.addEventListener('click',()=>m.classList.remove('on'));
+});
+document.querySelectorAll('[data-palopen]').forEach(b=>{
+  const f=b.closest('.mnf'), pal=f.querySelector('[data-pal]'), q=pal.querySelector('[data-palq]');
+  b.addEventListener('click',e=>{e.stopPropagation(); pal.classList.add('on'); q.focus()});
+  document.addEventListener('click',e=>{if(!pal.contains(e.target))pal.classList.remove('on')});
+  q.addEventListener('input',()=>{
+    const v=q.value.toLowerCase();
+    pal.querySelectorAll('.it').forEach(it=>it.style.display=it.textContent.toLowerCase().includes(v)?'':'none');
+  });
+});
+document.querySelectorAll('[data-chips]').forEach(c=>c.querySelectorAll('.mn-chip').forEach(ch=>ch.addEventListener('click',()=>{
+  c.querySelectorAll('.mn-chip').forEach(x=>x.classList.remove('on')); ch.classList.add('on');
+})));
+document.querySelectorAll('[data-dd]').forEach(dd=>{
+  const btn=dd.querySelector('[data-ddlabel]');
+  btn.addEventListener('click',e=>{e.stopPropagation(); dd.classList.toggle('on')});
+  dd.querySelectorAll('.mn-ddmenu button').forEach(it=>it.addEventListener('click',()=>{
+    btn.textContent='Ordenar: '+it.textContent+' ▾'; dd.classList.remove('on');
+  }));
+  document.addEventListener('click',()=>dd.classList.remove('on'));
+});
+
+/* ---- 3D (three.js vendorizado — carrega quando a seção aproxima; 3 peças) ---- */
+(function(){
+  const stage=document.getElementById('orb-stage'); if(!stage)return;
+  const FOTOS=[1015,1016,1018,1025,1035,1039,1043,1050,1069,1080,1084,1057];
+  function fallback(){
+    stage.classList.add('no3d');
+    const fb=document.getElementById('orb-fallback');
+    fb.innerHTML=FOTOS.slice(0,8).map(id=>`<img src="https://picsum.photos/id/${id}/460/304" alt="" loading="lazy">`).join('');
+  }
+  let started=false;
+  function boot(){
+    if(started)return; started=true;
+    const s=document.createElement('script');
+    s.src='vendor/three.min.js';
+    s.onload=()=>{ try{ initOrbit(); initGem(); initMesh(); }catch(e){ fallback() } };
+    s.onerror=fallback;
+    document.head.appendChild(s);
+  }
+  new IntersectionObserver((es,io)=>{if(es[0].isIntersecting){io.disconnect(); boot()}},{rootMargin:'600px'}).observe(stage);
+
+  function makeRenderer(canvas,h){
+    const r=new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+    r.setPixelRatio(Math.min(devicePixelRatio,2));
+    const w=()=>canvas.parentElement.clientWidth;
+    r.setSize(w(),h,false);
+    addEventListener('resize',()=>r.setSize(w(),h,false));
+    return r;
+  }
+
+  /* 01 · galeria orbital */
+  function initOrbit(){
+    const canvas=document.getElementById('orb-canvas');
+    const renderer=makeRenderer(canvas,520);
+    const scene=new THREE.Scene();
+    scene.fog=new THREE.Fog(0x0b0d12, 9, 16);
+    const cam=new THREE.PerspectiveCamera(46, canvas.parentElement.clientWidth/520, .1, 60);
+    cam.position.set(0,.6,11.2);
+    const ring=new THREE.Group(); scene.add(ring);
+    const N=FOTOS.length, R=6.2, loader=new THREE.TextureLoader();
+    loader.crossOrigin='anonymous';
+    const planes=[];
+    FOTOS.forEach((id,i)=>{
+      const a=i/N*Math.PI*2;
+      const mat=new THREE.MeshBasicMaterial({color:0x232a38, side:THREE.DoubleSide});
+      loader.load(`https://picsum.photos/id/${id}/580/390`, tex=>{
+        tex.colorSpace!==undefined?tex.colorSpace=THREE.SRGBColorSpace:tex.encoding=THREE.sRGBEncoding;
+        mat.map=tex; mat.color.set(0xffffff); mat.needsUpdate=true;
+      });
+      const m=new THREE.Mesh(new THREE.PlaneGeometry(2.9,1.95),mat);
+      m.position.set(Math.sin(a)*R,0,Math.cos(a)*R); m.rotation.y=a;
+      ring.add(m); planes.push(m);
+    });
+    let vel=0,dragging=false,lastX=0,idle=reduced?0:0.0022;
+    canvas.addEventListener('pointerdown',e=>{dragging=true; lastX=e.clientX; canvas.classList.add('grab')});
+    window.addEventListener('pointermove',e=>{
+      if(!dragging)return;
+      const dx=e.clientX-lastX; lastX=e.clientX;
+      ring.rotation.y+=dx*0.005; vel=dx*0.005;
+    });
+    window.addEventListener('pointerup',()=>{dragging=false; canvas.classList.remove('grab')});
+    const front=new THREE.Vector3();
+    (function frame(){
+      requestAnimationFrame(frame);
+      if(!dragging){ ring.rotation.y+=vel+idle; vel*=0.95; }
+      planes.forEach(m=>{
+        m.getWorldPosition(front);
+        const f=(front.z+R)/(2*R), k=0.86+f*0.3, b=0.45+f*0.55;
+        m.scale.setScalar(k);
+        if(m.material.map) m.material.color.setRGB(b,b,b);
+      });
+      renderer.render(scene,cam);
+    })();
+  }
+
+  /* 02 · objeto-assinatura */
+  function initGem(){
+    const canvas=document.getElementById('gem-canvas'); if(!canvas)return;
+    const H=320, renderer=makeRenderer(canvas,H);
+    const scene=new THREE.Scene();
+    const cam=new THREE.PerspectiveCamera(45, canvas.parentElement.clientWidth/H, .1, 40);
+    cam.position.set(0,0,4.6);
+    const gem=new THREE.Group();
+    const core=new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.35,0),
+      new THREE.MeshStandardMaterial({color:0x141824, metalness:.9, roughness:.28, flatShading:true}));
+    const edges=new THREE.LineSegments(
+      new THREE.EdgesGeometry(core.geometry),
+      new THREE.LineBasicMaterial({color:0xc8ff3d, transparent:true, opacity:.55}));
+    gem.add(core,edges); scene.add(gem);
+    scene.add(new THREE.AmbientLight(0xffffff,.45));
+    const key=new THREE.DirectionalLight(0xc8ff3d,.75); key.position.set(4,6,6); scene.add(key);
+    const fill=new THREE.DirectionalLight(0x516cb1,.55); fill.position.set(-5,2,4); scene.add(fill);
+    let mx=0,my=0;
+    canvas.parentElement.addEventListener('pointermove',e=>{
+      const r=canvas.getBoundingClientRect();
+      mx=(e.clientX-r.left)/r.width-.5; my=(e.clientY-r.top)/r.height-.5;
+    },{passive:true});
+    function paint(tms){
+      const tt=tms*0.00045;
+      gem.rotation.y=tt*0.9+mx*0.9; gem.rotation.x=0.3+my*0.7;
+      gem.position.y=Math.sin(tt*1.4)*0.12;
+      renderer.render(scene,cam);
+    }
+    if(reduced){ paint(1200); return }
+    (function loop(tms){ paint(tms||0); requestAnimationFrame(loop) })(0);
+  }
+
+  /* 03 · malha viva */
+  function initMesh(){
+    const canvas=document.getElementById('mesh-canvas'); if(!canvas)return;
+    const H=320, renderer=makeRenderer(canvas,H);
+    const scene=new THREE.Scene();
+    const cam=new THREE.PerspectiveCamera(50, canvas.parentElement.clientWidth/H, .1, 60);
+    cam.position.set(0,2.6,7.5); cam.lookAt(0,0,0);
+    const COLS=90, ROWS=42, SP=0.3;
+    const geo=new THREE.BufferGeometry();
+    const pos=new Float32Array(COLS*ROWS*3);
+    let k=0;
+    for(let i=0;i<COLS;i++)for(let j=0;j<ROWS;j++){
+      pos[k++]=(i-COLS/2)*SP; pos[k++]=0; pos[k++]=(j-ROWS/2)*SP;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    scene.add(new THREE.Points(geo, new THREE.PointsMaterial({color:0x4a5670, size:0.05, transparent:true, opacity:.9})));
+    let mx=0;
+    canvas.parentElement.addEventListener('pointermove',e=>{
+      const r=canvas.getBoundingClientRect();
+      mx=(e.clientX-r.left)/r.width-.5;
+    },{passive:true});
+    const p=geo.attributes.position;
+    function paint(tms){
+      const tt=tms*0.00055;
+      let k2=1;
+      for(let i=0;i<COLS;i++)for(let j=0;j<ROWS;j++){
+        const x=(i-COLS/2)*SP, z=(j-ROWS/2)*SP;
+        p.array[k2]=Math.sin(x*0.6+tt*2.2+mx*3)*0.3+Math.cos(z*0.8+tt*1.5)*0.24;
+        k2+=3;
+      }
+      p.needsUpdate=true;
+      renderer.render(scene,cam);
+    }
+    if(reduced){ paint(900); return }
+    (function loop(tms){ paint(tms||0); requestAnimationFrame(loop) })(0);
+  }
+})();
+
+/* ---- linguagens (sample switcher) ---- */
+document.querySelectorAll('.st2').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.st2').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  document.getElementById('scv').className='scv scv-'+b.dataset.s;
+  document.getElementById('ssample').className='sample s-'+b.dataset.s;
+}));
+
+/* ---- loading (switcher + %) ---- */
+document.querySelectorAll('.ldp2').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.ldp2').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  document.getElementById('ldcv').className='ldcanvas ld-'+b.dataset.ls;
+}));
+(function(){
+  const els=document.querySelectorAll('.pct');
+  if(!els.length)return;
+  if(reduced){els.forEach(e=>e.textContent='64%');return}
+  (function tick(t){
+    const p=(t/2400)%1, k=p<.55?p/.55*.62:(p<.85?.62+(p-.55)/.3*.28:(.9+(p-.85)/.15*.07));
+    els.forEach(e=>e.textContent=Math.round(k*100)+'%');
+    requestAnimationFrame(tick);
+  })(0);
+})();
+
+/* ---- fotos ---- */
+(function(){
+  const trk=$('#caro-trk'); if(!trk)return;
+  const dots=$('#caro-dots'), caro=$('#caro'), n=trk.children.length; let i=0, timer=null;
+  for(let k=0;k<n;k++){const d=document.createElement('i'); d.addEventListener('click',()=>go(k,true)); dots.appendChild(d)}
+  function paint(){trk.style.transform=`translateX(-${i*100}%)`;
+    [...dots.children].forEach((d,k)=>d.classList.toggle('on',k===i))}
+  function go(k,user){i=(k+n)%n; paint(); if(user)restart()}
+  function restart(){clearInterval(timer); if(!reduced)timer=setInterval(()=>go(i+1),3800)}
+  $('#caro-prev').addEventListener('click',()=>go(i-1,true));
+  $('#caro-next').addEventListener('click',()=>go(i+1,true));
+  caro.addEventListener('mouseenter',()=>clearInterval(timer));
+  caro.addEventListener('mouseleave',restart);
+  paint(); restart();
+})();
+(function(){
+  const kb=$('#kb'); if(!kb)return;
+  const imgs=[...kb.querySelectorAll('img')]; let i=0;
+  if(reduced)return;
+  setInterval(()=>{imgs[i].classList.remove('on'); i=(i+1)%imgs.length; imgs[i].classList.add('on')},4600);
+})();
+(function(){
+  const cs=$('#cs'); if(!cs)return;
+  const sls=[...cs.querySelectorAll('.csl')], dots=$('#csdots'), n=sls.length;
+  let i=0, drag=0, dragging=false, sx=0, moved=false, timer=null;
+  for(let k=0;k<n;k++){const d=document.createElement('i');
+    d.addEventListener('click',()=>{i=k; paint(); restart()}); dots.appendChild(d)}
+  const off=k=>{let o=k-i; if(o>n/2)o-=n; if(o<-n/2)o+=n; return o};
+  function paint(){
+    sls.forEach((el,k)=>{
+      const o=off(k), a=Math.abs(o);
+      el.style.transition=dragging?'none':'transform 800ms cubic-bezier(.22,1,.36,1), opacity 800ms cubic-bezier(.22,1,.36,1)';
+      el.style.transform=`translateX(calc(${o*55}% + ${drag}px)) scale(${a===0?1:.86})`;
+      el.style.opacity=a<=1?'1':'0';
+      el.style.zIndex=String(30-a*10);
+    });
+    [...dots.children].forEach((d,k)=>d.classList.toggle('on',k===i));
+  }
+  sls.forEach((el,k)=>{
+    el.addEventListener('pointerdown',e=>{dragging=true; moved=false; sx=e.clientX; cs.classList.add('grab'); e.preventDefault()});
+    el.addEventListener('click',()=>{ // clique no vizinho = focar (arrasto nao conta como clique)
+      if(moved) return;
+      if(off(k)!==0){ i=k; paint(); restart(); }
+    });
+  });
+  window.addEventListener('pointermove',e=>{if(!dragging)return; drag=e.clientX-sx; if(Math.abs(drag)>8)moved=true; paint()});
+  window.addEventListener('pointerup',()=>{
+    if(!dragging)return; dragging=false; cs.classList.remove('grab');
+    if(moved&&Math.abs(drag)>60) i=(i+(drag<0?1:-1)+n)%n;
+    drag=0; paint(); restart();
+  });
+  function restart(){clearInterval(timer); if(!reduced)timer=setInterval(()=>{i=(i+1)%n; paint()},4200)}
+  cs.addEventListener('mouseenter',()=>clearInterval(timer));
+  cs.addEventListener('mouseleave',restart);
+  paint(); restart();
+})();
+(function(){
+  const xp=$('#xp'); if(!xp)return;
+  [...xp.querySelectorAll('.xpp')].forEach(p=>{
+    const imgs=[...p.querySelectorAll('img')]; let ci=0; imgs[0].classList.add('cur');
+    p.addEventListener('click',()=>[...xp.querySelectorAll('.xpp')].forEach(q=>q.classList.toggle('on',q===p)));
+    p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault(); p.click()}});
+    p.querySelectorAll('.xarr').forEach(a=>a.addEventListener('click',e=>{
+      e.stopPropagation();
+      imgs[ci].classList.remove('cur');
+      ci=(ci+(a.classList.contains('r')?1:-1)+imgs.length)%imgs.length;
+      imgs[ci].classList.add('cur');
+    }));
+  });
+})();
+(function(){
+  const deck=$('#deck'); if(!deck)return;
+  let cards=[...deck.querySelectorAll('.dcard')];
+  const POS=['rotate(0deg)','rotate(3.5deg) translate(16px,10px)','rotate(-3deg) translate(-14px,20px)','rotate(1deg) translateY(30px) scale(.96)'];
+  let busy=false;
+  function paint(){cards.forEach((c,k)=>{c.style.transform=POS[Math.min(k,POS.length-1)]; c.style.zIndex=String(40-k)})}
+  deck.addEventListener('click',()=>{
+    if(busy)return; busy=true;
+    const top=cards[0];
+    top.style.transform='translateX(130%) rotate(14deg)'; top.style.opacity='0';
+    setTimeout(()=>{cards.push(cards.shift()); top.style.opacity='1'; paint(); busy=false}, reduced?40:470);
+  });
+  paint();
+})();
+(function(){
+  const ba=$('#ba'); if(!ba)return;
+  const r=ba.querySelector('input');
+  r.addEventListener('input',()=>ba.style.setProperty('--bacut',r.value+'%'));
+})();
+(function(){
+  const ov=$('#lbov'); if(!ov)return;
+  const big=ov.querySelector('img');
+  document.querySelectorAll('#lb img').forEach(t=>t.addEventListener('click',()=>{
+    big.src=t.src.replace('/460/304','/1100/730');
+    ov.classList.add('on');
+  }));
+  ov.addEventListener('click',()=>ov.classList.remove('on'));
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')ov.classList.remove('on')});
+})();
+</script>
+</body>
+</html>

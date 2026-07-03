@@ -2366,6 +2366,30 @@
     }
   },
   {
+    "id": "asset-producer",
+    "path": "skills/asset-producer",
+    "category": "design",
+    "name": "asset-producer",
+    "description": "Producao de assets visuais: da direcao aprovada ao asset no build (buckets produce/direct/semantic, manifest com QA).",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
+  },
+  {
     "id": "astro",
     "path": "skills/astro",
     "category": "frontend",
@@ -7148,6 +7172,31 @@
     }
   },
   {
+    "id": "center-stage-carousel",
+    "path": "skills/center-stage-carousel",
+    "category": "design",
+    "name": "center-stage-carousel",
+    "description": "Carrossel center-stage arrastavel de producao: palco central + peek, arrasto 1:1 com snap suave, arrasto!=clique, autoplay que pausa, touch pan-y.",
+    "risk": "safe",
+    "source": "overcore:producao",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "producao",
+    "author": "Weriton - GR Group",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/9"
+  },
+  {
     "id": "changelog-automation",
     "path": "skills/changelog-automation",
     "category": "workflow",
@@ -10349,6 +10398,30 @@
     }
   },
   {
+    "id": "design-critique",
+    "path": "skills/design-critique",
+    "category": "design",
+    "name": "design-critique",
+    "description": "Critica de design pontuada: rubrica Nielsen 0-40 com ancoras, personas, severidade P0-P3, tendencia entre execucoes.",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
+  },
+  {
     "id": "design-md",
     "path": "skills/design-md",
     "category": "design",
@@ -10369,6 +10442,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "design-register",
+    "path": "skills/design-register",
+    "category": "design",
+    "name": "design-register",
+    "description": "A dimensao registro brand vs product: a mesma regra de design muda de peso por tipo de interface; ban list nominal de fontes-reflexo com isencoes em product.",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
   },
   {
     "id": "design-spells",
@@ -11803,6 +11900,31 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "expanding-gallery",
+    "path": "skills/expanding-gallery",
+    "category": "design",
+    "name": "expanding-gallery",
+    "description": "Accordion expansivel com carrossel aninhado (producao): flex-grow, rotulo rotacionado, setas so no ativo com crossfade+scale, outline de acento.",
+    "risk": "safe",
+    "source": "overcore:producao",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "producao",
+    "author": "Weriton - GR Group",
+    "contributed_via": "https://github.com/Weriton-DataOps/agent-skills-hub/issues/10"
   },
   {
     "id": "explain-like-socrates",
@@ -14489,6 +14611,30 @@
     }
   },
   {
+    "id": "hardening-ui",
+    "path": "skills/hardening-ui",
+    "category": "design",
+    "name": "hardening-ui",
+    "description": "Robustez de producao da UI: i18n/expansao de texto, overflow, matriz HTTP->UI, duplo-submit, estados extremos.",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
+  },
+  {
     "id": "haskell-pro",
     "path": "skills/haskell-pro",
     "category": "code",
@@ -14973,6 +15119,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "high-impact-moments",
+    "path": "skills/high-impact-moments",
+    "category": "design",
+    "name": "high-impact-moments",
+    "description": "Momentos de alto impacto (hero, data-viz, tabelas densas) com APIs modernas e disciplina de fallback; gate de 2-3 direcoes.",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
   },
   {
     "id": "hono",
@@ -19192,6 +19362,30 @@
     }
   },
   {
+    "id": "modern-interaction",
+    "path": "skills/modern-interaction",
+    "category": "design",
+    "name": "modern-interaction",
+    "description": "Interacoes modernas: Popover API, inert, anchor positioning, roving tabindex, focus ring correto; resolve o dropdown clipado.",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
+  },
+  {
     "id": "modern-javascript-patterns",
     "path": "skills/modern-javascript-patterns",
     "category": "development",
@@ -21133,6 +21327,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "onboarding-first-run",
+    "path": "skills/onboarding-first-run",
+    "category": "design",
+    "name": "onboarding-first-run",
+    "description": "Onboarding e first-run: anatomia dos 5 tipos de empty state, progressive disclosure, o primeiro minuto do usuario.",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
   },
   {
     "id": "onboarding-psychologist",
@@ -24017,6 +24235,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "responsive-adaptation",
+    "path": "skills/responsive-adaptation",
+    "category": "design",
+    "name": "responsive-adaptation",
+    "description": "Adaptacao responsiva: navegacao em 3 estagios, tabela->cards, pointer/hover queries, print e email 600px.",
+    "risk": "safe",
+    "source": "pbakaus/impeccable (Apache-2.0, modificado)",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "unknown",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "origin": "impeccable",
+    "upstream": "https://github.com/pbakaus/impeccable"
   },
   {
     "id": "returns-reverse-logistics",

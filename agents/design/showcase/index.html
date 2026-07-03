@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier — o ateliê de design do OverCore</title>
+<meta name="description" content="Um mestre, artesãs hiper-estreitas e 30 regras determinísticas contra o design com cara de IA.">
+<style>
+  /* ATELIER SHOWCASE · registro LANDING (decoração intencional permitida) · tokens herdados do OverCore */
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --panel-2:#171b26; --line:#242a36;
+    --ink:#e8ebf2; --dim:#8b93a7; --accent:#c8ff3d;
+    --ok:#4ade80; --warn:#fbbf24; --err:#f87171;
+    --radius:18px; --radius-s:10px;
+    --dur-micro:100ms; --dur-trans:300ms; --dur-enter:500ms; --ease:cubic-bezier(.4,0,.2,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+  a{color:inherit}
+  section{position:relative; padding:96px 24px}
+  .wrap{max-width:1120px; margin:0 auto}
+  .kicker{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  h2{font-size:clamp(28px,4vw,42px); font-weight:800; letter-spacing:-.02em; line-height:1.08; margin:12px 0 10px; text-wrap:balance}
+  .lead{color:var(--dim); max-width:62ch; font-size:16px; margin:0}
+
+  /* reveals — transform/opacity, reduced-motion respeitado */
+  .rv{opacity:0; transform:translateY(18px); transition:opacity var(--dur-enter) var(--ease), transform var(--dur-enter) var(--ease); transition-delay:calc(var(--i,0)*70ms)}
+  .rv.in{opacity:1; transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .rv{opacity:1; transform:none; transition:none}
+    *{animation-duration:.01ms!important; animation-iteration-count:1!important}
+  }
+
+  /* nav */
+  nav{position:fixed; top:0; left:0; right:0; z-index:50; backdrop-filter:blur(10px);
+    background:rgba(11,13,18,.78); border-bottom:1px solid var(--line)}
+  nav .bar{max-width:1120px; margin:0 auto; padding:14px 24px; display:flex; justify-content:space-between; align-items:center}
+  .logo{font-weight:800; letter-spacing:-.02em; font-size:16px; text-decoration:none}
+  .logo b{color:var(--accent)}
+  nav .links{display:flex; gap:20px; align-items:center; font-size:13px}
+  nav .links a{color:var(--dim); text-decoration:none; transition:color var(--dur-micro) var(--ease)}
+  nav .links a:hover{color:var(--ink)}
+  .btn{display:inline-block; font:600 13px/1 inherit; padding:10px 16px; border-radius:var(--radius-s); cursor:pointer;
+    border:1px solid var(--line); background:var(--panel); color:var(--ink); text-decoration:none;
+    transition:background var(--dur-micro) var(--ease), border-color var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease)}
+  .btn:hover{background:var(--panel-2); border-color:#31394a}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#0b0d12}
+  .btn.primary:hover{filter:brightness(1.07)}
+  .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  /* ============ HERO ============ */
+  .hero{min-height:100svh; display:flex; align-items:center; padding-top:120px;
+    background:
+      radial-gradient(1100px 560px at 75% -10%, #171b26 0%, transparent 60%),
+      radial-gradient(900px 480px at 12% 110%, rgba(200,255,61,.05) 0%, transparent 55%),
+      var(--bg)}
+  .hero::before{content:""; position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(rgba(139,147,167,.14) 1px, transparent 1px); background-size:28px 28px;
+    mask-image:radial-gradient(720px 480px at 30% 40%, #000 0%, transparent 75%)}
+  .hero .wrap{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center}
+  @media(max-width:920px){.hero .wrap{grid-template-columns:1fr} .hero{padding-top:110px}}
+  .hero h1{font-size:clamp(40px,6vw,68px); font-weight:800; letter-spacing:-.035em; line-height:1.02; margin:16px 0 18px; text-wrap:balance}
+  .hero h1 em{font-style:normal; color:var(--accent)}
+  .hero p{color:var(--dim); font-size:17px; max-width:52ch; margin:0 0 28px}
+  .hero .cta{display:flex; gap:10px; align-items:center}
+  .hero .hint{margin-top:56px; font-size:12px; color:var(--dim); display:flex; align-items:center; gap:8px}
+  .live{width:7px; height:7px; border-radius:999px; background:var(--accent); animation:pulse 2s var(--ease) infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* morph croqui ⟷ refinado */
+  .morph{position:relative; border-radius:var(--radius); border:1px solid var(--line); overflow:hidden; background:var(--panel);
+    aspect-ratio:4/3.1; user-select:none}
+  .morph .layer{position:absolute; inset:0; padding:26px}
+  .tagchip{position:absolute; top:14px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+    padding:4px 10px; border-radius:999px; z-index:3}
+  .tag-croqui{left:14px; background:#2a2f3b; color:#b7bfd0}
+  .tag-fino{right:14px; background:var(--accent); color:#0b0d12}
+  /* camada croqui (embaixo) */
+  .l-croqui{background:#f0f0ee}
+  .wf{border:2px dashed #b9b9b2; border-radius:6px; background:#fff}
+  .l-croqui .wf-head{height:44px; margin-bottom:14px; display:flex; align-items:center; gap:10px; padding:0 12px}
+  .l-croqui .wf-dot{width:22px; height:22px; border-radius:999px; border:2px dashed #b9b9b2}
+  .l-croqui .wf-line{height:8px; background:#dcdcd6; border-radius:4px}
+  .l-croqui .row{display:flex; gap:12px; margin-bottom:14px}
+  .l-croqui .box{flex:1; height:76px}
+  .l-croqui .big{height:120px}
+  .l-croqui .note{font:11px/1.4 monospace; color:#8a8a82; margin-top:12px}
+  /* camada refinada (por cima, clipada) */
+  .l-fino{background:linear-gradient(180deg,#12151d,#0e1118); clip-path:inset(0 0 0 var(--cut,58%)); transition:clip-path 80ms linear}
+  .fino-head{display:flex; align-items:center; gap:12px; margin-bottom:16px}
+  .fino-ava{width:38px; height:38px; border-radius:999px; background:linear-gradient(135deg,#c8ff3d,#7cb518); display:grid; place-items:center; color:#0b0d12; font-weight:800; font-size:14px}
+  .fino-head b{display:block; font-size:14px} .fino-head span{font-size:12px; color:var(--dim)}
+  .fino-row{display:flex; gap:12px; margin-bottom:14px}
+  .fino-stat{flex:1; background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-s); padding:12px}
+  .fino-stat .fn{font-size:20px; font-weight:800; font-variant-numeric:tabular-nums}
+  .fino-stat .fl{font-size:12px; color:var(--dim); margin-top:2px}
+  .fino-chart{background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-s); height:112px; padding:10px; margin-bottom:14px}
+  .fino-chart svg{width:100%; height:100%}
+  .fino-btn{display:inline-block; background:var(--accent); color:#0b0d12; font-weight:700; font-size:13px; border-radius:var(--radius-s); padding:10px 16px}
+  /* divisor */
+  .divider{position:absolute; top:0; bottom:0; width:2px; background:var(--accent); left:var(--cut,58%); z-index:2; pointer-events:none}
+  .divider::after{content:"⇔"; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:38px; height:38px; border-radius:999px; background:var(--accent); color:#0b0d12; font-weight:800;
+    display:grid; place-items:center; font-size:15px; box-shadow:0 4px 16px rgba(0,0,0,.45)}
+  .morph input[type=range]{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:ew-resize; z-index:4; margin:0}
+
+  /* marquee */
+  .marquee{border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--panel); overflow:hidden; padding:14px 0}
+  .marquee .track{display:flex; gap:44px; width:max-content; animation:mq 46s linear infinite; font-size:13px; color:var(--dim); white-space:nowrap}
+  .marquee:hover .track{animation-play-state:paused}
+  .marquee b{color:var(--ink); font-weight:600}
+  .marquee em{color:var(--accent); font-style:normal}
+  @keyframes mq{to{transform:translateX(-50%)}}
+
+  /* ============ SLOP (o vilão) ============ */
+  .slop-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:44px}
+  @media(max-width:880px){.slop-grid{grid-template-columns:1fr}}
+  .specimen{position:relative; border-radius:var(--radius); overflow:hidden; min-height:250px; padding:22px;
+    display:flex; flex-direction:column; justify-content:flex-end}
+  .specimen .sweepline{position:absolute; inset:0; pointer-events:none; opacity:0}
+  .specimen.in .sweepline{opacity:1; background:linear-gradient(90deg, transparent 0%, rgba(200,255,61,.16) 50%, transparent 100%);
+    transform:translateX(-110%); animation:sweep 1.6s var(--ease) forwards; animation-delay:calc(var(--i,0)*350ms)}
+  @keyframes sweep{to{transform:translateX(110%)}}
+  .stamp{position:absolute; top:18px; right:-64px; transform:rotate(9deg) scale(1.6); opacity:0;
+    background:var(--err); color:#0b0d12; font-weight:800; font-size:12px; letter-spacing:.14em;
+    padding:6px 14px; border-radius:6px; transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease);
+    transition-delay:calc(var(--i,0)*350ms + 1.1s)}
+  .specimen.in .stamp{opacity:1; transform:rotate(9deg) scale(1); right:18px}
+  .specimen .why{font-size:12px; color:rgba(255,255,255,.85); background:rgba(0,0,0,.45); border-radius:8px; padding:8px 10px; backdrop-filter:blur(4px)}
+  .specimen .why b{color:#fff}
+  /* espécime 1: roxo-degradê + gradiente em texto */
+  .sp-1{background:linear-gradient(135deg,#6d28d9,#c026d3 60%,#3b82f6)}
+  .sp-1 .fake-h{font-size:24px; font-weight:800; margin-bottom:6px;
+    background:linear-gradient(90deg,#fff,#a5b4fc); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .sp-1 .fake-p{color:rgba(255,255,255,.75); font-size:13px; margin-bottom:14px}
+  /* espécime 2: glass genérico */
+  .sp-2{background:linear-gradient(135deg,#0ea5e9,#8b5cf6)}
+  .sp-2 .glasscard{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35);
+    backdrop-filter:blur(12px); border-radius:16px; padding:16px; color:#fff; margin-bottom:14px}
+  .sp-2 .glasscard b{font-size:15px} .sp-2 .glasscard p{font-size:12px; margin:6px 0 0; opacity:.8}
+  /* espécime 3: ghost card + glow + over-rounding */
+  .sp-3{background:#0d0f16}
+  .sp-3 .ghost{border:1px solid #2c3242; border-radius:34px; padding:18px;
+    box-shadow:0 0 34px rgba(139,92,246,.55); margin-bottom:14px}
+  .sp-3 .ghost .ic{width:40px; height:40px; border-radius:12px; background:#242a3a; display:grid; place-items:center; color:#8b5cf6; font-weight:800; margin-bottom:10px}
+  .sp-3 .ghost b{font-size:15px} .sp-3 .ghost p{font-size:12px; color:#8b93a7; margin:6px 0 0}
+
+  /* ============ MÉTODO ============ */
+  .steps{margin-top:48px; position:relative}
+  .steps::before{content:""; position:absolute; left:19px; top:8px; bottom:8px; width:2px; background:var(--line)}
+  .step{position:relative; padding:0 0 34px 64px}
+  .step:last-child{padding-bottom:0}
+  .step .num{position:absolute; left:0; top:0; width:40px; height:40px; border-radius:999px; z-index:1;
+    background:var(--panel); border:1px solid var(--line); display:grid; place-items:center;
+    font-weight:800; font-size:14px; color:var(--dim); transition:all var(--dur-trans) var(--ease)}
+  .step.in .num{background:var(--accent); border-color:var(--accent); color:#0b0d12}
+  .step h3{margin:6px 0 6px; font-size:19px; font-weight:700; letter-spacing:-.01em}
+  .step h3 .gate{font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--warn); border:1px solid rgba(251,191,36,.35); background:rgba(251,191,36,.08);
+    border-radius:999px; padding:3px 9px; margin-left:10px; vertical-align:2px}
+  .step p{color:var(--dim); font-size:14px; max-width:60ch; margin:0}
+
+  /* ============ ARTESÃS ============ */
+  .loop3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:44px 0 18px}
+  @media(max-width:880px){.loop3{grid-template-columns:1fr}}
+  .loop3 .ph{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; position:relative}
+  .loop3 .ph .k{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  .loop3 .ph h3{margin:8px 0 6px; font-size:18px}
+  .loop3 .ph p{font-size:13.5px; color:var(--dim); margin:0}
+  .loop3 .ph::after{content:"→"; position:absolute; right:-15px; top:50%; transform:translateY(-50%);
+    color:var(--accent); font-size:20px; font-weight:800; z-index:1}
+  .loop3 .ph:last-child::after{content:"↺"}
+  @media(max-width:880px){.loop3 .ph::after{display:none}}
+  .artesas{display:flex; flex-wrap:wrap; gap:10px; margin-top:26px}
+  .art{border:1px solid var(--line); background:var(--panel); border-radius:999px; padding:9px 15px; font-size:13px;
+    transition:border-color var(--dur-micro) var(--ease), background var(--dur-micro) var(--ease); cursor:default}
+  .art:hover{border-color:var(--accent); background:var(--panel-2)}
+  .art b{font-weight:600} .art span{color:var(--dim); font-size:12px}
+  .art.new{border-color:rgba(200,255,61,.4)}
+  .art.new i{font-style:normal; color:var(--accent); font-size:12px; font-weight:700; margin-left:6px}
+
+  /* ============ VARREDURA LAB ============ */
+  .lab{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:44px; align-items:start}
+  @media(max-width:880px){.lab{grid-template-columns:1fr}}
+  .lab-stage{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:28px; position:relative; min-height:330px; display:grid; place-items:center}
+  .lab-card{width:min(360px,100%); background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius); padding:22px; transition:all var(--dur-trans) var(--ease); position:relative}
+  .lab-card h4{margin:0 0 6px; font-size:18px; letter-spacing:-.01em; transition:all var(--dur-trans) var(--ease)}
+  .lab-card p{margin:0 0 16px; font-size:13px; color:var(--dim)}
+  .lab-card .lc-btn{display:inline-block; background:var(--accent); color:#0b0d12; font-weight:700; font-size:13px; border:none; border-radius:var(--radius-s); padding:10px 15px; transition:all var(--dur-trans) var(--ease)}
+  /* estados de slop injetado */
+  .lab-card.slop{border-radius:36px; border-left:4px solid #8b5cf6; box-shadow:0 0 30px rgba(139,92,246,.5)}
+  .lab-card.slop h4{background:linear-gradient(90deg,#a5b4fc,#f0abfc); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .lab-card.slop .lc-btn{background:linear-gradient(135deg,#8b5cf6,#ec4899); color:#fff; border-radius:999px}
+  .flag{position:absolute; z-index:3; font-size:12px; font-weight:700; background:var(--err); color:#0b0d12;
+    padding:4px 9px; border-radius:6px; opacity:0; transform:translateY(6px);
+    transition:opacity var(--dur-trans) var(--ease), transform var(--dur-trans) var(--ease); white-space:nowrap}
+  .flag.on{opacity:1; transform:none}
+  .lab-log{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden}
+  .lab-log h3{font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--dim); font-weight:600; margin:0; padding:13px 16px; border-bottom:1px solid var(--line)}
+  .lab-log pre{margin:0; padding:16px; font-size:12.5px; line-height:1.8; color:var(--dim); min-height:190px; white-space:pre-wrap}
+  .lab-log pre b{color:var(--err)} .lab-log pre em{color:var(--ok); font-style:normal}
+  .lab-controls{display:flex; gap:10px; padding:14px 16px; border-top:1px solid var(--line)}
+
+  /* ============ NÚMEROS ============ */
+  .nums{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:44px}
+  @media(max-width:880px){.nums{grid-template-columns:repeat(2,1fr)}}
+  .num{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:22px; position:relative; overflow:hidden}
+  .num .v{font-size:40px; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+  .num .v small{font-size:20px; color:var(--accent)}
+  .num .t{font-size:13px; color:var(--dim); margin-top:4px}
+  .num svg{position:absolute; left:0; right:0; bottom:0; height:46px; width:100%; opacity:.9}
+
+  /* ============ TERMINAL CTA ============ */
+  .term{margin-top:44px; background:#0a0c11; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; max-width:720px}
+  .term .tbar{display:flex; gap:6px; padding:12px 14px; border-bottom:1px solid var(--line); align-items:center}
+  .term .tdot{width:10px; height:10px; border-radius:999px; background:#2c3242}
+  .term .tt{margin-left:8px; font-size:12px; color:var(--dim)}
+  .term pre{margin:0; padding:20px; font-size:13.5px; line-height:2.0; color:var(--ink); font-family:ui-monospace,Consolas,monospace; min-height:150px; white-space:pre-wrap}
+  .term .p{color:var(--accent); font-weight:700}
+  .term .c{color:var(--dim)}
+  .cursor{display:inline-block; width:8px; height:15px; background:var(--accent); vertical-align:-2px; animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  footer{border-top:1px solid var(--line); padding:36px 24px; margin-top:40px}
+  footer .wrap{display:flex; justify-content:space-between; gap:14px; font-size:13px; color:var(--dim); flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="bar">
+    <a class="logo" href="#top">Atelier<b>.</b> <span style="color:var(--dim); font-weight:500; font-size:13px">by OverCore</span></a>
+    <div class="links">
+      <a href="#slop">O vilão</a><a href="#metodo">Método</a><a href="#artesas">Artesãs</a>
+      <a href="#varrer">/varrer</a><a href="catalogo.html" style="color:var(--accent)">Catálogo →</a><a href="verbos.html">Verbos</a>
+      <a class="btn primary" href="#instalar">Instalar</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="kicker rv"><span class="live" style="display:inline-block; margin-right:8px"></span>Atelier · o ateliê de design do OverCore</div>
+      <h1 class="rv" style="--i:1">Design que <em>não parece</em> feito por IA.</h1>
+      <p class="rv" style="--i:2">Um mestre que dirige a obra, artesãs hiper-estreitas que dominam um ofício cada, e 30 regras determinísticas que barram o slop — do croqui ao código, com você em cada portão.</p>
+      <div class="cta rv" style="--i:3">
+        <a class="btn primary" href="#metodo">Ver o método</a>
+        <a class="btn" href="catalogo.html">Brincar no catálogo</a>
+      </div>
+      <div class="hint rv" style="--i:4">arraste o divisor ao lado — o método em uma imagem</div>
+    </div>
+    <div class="rv" style="--i:2">
+      <div class="morph" id="morph" style="--cut:58%">
+        <div class="layer l-croqui">
+          <div class="wf wf-head"><div class="wf-dot"></div><div class="wf-line" style="width:38%"></div></div>
+          <div class="row"><div class="wf box"></div><div class="wf box"></div></div>
+          <div class="wf big"></div>
+          <div class="note">croqui v1 — estrutura aprovada · gate 2 ✔</div>
+        </div>
+        <div class="layer l-fino">
+          <div class="fino-head"><div class="fino-ava">OC</div><div><b>Receita — Q3</b><span>atualizado agora</span></div></div>
+          <div class="fino-row">
+            <div class="fino-stat"><div class="fn">R$ 84,2k</div><div class="fl">este mês</div></div>
+            <div class="fino-stat"><div class="fn">+12,4%</div><div class="fl">vs. anterior</div></div>
+          </div>
+          <div class="fino-chart"><svg viewBox="0 0 200 92" preserveAspectRatio="none">
+            <defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8ff3d" stop-opacity=".25"/><stop offset="1" stop-color="#c8ff3d" stop-opacity="0"/></linearGradient></defs>
+            <polygon fill="url(#hg)" points="4,88 4,66 32,60 60,64 88,44 116,50 144,30 172,24 196,12 196,88"/>
+            <polyline fill="none" stroke="#c8ff3d" stroke-width="2" stroke-linecap="round" points="4,66 32,60 60,64 88,44 116,50 144,30 172,24 196,12"/>
+          </svg></div>
+          <span class="fino-btn">Ver detalhes</span>
+        </div>
+        <div class="divider"></div>
+        <span class="tagchip tag-croqui">croqui</span>
+        <span class="tagchip tag-fino">refinado</span>
+        <input type="range" min="6" max="94" value="58" aria-label="arraste para comparar croqui e refinado">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span><b>ux-feedback</b> · estados que não mentem</span><span><em>A20</em> side-stripe reprovado</span>
+    <span><b>loading-states</b> · cristalizada ao vivo via #7</span><span><em>A2</em> roxo-degradê barrado</span>
+    <span><b>design-critique</b> · rubrica 0–40</span><span>croqui → gate → refinado → gate → código</span>
+    <span><b>hardening-ui</b> · UI que aguenta produção</span><span><em>A27</em> glow difuso negado</span>
+    <span><b>modern-interaction</b> · o dropdown nunca mais clipa</span><span>herança primeiro — tokens nunca sobrescritos</span>
+    <span><b>ux-feedback</b> · estados que não mentem</span><span><em>A20</em> side-stripe reprovado</span>
+    <span><b>loading-states</b> · cristalizada ao vivo via #7</span><span><em>A2</em> roxo-degradê barrado</span>
+    <span><b>design-critique</b> · rubrica 0–40</span><span>croqui → gate → refinado → gate → código</span>
+    <span><b>hardening-ui</b> · UI que aguenta produção</span><span><em>A27</em> glow difuso negado</span>
+    <span><b>modern-interaction</b> · o dropdown nunca mais clipa</span><span>herança primeiro — tokens nunca sobrescritos</span>
+  </div>
+</div>
+
+<!-- SLOP -->
+<section id="slop">
+  <div class="wrap">
+    <div class="kicker rv">O vilão</div>
+    <h2 class="rv" style="--i:1">Todo frontend de IA tem a mesma cara.<br>Você já viu estes três.</h2>
+    <p class="lead rv" style="--i:2">Todos os modelos treinaram nos mesmos templates. Sem vocabulário de design, o resultado é reflexo — e reflexo tem <i>tells</i>. O Atelier os caça com regra determinística, não com opinião.</p>
+    <div class="slop-grid">
+      <div class="specimen sp-1 rv sweep-on" style="--i:0">
+        <div class="sweepline"></div><div class="stamp">REPROVADO · A1 + A2</div>
+        <div class="fake-h">Unlock Your Potential</div>
+        <div class="fake-p">Elevate your workflow with AI-powered synergy.</div>
+        <div class="why"><b>A2</b> roxo-degradê reflexo · <b>A1</b> gradiente em texto · <b>A10</b> headline de hype</div>
+      </div>
+      <div class="specimen sp-2 rv sweep-on" style="--i:1">
+        <div class="sweepline"></div><div class="stamp">REPROVADO · A3</div>
+        <div class="glasscard"><b>Analytics Dashboard</b><p>Real-time insights, beautifully blurred.</p></div>
+        <div class="why"><b>A3</b> glassmorphism como default — ninguém escolheu vidro</div>
+      </div>
+      <div class="specimen sp-3 rv sweep-on" style="--i:2">
+        <div class="sweepline"></div><div class="stamp">REPROVADO · A24 + A27</div>
+        <div class="ghost"><div class="ic">◆</div><b>Feature incrível</b><p>Card fantasma com brilho roxo e raio de 34px.</p></div>
+        <div class="why"><b>A24</b> ghost-card (hairline + blur 34) · <b>A27</b> glow difuso no dark</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTODO -->
+<section id="metodo" style="background:linear-gradient(180deg, var(--bg), #0d1017 40%, var(--bg))">
+  <div class="wrap">
+    <div class="kicker rv">O método</div>
+    <h2 class="rv" style="--i:1">Nenhum pixel nasce sem passar pelos portões.</h2>
+    <p class="lead rv" style="--i:2">O wizard do Atelier: erro barato no começo, aprovação humana entre as etapas, varredura no fim. Comprimir gates é o modo de falha dominante — então eles são bloqueantes.</p>
+    <div class="steps">
+      <div class="step rv"><div class="num">1</div><h3>Direção</h3><p>Herança primeiro: tokens existentes nunca são sobrescritos. Sem sistema? Galeria de estilos + PRODUCT.md com referências nomeadas e anti-referências obrigatórias.</p></div>
+      <div class="step rv"><div class="num">2</div><h3>DESIGN.md <span class="gate">gate humano</span></h3><p>Cor, tipo, espaço, raio, sombra e motion viram tokens portáteis (formato Stitch) com Named Rules citáveis.</p></div>
+      <div class="step rv"><div class="num">3</div><h3>Croqui <span class="gate">gate humano</span></h3><p>Estrutura cinza e descartável — errar aqui custa segundos, não sprints. Você aprova o esqueleto antes de qualquer estética.</p></div>
+      <div class="step rv"><div class="num">4</div><h3>Peça a peça</h3><p>O mestre convoca uma artesã por peça: skeleton com a loading-states, estados com a ux-feedback, microcopy com a ux-copy. Cada uma domina UM ofício.</p></div>
+      <div class="step rv"><div class="num">5</div><h3>Varredura <span class="gate">gate humano</span></h3><p>As 30 regras rodam deterministicamente. Peça reprovada volta à artesã com as violações numeradas — sem te incomodar.</p></div>
+      <div class="step rv"><div class="num">6</div><h3>Código</h3><p>Só nasce com refinado aprovado. Todo valor visual vem de token; a implementação é fiel ao mockup — e roda de verdade.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTESÃS -->
+<section id="artesas">
+  <div class="wrap">
+    <div class="kicker rv">O roster vivo</div>
+    <h2 class="rv" style="--i:1">Artesãs que fazem uma coisa.<br>E fazem impecável.</h2>
+    <p class="lead rv" style="--i:2">O roster não é fixo — ele cresce da demanda real. O mestre descobre, improvisa e cristaliza:</p>
+    <div class="loop3">
+      <div class="ph rv" style="--i:0"><div class="k">1 · descobre</div><h3>Já existe artesã?</h3><p>1.469 skills no hub, filtradas por ofício. Match bom → convocada com contrato: DESIGN.md + registro + a peça.</p></div>
+      <div class="ph rv" style="--i:1"><div class="k">2 · improvisa</div><h3>Não existe? Nasce uma efêmera.</h3><p>Mandato estreito + regras de ofício próprias, criada na hora para a peça. Morre no fim da sessão — se não valer.</p></div>
+      <div class="ph rv" style="--i:2"><div class="k">3 · cristaliza</div><h3>Valeu? Vira permanente.</h3><p>Issue → juiz → PR → seu merge. A <b class="mono" style="font-size:12px">loading-states</b> nasceu exatamente assim, ao vivo.</p></div>
+    </div>
+    <div class="artesas rv" style="--i:3">
+      <span class="art"><b>ux-feedback</b> <span>· loading/empty/error/success</span></span>
+      <span class="art new"><b>loading-states</b> <span>· telas de carregamento</span><i>cristalizada via #7</i></span>
+      <span class="art"><b>ux-copy</b> <span>· microcopy que diz consequência</span></span>
+      <span class="art"><b>ux-flow</b> <span>· fluxo antes de tela</span></span>
+      <span class="art new"><b>design-critique</b> <span>· rubrica Nielsen 0–40</span><i>nova</i></span>
+      <span class="art new"><b>hardening-ui</b> <span>· i18n, overflow, duplo-submit</span><i>nova</i></span>
+      <span class="art new"><b>modern-interaction</b> <span>· popover, inert, anchor</span><i>nova</i></span>
+      <span class="art new"><b>onboarding-first-run</b> <span>· o primeiro minuto</span><i>nova</i></span>
+      <span class="art new"><b>design-register</b> <span>· brand ≠ product</span><i>nova</i></span>
+      <span class="art"><b>fixing-accessibility</b> <span>· WCAG que corrige, não lista</span></span>
+      <span class="art"><b>design-spells</b> <span>· micro-interações de encanto</span></span>
+      <span class="art"><b>+ 20 outras</b> <span>· e as que ainda vão nascer</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- VARREDURA LAB -->
+<section id="varrer">
+  <div class="wrap">
+    <div class="kicker rv">O laboratório</div>
+    <h2 class="rv" style="--i:1">Injete slop. Assista o <span class="mono" style="font-size:.8em">/varrer</span> caçar.</h2>
+    <p class="lead rv" style="--i:2">30 regras determinísticas — sem LLM, sem opinião, sem desculpa. Clique em “Injetar slop” pra corromper o card, depois rode a varredura e veja cada violação ser flagrada e corrigida.</p>
+    <div class="lab">
+      <div class="lab-stage rv" style="--i:0">
+        <div class="lab-card" id="lab-card">
+          <h4 id="lab-h">Relatório semanal</h4>
+          <p>Suas métricas consolidadas, sem drama.</p>
+          <span class="lc-btn">Abrir relatório</span>
+          <span class="flag" id="f1" style="top:-12px; left:14px">A1 · gradiente em texto</span>
+          <span class="flag" id="f2" style="top:38%; left:-14px">A20 · side-stripe</span>
+          <span class="flag" id="f3" style="bottom:-12px; left:14px">A24 · over-rounding</span>
+          <span class="flag" id="f4" style="top:38%; right:-10px">A27 · glow difuso</span>
+        </div>
+      </div>
+      <div class="lab-log rv" style="--i:1">
+        <h3>Console do /varrer</h3>
+        <pre id="lab-log">aguardando amostra…
+o card ao lado está limpo (30/30 regras ok).</pre>
+        <div class="lab-controls">
+          <button class="btn" id="btn-slop">Injetar slop</button>
+          <button class="btn primary" id="btn-varrer" disabled>Rodar /varrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NÚMEROS -->
+<section style="padding-top:40px">
+  <div class="wrap">
+    <div class="kicker rv">Em números</div>
+    <div class="nums">
+      <div class="num rv" style="--i:0"><div class="v" data-count="1469">0</div><div class="t">skills no hub — curadas, deduplicadas, com crédito</div>
+        <svg viewBox="0 0 200 46" preserveAspectRatio="none" id="growth"></svg></div>
+      <div class="num rv" style="--i:1"><div class="v" data-count="30">0</div><div class="t">regras anti-slop determinísticas no /varrer</div></div>
+      <div class="num rv" style="--i:2"><div class="v" data-count="29">0</div><div class="t">artesãs de ofício estreito — e crescendo sob demanda</div></div>
+      <div class="num rv" style="--i:3"><div class="v" data-count="3">0</div><div class="t">gates humanos — nenhum pixel vira código sem seu aval</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALAR -->
+<section id="instalar" style="padding-top:40px">
+  <div class="wrap">
+    <div class="kicker rv">Comece agora</div>
+    <h2 class="rv" style="--i:1">Dois comandos. Qualquer projeto.</h2>
+    <p class="lead rv" style="--i:2">O Atelier viaja dentro do OverCore — instale o plugin e o ateliê inteiro (mestre, artesãs, regras e galeria) fica a um <span class="mono">/overcore</span> de distância.</p>
+    <div class="term rv" style="--i:3">
+      <div class="tbar"><span class="tdot"></span><span class="tdot"></span><span class="tdot"></span><span class="tt">claude code</span></div>
+      <pre id="term-pre"></pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:var(--ink)">Atelier</b> · o ateliê de design do OverCore — croqui, gates, artesãs e zero slop.</span>
+    <span>feito pelo próprio Atelier, obviamente · regras A19–A30 derivadas de pbakaus/impeccable (Apache-2.0)</span>
+  </div>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* reveals */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target)}}),{threshold:.18});
+document.querySelectorAll('.rv,.step,.specimen').forEach(el=>io.observe(el));
+
+/* hero morph — arraste (range invisível) + drift automático até 1ª interação */
+const morph=$('#morph'), range=morph.querySelector('input');
+let touched=false, t=0, dir=1;
+range.addEventListener('input',()=>{touched=true; morph.style.setProperty('--cut',range.value+'%')});
+(function drift(){
+  if(!touched && !reduced){
+    t+=dir*0.18; if(t>18||t<-18)dir*=-1;
+    morph.style.setProperty('--cut',(58+t)+'%'); range.value=58+t;
+  }
+  requestAnimationFrame(drift);
+})();
+
+/* lab do /varrer */
+const labCard=$('#lab-card'), log=$('#lab-log');
+const btnSlop=$('#btn-slop'), btnVarrer=$('#btn-varrer');
+const flags=['f1','f2','f3','f4'].map(id=>document.getElementById(id));
+const FIXES=[
+  ['A1','gradiente em texto','título volta a tinta sólida'],
+  ['A20','side-stripe 4px','borda uniforme restaurada'],
+  ['A24','raio 36px em card','raio devolvido ao token (18px)'],
+  ['A27','glow roxo difuso','sombra removida — dark eleva por superfície'],
+];
+btnSlop.addEventListener('click',()=>{
+  labCard.classList.add('slop');
+  flags.forEach(f=>f.classList.remove('on'));
+  log.innerHTML='amostra corrompida com 4 tells clássicos de IA.\nrode o /varrer pra ver a caça.';
+  btnVarrer.disabled=false; btnSlop.disabled=true;
+});
+btnVarrer.addEventListener('click',async()=>{
+  btnVarrer.disabled=true;
+  log.innerHTML='varrendo 30 regras…\n';
+  for(let i=0;i<4;i++){
+    await new Promise(r=>setTimeout(r,reduced?60:650));
+    flags[i].classList.add('on');
+    log.innerHTML+=`<b>✗ ${FIXES[i][0]}</b> — ${FIXES[i][1]}\n`;
+  }
+  await new Promise(r=>setTimeout(r,reduced?60:800));
+  labCard.classList.remove('slop');
+  flags.forEach(f=>f.classList.remove('on'));
+  log.innerHTML+='\ncorrigindo pelas artesãs…\n';
+  for(const f of FIXES){
+    await new Promise(r=>setTimeout(r,reduced?40:340));
+    log.innerHTML+=`<em>✓ ${f[0]}</em> — ${f[2]}\n`;
+  }
+  log.innerHTML+='\n<em>varredura limpa: 30/30. o card sobreviveu.</em>';
+  btnSlop.disabled=false;
+});
+
+/* count-ups (500ms, ease-out) */
+const nio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return; nio.unobserve(e.target);
+  const el=e.target, alvo=+el.dataset.count;
+  if(reduced){el.textContent=alvo.toLocaleString('pt-BR');return}
+  const t0=performance.now();
+  (function tick(t){const p=Math.min((t-t0)/700,1), k=1-Math.pow(1-p,3);
+    el.textContent=Math.round(alvo*k).toLocaleString('pt-BR');
+    if(p<1)requestAnimationFrame(tick)})(t0);
+}),{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>nio.observe(el));
+
+/* curva real de crescimento do hub */
+(function(){
+  const vals=[1,918,1105,1200,1222,1241,1469];
+  const svg=$('#growth'); const min=Math.min(...vals), max=Math.max(...vals), pad=4;
+  const X=i=>pad+(200-2*pad)*i/(vals.length-1);
+  const Y=v=>(46-pad)-(46-2*pad)*(v-min)/(max-min);
+  const pts=vals.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  svg.innerHTML=`<defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c8ff3d" stop-opacity=".2"/><stop offset="1" stop-color="#c8ff3d" stop-opacity="0"/></linearGradient></defs>
+    <polygon points="${X(0)},46 ${pts} ${X(vals.length-1)},46" fill="url(#gg)"/>
+    <polyline points="${pts}" fill="none" stroke="#c8ff3d" stroke-width="1.6" stroke-linecap="round"/>`;
+})();
+
+/* terminal com digitação */
+const LINES=[
+  ['p','/plugin marketplace add Weriton-DataOps/agent-skills-hub'],
+  ['c','✓ marketplace overcore-hub adicionado'],
+  ['p','/plugin install overcore@overcore-hub'],
+  ['c','✓ /overcore disponível em todos os seus projetos'],
+  ['p','/overcore'],
+  ['c','Modo orquestrador ligado. Modéstia ficou noutro repositório.'],
+];
+const pre=$('#term-pre');
+const tio=new IntersectionObserver(async es=>{
+  if(!es[0].isIntersecting)return; tio.disconnect();
+  for(const [cls,txt] of LINES){
+    const span=document.createElement('span'); span.className=cls; pre.appendChild(span);
+    if(cls==='p'){
+      for(const ch of txt){span.textContent+=ch; await new Promise(r=>setTimeout(r,reduced?0:26))}
+    } else { span.textContent=txt }
+    pre.appendChild(document.createTextNode('\n'));
+    await new Promise(r=>setTimeout(r,reduced?0:320));
+  }
+  const c=document.createElement('span'); c.className='cursor'; pre.appendChild(c);
+},{threshold:.5});
+tio.observe($('#instalar'));
+</script>
+</body>
+</html>

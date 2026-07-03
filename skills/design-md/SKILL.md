@@ -182,3 +182,95 @@ To use this skill for the Furniture Collection project:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Absorvido de Impeccable (Apache-2.0, modificado)
+
+> Seção derivada de `pbakaus/impeccable` (`skill/reference/document.md`, Apache-2.0). Arquivo **MODIFICADO** nos termos da cláusula 4b: traduzido para PT-BR, desacoplado do produto original e adaptado ao vocabulário do Atelier (`/varrer`, `/croqui`, `/heranca`, registro LANDING/APP/DOCS, `PRODUCT.md`, tokens herdados).
+
+### Dois caminhos: scan ou seed
+
+Decida escaneando primeiro (ordem de scan abaixo). Se o scan não encontra tokens, nem arquivos de componentes, nem site renderizado, **ofereça o seed mode — nunca troque silenciosamente**. E se já existe um `DESIGN.md`, não sobrescreva em silêncio: mostre o arquivo existente e pergunte se é para atualizar, sobrescrever ou mesclar.
+
+- **Modo scan** (padrão): o projeto tem tokens, componentes ou saída renderizada. Extraia, depois confirme a linguagem descritiva com o usuário.
+- **Modo seed**: o projeto é pré-implementação (nada construído ainda). Entreviste com as 5 perguntas abaixo e escreva um `DESIGN.md` mínimo marcado `<!-- SEED -->`. Re-execute em modo scan quando houver código.
+
+### Seed mode — 5 perguntas para projeto vazio
+
+Antes de entrevistar, confirme: *"Não há sistema visual para escanear. Vou fazer cinco perguntas rápidas para semear um DESIGN.md inicial. Quando houver código, re-executamos esta skill (ou `/heranca` + `/varrer` no Atelier) para capturar os tokens e componentes reais. OK?"* Se o usuário preferir pular, pare — nenhum arquivo.
+
+Agrupe as cinco em UMA interação; as opções devem ser concretas:
+
+1. **Estratégia de cor.** Escolha uma:
+   - Contida: neutros tintados + um acento em ≤10% da tela
+   - Comprometida: uma cor saturada carrega 30–60% da superfície
+   - Paleta completa: 3–4 papéis de cor nomeados, cada um deliberado
+   - Encharcada: a superfície É a cor
+
+   Depois: uma família de matiz ou referência-âncora nomeada ("teal profundo", "mostarda", "laranja Klim #ff4500").
+
+2. **Direção tipográfica.** Escolha uma (fontes específicas vêm depois):
+   - Serifada no display + sans no corpo
+   - Sans única (calorosa / técnica / geométrica / humanista; escolha o caráter)
+   - Display + mono
+   - Mono em primeiro plano
+   - Script editorial + sans
+
+3. **Energia de motion.** Escolha uma:
+   - Contida: só mudanças de estado
+   - Responsiva: feedback + transições, sem coreografia
+   - Coreografada: entradas orquestradas, sequências dirigidas por scroll
+
+4. **Três referências NOMEADAS.** Marcas, produtos, objetos impressos. Não adjetivos.
+
+5. **Uma anti-referência.** O que NÃO deve parecer. Também nomeada.
+
+**Escrita do seed.** Use a mesma estrutura do DESIGN.md normal, populando o que a entrevista respondeu e deixando o resto como placeholder honesto — o seed é um andaime, não uma spec fabricada. Abra o arquivo com o marcador literal:
+
+```markdown
+<!-- SEED: re-execute a skill design-md quando houver código, para capturar os tokens e componentes reais. -->
+```
+
+Guia por seção no seed:
+- **Visual Theme & Atmosphere**: north star e filosofia formulados a partir das respostas (estratégia de cor + energia de motion + referências). Cite a anti-referência do usuário diretamente.
+- **Cores**: a estratégia de cor vira uma Named Rule (ex.: *"A Regra do Encharcado. A superfície É a cor."*). Família de matiz ou âncora. Sem valores hex; marque como `[a resolver na implementação]`.
+- **Tipografia**: só a direção escolhida (ex.: "serifada no display + sans no corpo"). Sem nomes de fonte ainda: `[pareamento a escolher na implementação]`.
+- **Elevação**: inferida da energia de motion. Contida/Responsiva → flat por padrão; Coreografada → em camadas. Uma frase.
+- **Componentes**: omita por completo; nenhum componente existe ainda.
+- **Do's and Don'ts**: carregue as anti-referências do `PRODUCT.md` diretamente, mais a anti-referência nomeada na pergunta 5.
+
+Ao confirmar, deixe claro que é um seed (o marcador é o compromisso literal) e que a próxima passada em modo scan extrai os tokens reais.
+
+### Named Rules — doutrinas citáveis no DESIGN.md
+
+Formato: `**A Regra [Nome]. [doutrina curta e imperativa.]**` — memorável, citável por artesão e pelo `/varrer`, muito mais aderente para consumidores de IA do que listas de bullets. Mire **1–3 por seção** (Cores, Tipografia, Elevação).
+
+Exemplos do gênero:
+- *"A Regra da Voz Única. O acento primário aparece em ≤10% de qualquer tela. A raridade é o ponto."*
+- *"A Regra do Flat-Por-Padrão. Superfícies são planas em repouso. Sombra só como resposta a estado (hover, elevação, foco)."*
+
+Complementos de voz:
+- **Seja imperativo.** Voz de diretor de design: "proibido", "nunca", "sempre" — não "considere", "prefira".
+- **Teste de anti-padrão em uma frase** vale mais que um parágrafo de princípio: *"Se parece app de 2014, a sombra está escura demais e o blur, pequeno demais."*
+
+### Anti-referências verbatim nos Don'ts
+
+Toda anti-referência registrada no `PRODUCT.md` (direção da etapa 1 do wizard do Atelier) deve reaparecer na seção de Don'ts do `DESIGN.md` como um "Don't" **com a mesma linguagem, citada verbatim** — assim a spec visual carrega a linha estratégica adiante. Se o `PRODUCT.md` diz *"evitar dark mode com gradientes roxos, acentos neon, glassmorphism"*, os Don'ts repetem isso nominalmente. Guardrails concretos e imperativos: cada item abre com "Do" ou "Don't" e inclui cores exatas, valores em pixels e anti-padrões nomeados (ex.: *"Don't: usar border-left maior que 1px como faixa colorida em card"*).
+
+### Ordem de scan de tokens ao herdar
+
+Ao rodar em modo scan (ou alimentar o `/heranca` do Atelier), procure os ativos de design nesta ordem de prioridade:
+
+1. **CSS custom properties**: declarações `--color-`, `--font-`, `--spacing-`, `--radius-`, `--shadow-`, `--ease-`, `--duration-` nos CSS (tipicamente `src/styles/`, `public/css/`, `app/globals.css`). Registre nome, valor e arquivo de origem.
+2. **Config do Tailwind**: se `tailwind.config.{js,ts,mjs}` existe, leia o bloco `theme.extend` (colors, fontFamily, spacing, borderRadius, boxShadow).
+3. **Temas CSS-in-JS**: styled-components, emotion, vanilla-extract, stitches; procure `theme.ts`, `tokens.ts` ou equivalente.
+4. **Arquivos de token**: `tokens.json`, `design-tokens.json`, saída do Style Dictionary, formato W3C design tokens.
+5. **Biblioteca de componentes**: escaneie botão, card, input, navegação e dialog principais. Anote APIs de variante e estilos default.
+6. **Stylesheet global**: o CSS raiz costuma ter a tipografia base e as atribuições de cor.
+7. **Saída renderizada**: com automação de browser disponível, carregue o site e amostre estilos computados dos elementos-chave (`body`, `h1`, `a`, `button`, `.card`) — captura valores que os tokens não registram.
+
+Ao consolidar o extraído:
+- **Cores**: agrupe por papel (Primary / Secondary / Tertiary / Neutral). Se o projeto tem um só acento, expresse como Primary + Neutral; **omita Secondary/Tertiary em vez de inventá-los**.
+- **Tipografia**: mapeie tamanhos e pesos observados para a hierarquia display / headline / title / body / label; anote as pilhas de font-family e a razão da escala.
+- **Elevação**: catalogue o vocabulário de sombras. Projeto flat com camadas tonais é resposta válida — declare explicitamente.
+- **Componentes**: para cada componente comum, extraia forma (raio), atribuição de cor, tratamento de hover/focus e padding interno.
+- **Pare no que é reutilizado de fato**: não extraia todo token; one-offs poluem o sistema. E não documente componentes que não existem.
