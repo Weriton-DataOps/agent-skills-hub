@@ -9,9 +9,10 @@ quando não existe) → **CRISTALIZA** (o que valeu vira skill permanente via cu
   roster vivo, contrato do artesão, wizard com gates, registro (landing/app/docs),
   **18 regras anti-slop determinísticas** e o vocabulário (`/croqui`, `/refinar`,
   `/artesao`, `/varrer`, `/cristalizar`…).
-- **[`style-gallery.html`](style-gallery.html)** — a galeria de direções visuais
-  (glassmorphism, skeuomorphism, neo-brutalism, claymorphism, minimalism, liquid glass),
-  cada uma com exemplo ao vivo. Etapa 1 do wizard quando não há design system.
+- **[`showcase/catalogo.html`](showcase/catalogo.html)** — o catálogo vivo (86+ componentes):
+  a seção **Linguagens** traz as direções visuais (glassmorphism, skeuomorphism, neo-brutalism,
+  claymorphism, minimalism, liquid glass), cada uma com exemplo ao vivo. Etapa 1 do wizard
+  quando não há design system. (Substitui a antiga `style-gallery.html`.)
 - **[`AUDITORIA.md`](AUDITORIA.md)** — a auditoria do arsenal (69 skills lidas pelo
   conteúdo): roster titular por etapa, 27 artesãs existentes, 14 buracos, cortes aplicados.
 
