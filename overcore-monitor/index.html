@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>◆ OverCore · Monitor</title>
+<style>
+  :root{
+    --bg:#08080c; --bg2:#0d0d14; --panel:#12121b; --panel2:#161622;
+    --line:#23233340; --line2:#2b2b3d; --txt:#e7e7f0; --dim:#8a8a99; --dim2:#5c5c6e;
+    --oc:#c07bff; --oc-glow:#c07bff55; --mono:ui-monospace,SFMono-Regular,"JetBrains Mono",Consolas,monospace;
+    --green:#4ade80; --cyan:#38bdf8; --yellow:#facc15; --red:#f87171; --blue:#818cf8;
+    --bgreen:#86efac; --grey:#8a8a99;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:radial-gradient(1200px 700px at 15% -10%, #16121f 0%, var(--bg) 55%);
+    color:var(--txt); font:13px/1.4 "Segoe UI",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:var(--mono)}
+  .app{display:flex;flex-direction:column;min-height:100vh}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:10;padding:14px 20px 12px;
+    background:linear-gradient(180deg,#0c0c14 0%, #0a0a10ee 100%);
+    border-bottom:1px solid var(--line2);backdrop-filter:blur(6px);
+  }
+  .brandrow{display:flex;align-items:center;gap:14px}
+  .brand{font-size:16px;font-weight:700;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+  .brand .dia{color:var(--oc);filter:drop-shadow(0 0 6px var(--oc-glow))}
+  .brand small{color:var(--dim);font-weight:500}
+  .badge{font:600 10px var(--mono);padding:3px 8px;border-radius:5px;letter-spacing:.5px}
+  .badge.demo{background:#3a2f00;color:#facc15;border:1px solid #6b5400}
+  .badge.live{background:#052e17;color:#4ade80;border:1px solid #14532d}
+  .clock{margin-left:auto;font:600 15px var(--mono);color:#cfcfe0}
+  .clock small{display:block;text-align:right;color:var(--dim2);font-size:10px;font-weight:500}
+
+  .tiles{display:flex;gap:0;margin-top:12px;flex-wrap:wrap}
+  .tile{flex:1;min-width:70px;text-align:center;padding:2px 6px;border-right:1px solid var(--line)}
+  .tile:last-child{border-right:0}
+  .tile .v{font:700 18px var(--mono)}
+  .tile .l{font-size:9.5px;color:var(--dim2);letter-spacing:.6px;margin-top:2px}
+  .gbar{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:11px;color:var(--dim)}
+  .track{flex:1;height:7px;border-radius:4px;background:#1c1c28;overflow:hidden;border:1px solid var(--line)}
+  .track > i{display:block;height:100%;background:linear-gradient(90deg,var(--oc),#7c5cff);box-shadow:0 0 10px var(--oc-glow);transition:width .6s ease}
+
+  /* ---------- body ---------- */
+  main{display:flex;gap:14px;padding:14px 18px 24px;align-items:flex-start;flex:1}
+  .projects{display:flex;gap:14px;flex:1;overflow-x:auto;padding-bottom:6px}
+  .side{width:320px;flex:none;display:flex;flex-direction:column;gap:14px}
+
+  .col{background:var(--panel);border:1px solid var(--line2);border-radius:12px;min-width:300px;flex:1;overflow:hidden}
+  .col.oc{border-color:#6a3fb0;box-shadow:0 0 0 1px #6a3fb033, inset 0 0 40px #c07bff08}
+  .colhead{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);font-weight:700}
+  .colhead .cnt{font:600 10px var(--mono);padding:2px 7px;border-radius:5px;background:#0d2c18;color:var(--green);border:1px solid #14532d}
+  .colhead .cnt.idle{background:#1a1a26;color:var(--dim2);border-color:var(--line2)}
+  .colhead .ocpill{margin-left:auto;font:600 10px var(--mono);padding:2px 7px;border-radius:5px;background:#2a1147;color:var(--oc);border:1px solid #6a3fb0}
+  .colbody{padding:10px 12px;display:flex;flex-direction:column;gap:10px}
+
+  /* ---------- agent card ---------- */
+  .card{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;cursor:pointer;transition:border-color .2s}
+  .card:hover{border-color:#3a3a52}
+  .card.oc{border-color:#7a4fc0;background:linear-gradient(180deg,#1a1226,#161622)}
+  .card.oc:hover{border-color:var(--oc)}
+  .chead{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px}
+  .dia{color:var(--oc);filter:drop-shadow(0 0 5px var(--oc-glow))}
+  .spin{display:inline-block;animation:spin 1s steps(1) infinite;font-family:var(--mono)}
+  .stat{margin-left:auto;font:600 10px var(--mono);letter-spacing:.4px}
+  .octag{font:700 9px var(--mono);color:var(--oc);border:1px solid #6a3fb0;background:#2a1147;border-radius:4px;padding:1px 5px}
+  .csub{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:11.5px}
+  .skill{color:var(--cyan);font-family:var(--mono)}
+  .tool{color:var(--yellow);font-family:var(--mono)}
+  .parent{color:var(--dim2);font-size:10.5px}
+
+  .pbar{margin:9px 0 7px;height:8px;border-radius:5px;background:#14141f;overflow:hidden;border:1px solid var(--line)}
+  .pbar > i{display:block;height:100%;border-radius:5px;transition:width .5s ease}
+  .pbar.indet{position:relative}
+  .pbar.indet > i{position:absolute;width:32%;animation:slide 1.3s ease-in-out infinite}
+  .pmeta{display:flex;justify-content:space-between;font:600 10.5px var(--mono);color:var(--dim);margin:-2px 0 6px}
+
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 8px;font:600 11px var(--mono)}
+  .grid3 .k{color:var(--dim2);font-weight:500;font-size:9.5px;letter-spacing:.3px}
+  .last{margin-top:7px;font-size:11px;color:#a9a9bd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .logs{margin-top:7px;border-top:1px dashed var(--line2);padding-top:6px;display:none}
+  .card.open .logs{display:block}
+  .logs .ln{font:11px var(--mono);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .logs .ln time{color:var(--dim2);margin-right:6px}
+  .hint{font-size:9.5px;color:var(--dim2);margin-top:6px;font-style:italic}
+
+  /* ---------- completed chips ---------- */
+  .seclbl{font:700 9.5px var(--mono);color:var(--dim2);letter-spacing:.8px;margin:4px 0 -2px}
+  .chip{display:flex;align-items:center;gap:8px;font-size:11.5px;padding:3px 2px}
+  .chip .nm{flex:1;color:#b9b9c9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .chip .tm{font:600 10.5px var(--mono);color:var(--dim2)}
+
+  /* ---------- side panels ---------- */
+  .panel{background:var(--panel);border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+  .phead{padding:11px 14px;font-weight:700;border-bottom:1px solid var(--line);font-size:13px}
+  .phead small{color:var(--dim2);font-weight:500;margin-left:6px}
+  .pbody{padding:8px 12px;max-height:52vh;overflow:auto}
+  .tl{display:flex;gap:8px;font-size:11.5px;padding:4px 0;border-bottom:1px solid #1a1a2440}
+  .tl time{font:600 10px var(--mono);color:var(--dim2);flex:none;padding-top:1px}
+  .tl .tx{color:#c2c2d2;overflow:hidden}
+  .tl.oc .tx{color:#e3d4ff}
+  .mrow{display:flex;justify-content:space-between;font:600 12px var(--mono);padding:4px 0;color:var(--dim)}
+  .mrow b{color:#dcdce8}
+  .rank{display:flex;font:600 11.5px var(--mono);padding:3px 0;color:var(--dim)}
+  .rank .n{flex:1;color:#b9b9c9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rank .t{color:var(--red)}
+  .miniclock{font-size:9px;color:var(--dim2)}
+
+  .empty{color:var(--dim2);text-align:center;padding:22px;font-size:12px}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:#26263a;border-radius:6px}
+
+  @keyframes spin{
+    0%{content:"⠋"} 10%{transform:none}
+  }
+  @keyframes slide{0%{left:-32%}100%{left:100%}}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .offline{animation:pulse 1.2s infinite}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brandrow">
+      <div class="brand"><span class="dia">◆</span> OverCore <small>· Monitor</small></div>
+      <span id="badge" class="badge demo">DEMO</span>
+      <div class="clock"><span id="clock">--:--:--</span><small id="session">sessão 0s</small></div>
+    </div>
+    <div class="tiles" id="tiles"></div>
+    <div class="gbar">
+      <span>PROGRESSO GLOBAL</span>
+      <div class="track"><i id="gfill" style="width:0%"></i></div>
+      <span class="mono" id="gpct">0%</span>
+      <span id="gextra" style="color:var(--dim2)"></span>
+    </div>
+  </header>
+
+  <main>
+    <div class="projects" id="projects"></div>
+    <div class="side">
+      <div class="panel">
+        <div class="phead">Timeline <small>eventos ao vivo</small></div>
+        <div class="pbody" id="timeline"></div>
+      </div>
+      <div class="panel">
+        <div class="phead">Métricas</div>
+        <div class="pbody" id="metrics"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const SPIN = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏";
+const STATUS = {
+  waiting:   {icon:"⏳", color:"var(--grey)",  label:"Aguardando"},
+  init:      {icon:"🚀", color:"var(--cyan)",  label:"Inicializando"},
+  running:   {icon:"⚙️", color:"var(--green)", label:"Executando"},
+  processing:{icon:"🔄", color:"var(--yellow)",label:"Processando"},
+  done:      {icon:"✅", color:"var(--bgreen)",label:"Finalizado"},
+  error:     {icon:"❌", color:"var(--red)",   label:"Erro"},
+  paused:    {icon:"⏸️", color:"var(--grey)",  label:"Pausado"},
+};
+const ACTIVE = new Set(["init","running","processing","paused"]);
+const TOOLI = {Read:"📄",Edit:"✏️",Write:"📝",Grep:"🔎",Glob:"🗂️",Bash:"⚡",Workflow:"🧬",Task:"🧩",WebFetch:"🌐",Agent:"🤖"};
+const expanded = new Set();
+
+const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fdur = s => s==null?"--":(s<60?s.toFixed(1)+"s":(s<3600?Math.floor(s/60)+"m"+String(Math.floor(s%60)).padStart(2,"0")+"s":Math.floor(s/3600)+"h"+String(Math.floor(s%3600/60)).padStart(2,"0")+"m"));
+function hnum(n){ if(n==null)return "--"; n=+n; const u=["","k","M","B"]; let i=0; while(Math.abs(n)>=1000&&i<3){n/=1000;i++;} return (i?n.toFixed(1):n.toFixed(0))+u[i]; }
+const hhmmss = ts => new Date(ts*1000).toLocaleTimeString("pt-BR",{hour12:false});
+const spinCh = () => SPIN[Math.floor(Date.now()/80)%SPIN.length];
+
+function tile(v,l,c){ return `<div class="tile"><div class="v mono" style="color:${c}">${v}</div><div class="l">${l}</div></div>`; }
+
+function agentCard(a){
+  const st = STATUS[a.status]||STATUS.waiting;
+  const isAct = ACTIVE.has(a.status);
+  const spin = ["running","processing","init"].includes(a.status);
+  const open = expanded.has(a.id) ? " open":"";
+  const dia = a.overcore ? `<span class="dia">◆</span> ` : "";
+  const icon = spin ? `<span class="spin" style="color:${st.color}">${spinCh()}</span>` : `<span style="color:${st.color}">${st.icon}</span>`;
+  const nameCls = a.overcore ? "" : "style=color:#b7b7c6";
+  const octag = a.overcore ? `<span class="octag">OVERCORE</span>` : "";
+  const parent = a.parent ? `<span class="parent">↳ sub de ${esc(a.parent)}</span>` : "";
+  const tool = a.tool ? `<span class="tool">${TOOLI[a.tool]||"•"} ${esc(a.tool)}</span>` : "";
+
+  let bar;
+  if(a.steps>0){
+    bar = `<div class="pbar"><i style="width:${Math.round(a.pct*100)}%;background:${st.color}"></i></div>
+           <div class="pmeta"><span>${Math.round(a.pct*100)}%</span><span>etapa ${a.step}/${a.steps}</span></div>`;
+  } else if(isAct){
+    bar = `<div class="pbar indet"><i style="background:${st.color}"></i></div>
+           <div class="pmeta"><span style="color:var(--dim2)">trabalhando…</span><span></span></div>`;
+  } else {
+    bar = `<div class="pbar"><i style="width:${Math.round(a.pct*100)}%;background:${st.color}"></i></div><div class="pmeta"></div>`;
+  }
+
+  const logs = (a.logs||[]).slice(-8).map(l=>`<div class="ln"><time>${hhmmss(l.ts)}</time>${esc(l.msg)}</div>`).join("");
+
+  return `<div class="card ${a.overcore?'oc':''}${open}" data-id="${esc(a.id)}">
+    <div class="chead">${dia}${icon} <span ${nameCls}>${esc(a.name)}</span> ${parent}
+      <span class="stat" style="color:${st.color}">${st.label.toUpperCase()}</span> ${octag}</div>
+    <div class="csub"><span class="skill">${esc(a.skill||"—")}</span> ${tool}</div>
+    ${bar}
+    <div class="grid3">
+      <span>⏱ ${fdur(a.elapsed)}</span><span>ETA ${fdur(a.eta)}</span><span>🤖 ${esc(a.model)}</span>
+      <span style="color:var(--oc)">▸ ${hnum(a.tokens)} tok</span><span style="color:var(--yellow)">~$${(a.cost||0).toFixed(3)}</span><span style="color:var(--cyan)">${a.calls} cham.</span>
+    </div>
+    ${a.last?`<div class="last">→ ${esc(a.last)}</div>`:""}
+    <div class="logs">
+      <div style="font:9.5px var(--mono);color:var(--dim2);margin-bottom:4px">TOKENS ${hnum(a.tokens_in)} in · ${hnum(a.tokens_out)} out · IA ${fdur(a.ai_time)} · externo ${fdur(a.ext_time)}</div>
+      ${logs||'<div class="ln">sem logs</div>'}
+    </div>
+    <div class="hint">${open?'clique p/ recolher':'clique p/ logs completos'}</div>
+  </div>`;
+}
+
+function projectCol(p){
+  const acts = p.agents.filter(a=>ACTIVE.has(a.status));
+  const dones = p.agents.filter(a=>a.status==="done"||a.status==="error");
+  const cntCls = p.n_active? "":"idle";
+  const oc = p.n_overcore>0;
+  let inner = acts.length ? acts.slice(0,4).map(agentCard).join("")
+                          : `<div class="empty">sem agente ativo</div>`;
+  if(dones.length){
+    inner += `<div class="seclbl">CONCLUÍDOS NESTA SESSÃO</div>`;
+    inner += dones.slice(-5).map(a=>{
+      const st=STATUS[a.status]||STATUS.done;
+      return `<div class="chip"><span style="color:${st.color}">${st.icon}</span>${a.overcore?'<span class="dia">◆</span>':''}<span class="nm">${esc(a.name)}</span><span class="tm">${fdur(a.elapsed)}</span></div>`;
+    }).join("");
+  }
+  const chip=(s,c,bg,col,bd)=>`<span style="font:600 10px var(--mono);padding:2px 7px;border-radius:5px;background:${bg};color:${col};border:1px solid ${bd}">${esc(s)}${c>1?' ×'+c:''}</span>`;
+  if(p.skills_roster && p.skills_roster.length){
+    inner += `<div class="seclbl">SKILLS ACIONADAS</div><div style="display:flex;flex-wrap:wrap;gap:5px">`+
+      p.skills_roster.map(([s,c])=>chip(s,c,"#2a1147","var(--oc)","#6a3fb0")).join("")+`</div>`;
+  }
+  if(p.agents_roster && p.agents_roster.length){
+    inner += `<div class="seclbl">AGENTES / SUBAGENTES ACIONADOS</div><div style="display:flex;flex-wrap:wrap;gap:5px">`+
+      p.agents_roster.map(([s,c])=>chip(s,c,"#0e2233","var(--cyan)","#1e3a5f")).join("")+`</div>`;
+  }
+  return `<div class="col ${oc?'oc':''}">
+    <div class="colhead">${oc?'<span class="dia">◆</span>':''}${esc(p.name)}
+      <span class="cnt ${cntCls}">${p.n_active} ativo${p.n_active!==1?'s':''}</span>
+      ${oc?`<span class="ocpill">◆ ${p.n_overcore} OverCore</span>`:''}</div>
+    <div class="colbody">${inner}</div>
+  </div>`;
+}
+
+function render(s){
+  document.getElementById("clock").textContent = new Date().toLocaleTimeString("pt-BR",{hour12:false});
+  document.getElementById("session").textContent = "monitor no ar " + fdur(s.session);
+  const badge = document.getElementById("badge");
+  badge.textContent = s.demo?"DEMO":"LIVE"; badge.className = "badge "+(s.demo?"demo":"live");
+
+  const m = s.summary;
+  document.getElementById("tiles").innerHTML =
+    tile(m.projetos,"PROJETOS","var(--cyan)") + tile(m.ativos,"ATIVOS","var(--green)") +
+    tile(m.subagentes,"SUBAGENTES","var(--blue)") + tile(m.concluidos,"CONCLUÍDOS","var(--bgreen)") +
+    tile(m.aguardando,"AGUARDANDO","var(--grey)") + tile(m.falhas,"FALHAS","var(--red)") +
+    tile(hnum(m.tokens),"TOKENS","var(--oc)") + tile("$"+m.cost.toFixed(3),"CUSTO ~","var(--yellow)") +
+    tile(m.calls,"CHAMADAS IA","var(--cyan)") + tile(fdur(s.session),"MONITOR NO AR","#dcdce8");
+  document.getElementById("gfill").style.width = Math.round(m.global_pct*100)+"%";
+  document.getElementById("gpct").textContent = Math.round(m.global_pct*100)+"%";
+  document.getElementById("gextra").textContent = `IA ${fdur(m.ai_time)} · externo ${fdur(m.ext_time)} · médio/agente ${fdur(m.avg_time)}`;
+
+  document.getElementById("projects").innerHTML =
+    s.projects.length ? s.projects.map(projectCol).join("") : `<div class="empty offline">aguardando agentes…</div>`;
+
+  document.getElementById("timeline").innerHTML =
+    s.timeline.slice().reverse().map(e=>`<div class="tl ${e.overcore?'oc':''}"><time>${hhmmss(e.ts)}</time><span class="tx">${e.icon} ${esc(e.text)}</span></div>`).join("")
+    || `<div class="empty">aguardando eventos…</div>`;
+
+  const cpu = s.cpu==null?"n/a":s.cpu.toFixed(0)+"%", mem = s.mem==null?"n/a":s.mem.toFixed(0)+"%";
+  let mx = `<div class="mrow"><span>CPU</span><b style="color:var(--green)">${cpu}</b></div>
+            <div class="mrow"><span>Memória</span><b style="color:var(--green)">${mem}</b></div>
+            <div class="mrow"><span>Tempo médio/agente</span><b>${fdur(m.avg_time)}</b></div>
+            <div class="mrow"><span>Tempo em IA</span><b style="color:var(--cyan)">${fdur(m.ai_time)}</b></div>
+            <div class="mrow"><span>Tempo externo</span><b style="color:var(--cyan)">${fdur(m.ext_time)}</b></div>
+            <div class="mrow"><span>Tokens in/out</span><b style="color:var(--oc)">${hnum(m.tokens_in)}/${hnum(m.tokens_out)}</b></div>
+            <div class="mrow"><span>Custo estimado</span><b style="color:var(--yellow)">$${m.cost.toFixed(4)}</b></div>`;
+  if(s.slowest.length){
+    mx += `<div class="seclbl" style="margin-top:8px">MAIS LENTOS</div>`;
+    mx += s.slowest.map((a,i)=>`<div class="rank"><span style="color:var(--dim2);width:16px">${i+1}.</span><span class="n">${a.overcore?'◆ ':''}${esc(a.name)}</span><span class="t">${fdur(a.elapsed)}</span></div>`).join("");
+  }
+  document.getElementById("metrics").innerHTML = mx;
+}
+
+// expandir card p/ logs completos
+document.getElementById("projects").addEventListener("click", e=>{
+  const card = e.target.closest(".card"); if(!card) return;
+  const id = card.dataset.id;
+  if(expanded.has(id)) expanded.delete(id); else expanded.add(id);
+  card.classList.toggle("open");
+});
+
+let failed=false;
+async function tick(){
+  try{
+    const r = await fetch("/state",{cache:"no-store"});
+    const s = await r.json(); failed=false; render(s);
+    document.body.classList.remove("offline");
+  }catch(e){ if(!failed){failed=true;} document.getElementById("badge").textContent="OFFLINE"; }
+}
+setInterval(tick, 800);
+setInterval(()=>{ // spinner/clock suaves entre polls
+  document.getElementById("clock").textContent = new Date().toLocaleTimeString("pt-BR",{hour12:false});
+  document.querySelectorAll(".spin").forEach(el=>el.textContent=spinCh());
+}, 90);
+tick();
+</script>
+</body>
+</html>

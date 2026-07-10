@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 STOPWORDS = {
     "the",
     "and",
@@ -117,7 +117,7 @@ def mechanism_text(entry: dict[str, Any]) -> str:
 
 
 def load_mechanisms(root: Path) -> list[dict[str, Any]]:
-    path = root / "researcher" / "mechanisms" / "registry.jsonl"
+    path = root / "agents" / "researcher" / "mechanisms" / "registry.jsonl"
     if not path.exists():
         return []
     entries: list[dict[str, Any]] = []
@@ -182,11 +182,11 @@ def corpus_documents(root: Path, exclude: Path | None = None) -> list[dict[str, 
         if exclude and path.resolve() == exclude.resolve():
             continue
         docs.append({"path": str(path.relative_to(root)), "text": salient_text(path.read_text(encoding="utf-8"))})
-    for path in sorted((root / "researcher" / "fixtures").glob("**/*.md")):
+    for path in sorted((root / "agents" / "researcher" / "fixtures").glob("**/*.md")):
         if exclude and path.resolve() == exclude.resolve():
             continue
         docs.append({"path": str(path.relative_to(root)), "text": salient_text(path.read_text(encoding="utf-8"))})
-    for path in sorted((root / "researcher" / "runs").glob("**/*.md")):
+    for path in sorted((root / "agents" / "researcher" / "runs").glob("**/*.md")):
         if exclude and path.resolve() == exclude.resolve():
             continue
         if path.name == "skill-proposal.md":

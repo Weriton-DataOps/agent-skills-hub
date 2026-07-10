@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-02-08T00:00:00.000Z
+Generated catalog snapshot. The machine-readable index is the source of truth.
 
-Total skills: 1465
+Catalog snapshot: 1465 skills · Current indexed corpus: 1473 skills
 
 ## architecture (96)
 

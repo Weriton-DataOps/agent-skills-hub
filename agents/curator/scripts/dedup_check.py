@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Anti-duplication check against the 1465 existing skills.
+"""Anti-duplication check against the indexed skills corpus.
 
 Reuses the tokenizer/Jaccard approach of agents/researcher/scripts/novelty_check.py
 but runs against docs/indices/skills_index.json (name + description). No LLM.

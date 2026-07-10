@@ -14611,6 +14611,28 @@
     }
   },
   {
+    "id": "harness-engineering",
+    "path": "skills/harness-engineering",
+    "category": "workflow",
+    "name": "harness-engineering",
+    "description": "Design autonomous agent harnesses with locked and editable surfaces, durable logs, novelty gates, rollback, PR preparation, and human approval boundaries.",
+    "risk": "safe",
+    "source": "agents/researcher",
+    "date_added": "2026-05-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "hardening-ui",
     "path": "skills/hardening-ui",
     "category": "design",
@@ -17133,6 +17155,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "latent-briefing",
+    "path": "skills/latent-briefing",
+    "category": "ai-ml",
+    "name": "latent-briefing",
+    "description": "Share orchestrator state with workers through task-guided KV-cache compaction instead of replaying full trajectories as text.",
+    "risk": "unknown",
+    "source": "agents/researcher",
+    "date_added": "2026-05-15",
     "plugin": {
       "targets": {
         "codex": "supported",

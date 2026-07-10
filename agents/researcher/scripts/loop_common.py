@@ -10,7 +10,6 @@ parked queue.
 from __future__ import annotations
 
 import errno
-import fcntl
 import hashlib
 import json
 import os
@@ -20,9 +19,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
+try:  # ``fcntl`` is unavailable on Windows, where the scheduled loop is supported.
+    import fcntl
+except ImportError:  # pragma: no cover - platform dependent
+    fcntl = None
 
-ROOT = Path(__file__).resolve().parents[2]
-RESEARCHER = ROOT / "researcher"
+ROOT = Path(__file__).resolve().parents[3]
+RESEARCHER = ROOT / "agents" / "researcher"
 QUEUE_DIR = RESEARCHER / "queue"
 ORCH_DIR = RESEARCHER / "orchestration"
 REPORTS_DIR = RESEARCHER / "reports"
@@ -109,13 +112,15 @@ def append_jsonl(path: Path, record: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
         try:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            if fcntl is not None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
         except OSError:
             pass
         handle.write(json.dumps(record, sort_keys=True) + "\n")
         handle.flush()
         try:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            if fcntl is not None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
         except OSError:
             pass
 
@@ -129,14 +134,16 @@ def queue_lock(name: str) -> Iterator[None]:
     handle = open(lock_path, "a+")
     try:
         try:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            if fcntl is not None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
         except OSError as exc:
             if exc.errno not in {errno.EACCES, errno.EAGAIN}:
                 raise
         yield
     finally:
         try:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            if fcntl is not None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
         except OSError:
             pass
         handle.close()

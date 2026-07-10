@@ -12,8 +12,8 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[2]
-RESEARCHER = ROOT / "researcher"
+ROOT = Path(__file__).resolve().parents[3]
+RESEARCHER = ROOT / "agents" / "researcher"
 
 
 def utc_now() -> str:

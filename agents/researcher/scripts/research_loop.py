@@ -19,16 +19,16 @@ from typing import Any
 from uuid import uuid4
 
 
-ROOT = Path(__file__).resolve().parents[2]
-RESEARCHER = ROOT / "researcher"
+ROOT = Path(__file__).resolve().parents[3]
+RESEARCHER = ROOT / "agents" / "researcher"
 LOCKED_SURFACES = [
-    "researcher/rubrics/content-curation.md",
-    "researcher/rubrics/skill-change.md",
-    "researcher/rubrics/harness-change.md",
-    "researcher/mechanisms/registry.jsonl",
+    "agents/researcher/rubrics/content-curation.md",
+    "agents/researcher/rubrics/skill-change.md",
+    "agents/researcher/rubrics/harness-change.md",
+    "agents/researcher/mechanisms/registry.jsonl",
     ".claude-plugin/marketplace.json",
     ".plugin/plugin.json",
-    "researcher/scripts/validate_repo.py",
+    "agents/researcher/scripts/validate_repo.py",
 ]
 VALID_CLOSE_STATUS = {"accepted", "rejected", "reference-only", "abandoned"}
 
@@ -151,13 +151,13 @@ def create_thread(run_dir: Path, title: str, source_url: str | None) -> None:
 
 ## Locked Surfaces
 
-- `researcher/rubrics/content-curation.md`
-- `researcher/rubrics/skill-change.md`
-- `researcher/rubrics/harness-change.md`
-- `researcher/mechanisms/registry.jsonl`
+- `agents/researcher/rubrics/content-curation.md`
+- `agents/researcher/rubrics/skill-change.md`
+- `agents/researcher/rubrics/harness-change.md`
+- `agents/researcher/mechanisms/registry.jsonl`
 - `.claude-plugin/marketplace.json`
 - `.plugin/plugin.json`
-- `researcher/scripts/validate_repo.py`
+- `agents/researcher/scripts/validate_repo.py`
 - Merge policy: agents may prepare PRs, but human approval is required for push and merge.
 
 ## Editable Surfaces
@@ -395,7 +395,7 @@ def run_validator(run_dir: Path) -> int:
                     "findings": [
                         {
                             "severity": "error",
-                            "path": "researcher/scripts/validate_repo.py",
+                            "path": "agents/researcher/scripts/validate_repo.py",
                             "message": completed.stderr or "validator produced no output",
                         }
                     ],

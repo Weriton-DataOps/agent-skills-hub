@@ -2,7 +2,7 @@
 """Filtra o índice remoto do OverCore por uma busca — leve, cross-platform, sem arquivo temp.
 
 Empacotado com o plugin: o `/overcore usar` chama este script em vez de baixar o índice
-inteiro (1465 entradas) pro contexto. Imprime só as candidatas relevantes.
+inteiro (1473 entradas) pro contexto. Imprime só as candidatas relevantes.
 
 Uso: python find_skills.py <termos da tarefa>
 """

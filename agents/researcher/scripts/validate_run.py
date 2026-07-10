@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 VALID_STATES = {
     "initialized",
     "retrieved",
@@ -106,8 +106,8 @@ class RunValidator:
             self.error(path, "state_history must be a non-empty list")
         locked = data.get("locked_surfaces", [])
         for required in [
-            "researcher/rubrics/content-curation.md",
-            "researcher/mechanisms/registry.jsonl",
+            "agents/researcher/rubrics/content-curation.md",
+            "agents/researcher/mechanisms/registry.jsonl",
             ".claude-plugin/marketplace.json",
             ".plugin/plugin.json",
         ]:

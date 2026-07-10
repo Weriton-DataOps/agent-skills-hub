@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>◆ OverCore · Execução ao vivo</title>
+<style>
+  :root{
+    --bg:#08080c;--panel:#12121b;--panel2:#161622;--line:#23233340;--line2:#2b2b3d;
+    --txt:#e7e7f0;--dim:#8a8a99;--dim2:#5c5c6e;--oc:#c07bff;--oc-glow:#c07bff55;
+    --mono:ui-monospace,"JetBrains Mono",Consolas,monospace;
+    --green:#4ade80;--cyan:#38bdf8;--yellow:#facc15;--red:#f87171;--blue:#818cf8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(1300px 800px at 15% -10%,#16121f,var(--bg) 55%);
+       color:var(--txt);font:13.5px/1.5 "Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .mono{font-family:var(--mono)}
+  a{color:inherit}
+  header{position:sticky;top:0;z-index:9;padding:15px 24px 12px;background:#0a0a10ee;border-bottom:1px solid var(--line2);backdrop-filter:blur(6px)}
+  .brandrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .brand{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .brand .dia{color:var(--oc);filter:drop-shadow(0 0 6px var(--oc-glow))}
+  .brand small{color:var(--dim);font-weight:500}
+  .nav{display:flex;gap:6px;margin-left:6px}
+  .nav a{font:600 11px var(--mono);color:var(--dim);padding:4px 10px;border:1px solid var(--line2);border-radius:7px;text-decoration:none}
+  .nav a.on{color:var(--oc);border-color:#6a3fb0;background:#2a114733}
+  .gauges{margin-left:auto;display:flex;gap:18px;align-items:center}
+  .gauge{min-width:150px}
+  .gauge .gl{display:flex;justify-content:space-between;font:600 10px var(--mono);color:var(--dim2);margin-bottom:3px}
+  .gauge .gl b{color:#dcdce8}
+  .gbar{height:7px;border-radius:4px;background:#1c1c28;overflow:hidden}
+  .gbar>i{display:block;height:100%;border-radius:4px;transition:width .6s}
+  .clock{text-align:right;font:600 13px var(--mono);color:#dcdce8;min-width:74px}
+  .clock small{display:block;color:var(--dim2);font-size:10px}
+
+  .exec{display:flex;margin-top:13px;gap:0}
+  .xt{flex:1;text-align:center;padding:2px 6px;border-right:1px solid var(--line);cursor:default}
+  .xt:last-child{border-right:0}
+  .xt .v{font:700 21px var(--mono)}.xt .l{font-size:9.5px;color:var(--dim2);letter-spacing:.5px;margin-top:2px}
+  .xt .v.g{color:var(--green)}.xt .v.c{color:var(--cyan)}.xt .v.y{color:var(--yellow)}.xt .v.r{color:var(--red)}.xt .v.o{color:var(--oc)}
+
+  main{padding:18px 22px 40px;display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start}
+  @media(max-width:1120px){main{grid-template-columns:1fr}}
+  .sech{font:700 11px var(--mono);color:var(--dim2);letter-spacing:.9px;margin:2px 0 11px;display:flex;align-items:center;gap:8px}
+  .sech .n{color:var(--oc)}
+
+  .proj{margin-bottom:20px}
+  .projh{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .projh .ocbadge{font:700 8.5px var(--mono);color:var(--oc);border:1px solid #6a3fb0;background:#2a1147;border-radius:4px;padding:2px 6px}
+  .projh .cnt{margin-left:auto;font:600 11px var(--mono);color:var(--dim2)}
+
+  .card{background:var(--panel);border:1px solid var(--line2);border-radius:13px;padding:15px 16px;margin-bottom:13px;position:relative;overflow:hidden}
+  .card.oc{border-color:#5a3f8f;box-shadow:inset 0 0 50px #c07bff08}
+  .card.erro{border-color:#7a2f37}
+  .crow{display:flex;align-items:center;gap:10px}
+  .pill{display:inline-flex;align-items:center;gap:6px;font:700 10.5px var(--mono);padding:4px 9px;border-radius:20px;border:1px solid;flex:none}
+  .spin{width:11px;height:11px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+  .ctitle{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .subbadge{font:700 8.5px var(--mono);padding:2px 6px;border-radius:4px;background:#0e2233;color:var(--cyan);border:1px solid #1e3a5f;flex:none}
+  .dia{color:var(--oc)}
+
+  .meta{display:flex;flex-wrap:wrap;gap:7px 16px;margin-top:11px;font:600 11.5px var(--mono);color:var(--dim)}
+  .meta b{color:#cfcfdc}
+  .now{margin-top:11px;font:12px var(--mono);color:#c9ccd8;background:#0d0d14;border:1px solid var(--line2);border-radius:7px;padding:8px 10px;word-break:break-word}
+  .now .tool{color:var(--yellow);font-weight:700}
+  .now .lbl{color:var(--dim2)}
+
+  .prog{margin-top:11px}
+  .prog .pl{display:flex;justify-content:space-between;font:600 10px var(--mono);color:var(--dim2);margin-bottom:4px}
+  .track{height:7px;border-radius:4px;background:#1c1c28;overflow:hidden;position:relative}
+  .track.live>i{position:absolute;left:-40%;width:40%;height:100%;border-radius:4px;
+    background:linear-gradient(90deg,transparent,var(--green),transparent);animation:slide 1.5s ease-in-out infinite}
+  .track.init>i{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+  .track.wait{opacity:.5}.track.wait>i{position:absolute;left:0;width:100%;height:100%;background:#2a2a3a}
+  .track.err>i{position:absolute;left:0;width:100%;height:100%;background:var(--red);opacity:.7}
+
+  .tchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px}
+  .tchip{font:600 10px var(--mono);padding:2px 6px;border-radius:5px;background:#191926;color:#b9b9cc;border:1px solid var(--line2)}
+  .tchip.sk{background:#2a1147;color:var(--oc);border-color:#6a3fb0}
+
+  details{margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  summary{cursor:pointer;font:700 10px var(--mono);color:var(--dim2);letter-spacing:.6px;list-style:none;user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary:before{content:"▸ ";color:var(--oc)}
+  details[open] summary:before{content:"▾ "}
+  .log{display:flex;gap:9px;font:11px var(--mono);padding:4px 0;border-bottom:1px solid #1a1a2433;color:var(--dim)}
+  .log time{color:var(--dim2);flex:none;width:40px}
+  .log .k{flex:none;width:14px;text-align:center}
+  .log .x{flex:1;color:#c2c2d2;word-break:break-word}
+  .log .x b{color:var(--yellow)}
+  .log.skill .x{color:var(--oc)}.log.agente .x{color:var(--cyan)}
+
+  aside .box{background:var(--panel);border:1px solid var(--line2);border-radius:13px;padding:14px 15px;margin-bottom:16px}
+  .tl{display:flex;gap:9px;font:11px var(--mono);padding:5px 0;border-bottom:1px solid #1a1a2433}
+  .tl:last-child{border-bottom:0}
+  .tl time{color:var(--dim2);flex:none;width:40px;padding-top:1px}
+  .tl .d{width:8px;height:8px;border-radius:50%;flex:none;margin-top:4px;background:var(--dim2)}
+  .tl.skill .d{background:var(--oc)}.tl.agente .d{background:var(--cyan)}.tl.tool .d{background:var(--green)}
+  .tl .x{flex:1;color:#c2c2d2;word-break:break-word}
+  .tl .x b{color:var(--yellow)} .tl .x .p{color:var(--dim2)}
+  .tl.skill .x{color:var(--oc)}.tl.agente .x{color:var(--cyan)}
+
+  .fin{display:flex;align-items:center;gap:9px;font:12px var(--mono);padding:6px 0;border-bottom:1px solid #1a1a2433}
+  .fin:last-child{border-bottom:0}
+  .fin .rk{color:var(--dim2);width:16px;flex:none;font-weight:700}
+  .fin .t{flex:1;color:#c9c9d6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fin .m{color:var(--dim2);flex:none}
+  .empty{color:var(--dim2);font-size:12px;font-style:italic;padding:8px 2px}
+  .note{color:var(--dim2);font:11px var(--mono);padding:14px 24px 0;line-height:1.7}
+  .note b{color:var(--dim)}
+  ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#26263a;border-radius:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes slide{0%{left:-40%}100%{left:100%}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brandrow">
+    <div class="brand"><span class="dia">◆</span> OverCore <small>· Execução ao vivo</small></div>
+    <nav class="nav"><a href="/">▦ por projeto</a><a href="/exec" class="on">⚡ execução</a></nav>
+    <div class="gauges">
+      <div class="gauge"><div class="gl">CPU DA MÁQUINA <b id="cpuv">—</b></div><div class="gbar"><i id="cpub" style="width:0%;background:linear-gradient(90deg,#38bdf8,#818cf8)"></i></div></div>
+      <div class="gauge"><div class="gl">RAM DA MÁQUINA <b id="memv">—</b></div><div class="gbar"><i id="memb" style="width:0%;background:linear-gradient(90deg,#c07bff,#7c5cff)"></i></div></div>
+      <div class="clock"><span id="clock">--:--:--</span><small id="upd">conectando…</small></div>
+    </div>
+  </div>
+  <div class="exec" id="exec"></div>
+</header>
+<main>
+  <section id="live">
+    <div class="sech">AGENTES EXECUTANDO NA SUA MÁQUINA <span class="n" id="livecount"></span></div>
+    <div id="projects"></div>
+  </section>
+  <aside>
+    <div class="box"><div class="sech" style="margin-bottom:8px">TIMELINE · EVENTOS</div><div id="timeline"></div></div>
+    <div class="box"><div class="sech" style="margin-bottom:8px">CONCLUÍDAS RECENTEMENTE</div><div id="finished"></div></div>
+    <div class="box"><div class="sech" style="margin-bottom:8px">RANKING · MAIS LENTOS</div><div id="ranking"></div></div>
+  </aside>
+</main>
+<div class="note">
+  Métricas honestas: <b>tokens · turnos · ferramentas · tempo</b> são reais por sessão (o Claude Code grava no transcript).
+  <b>CPU / RAM</b> são da máquina — o Claude Code não expõe consumo por sessão.
+  <b>ETA e % de conclusão</b> de agente aberto são indeterminados (não há total de etapas conhecido) — a barra mostra "em curso".
+</div>
+<script>
+const esc=s=>(s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function hnum(n){if(n==null)return"0";n=+n;const u=["","k","M","B"];let i=0;while(Math.abs(n)>=1000&&i<3){n/=1000;i++;}return(i?n.toFixed(1):n.toFixed(0))+u[i];}
+function dur(s){s=Math.max(0,Math.round(s||0));if(s<60)return s+"s";const m=Math.floor(s/60);const r=s%60;if(m<60)return m+"m"+(r?" "+r+"s":"");const h=Math.floor(m/60);return h+"h "+(m%60)+"m";}
+const hhmm=ts=>ts?new Date(ts*1000).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):"--:--";
+const ST={
+  executando:{i:"⚙️",c:"var(--green)",t:"Executando",trk:"live",spin:1},
+  inicializando:{i:"🚀",c:"var(--cyan)",t:"Inicializando",trk:"init",spin:1},
+  processando:{i:"🔄",c:"var(--blue)",t:"Processando",trk:"live",spin:1},
+  aguardando:{i:"⏳",c:"var(--yellow)",t:"Aguardando",trk:"wait"},
+  finalizado:{i:"✅",c:"var(--dim)",t:"Finalizado",trk:"wait"},
+  erro:{i:"❌",c:"var(--red)",t:"Erro",trk:"err"},
+};
+function xt(v,l,cls){return `<div class="xt"><div class="v ${cls||''} mono">${v}</div><div class="l">${l}</div></div>`;}
+const kIcon=k=>k==="skill"?"⚡":k==="agente"?"🤖":"›";
+function cmdfmt(txt){const m=String(txt).match(/^(\S+)\s*(.*)$/);return m&&/^[A-Z]/.test(m[1])?`<b>${esc(m[1])}</b> ${esc(m[2])}`:esc(txt);}
+
+function card(a){
+  const st=ST[a.status]||ST.executando;
+  const tools=(a.tools_by||[]).map(([t,c])=>`<span class="tchip ${t==='Skill'?'sk':''}">${esc(t)}${c>1?' ×'+c:''}</span>`).join("");
+  const logs=(a.logs||[]).map(l=>`<div class="log ${l.kind}"><time>${hhmm(l.ts)}</time><span class="k">${kIcon(l.kind)}</span><span class="x">${l.kind==='tool'?cmdfmt(l.text):esc(l.text)}</span></div>`).join("")||`<div class="empty">sem ações registradas</div>`;
+  const etapa = a.status==='aguardando' ? 'aguardando entrada' : (st.trk==='err'?'falha na ferramenta':`em curso · turno ${a.turns}`);
+  return `<div class="card ${a.overcore?'oc':''} ${a.status==='erro'?'erro':''}">
+    <div class="crow">
+      <span class="pill" style="color:${st.c};border-color:${st.c}55;background:${st.c}12">${st.spin?'<span class="spin"></span>':st.i} ${st.t}</span>
+      ${a.overcore?'<span class="dia">◆</span>':''}
+      <span class="ctitle">${a.sub?'↳ ':''}${esc(a.title)}</span>
+      ${a.sub?'<span class="subbadge">SUBAGENTE</span>':''}
+    </div>
+    <div class="meta">
+      <span>⏱ <b>${dur(a.elapsed)}</b></span>
+      <span>🧩 turno <b>${a.turns}</b></span>
+      <span>📞 <b>${a.calls}</b> chamadas</span>
+      <span>🔧 <b>${a.tools}</b> ferramentas</span>
+      <span>🎫 <b>${hnum(a.tokens)}</b> tok <span style="color:var(--dim2)">(${hnum(a.tokens_in)}↓ ${hnum(a.tokens_out)}↑)</span></span>
+      <span>🧠 <b>${esc(a.model)}</b></span>
+      ${a.last_err?`<span style="color:var(--red)">❌ última ferramenta falhou</span>`:(a.errors?`<span style="color:var(--dim2)">⚠ ${a.errors} erro(s) recuperado(s)</span>`:'')}
+    </div>
+    <div class="now"><span class="lbl">agora:</span> <span class="tool">${esc(a.last_tool||'—')}</span> ${esc(a.last_action||'')}</div>
+    <div class="prog"><div class="pl"><span>PROGRESSO</span><span>${etapa}</span></div><div class="track ${st.trk}"><i></i></div></div>
+    ${tools?`<div class="tchips">${tools}</div>`:''}
+    <details data-id="${a.id}"><summary>LOGS DA EXECUÇÃO · ${(a.logs||[]).length}</summary>${logs}</details>
+  </div>`;
+}
+
+function render(d){
+  if(d.error){document.getElementById("upd").textContent="erro";return;}
+  const now=new Date();
+  document.getElementById("clock").textContent=now.toLocaleTimeString("pt-BR",{hour12:false});
+  document.getElementById("upd").textContent="ao vivo";
+  // máquina
+  const mc=d.machine||{};
+  if(mc.ok){
+    document.getElementById("cpuv").textContent=mc.cpu+"% · "+mc.cores+" cores";
+    document.getElementById("cpub").style.width=Math.min(100,mc.cpu)+"%";
+    document.getElementById("memv").textContent=mc.mem_pct+"% · "+mc.mem_used+"/"+mc.mem_total+"GB";
+    document.getElementById("memb").style.width=Math.min(100,mc.mem_pct)+"%";
+  } else {document.getElementById("cpuv").textContent="psutil ausente";document.getElementById("memv").textContent="—";}
+  // resumo executivo
+  const s=d.summary;
+  document.getElementById("exec").innerHTML=
+    xt(s.ativos,"AGENTES ATIVOS","g")+xt(s.subagentes,"SUBAGENTES","c")+xt(s.finalizados,"FINALIZADOS")+
+    xt(s.aguardando,"AGUARDANDO","y")+xt(s.falhas,"FALHAS",s.falhas?"r":"")+
+    xt(dur(s.workflow_elapsed),"TEMPO TOTAL")+xt(hnum(s.tokens_live),"TOKENS ATIVOS","o")+xt(dur(s.avg_dur),"MÉDIA/AGENTE");
+  // preserva logs abertos
+  const open=new Set([...document.querySelectorAll("details[open]")].map(e=>e.dataset.id));
+  // agentes por projeto
+  document.getElementById("livecount").textContent=s.ativos?("· "+s.ativos+" rodando"):"";
+  const P=document.getElementById("projects");
+  if(!d.projects.length){P.innerHTML=`<div class="empty" style="padding:26px 4px">Nada executando na máquina agora. Assim que um agente ou skill rodar, ele aparece aqui — ao vivo.</div>`;}
+  else P.innerHTML=d.projects.map(p=>`<div class="proj">
+    <div class="projh">${p.overcore?'<span class="dia">◆</span>':''}${esc(p.name)}${p.overcore?'<span class="ocbadge">OVERCORE</span>':''}<span class="cnt">${p.agents.length} agente(s)</span></div>
+    ${p.agents.map(card).join("")}</div>`).join("");
+  open.forEach(id=>{const el=document.querySelector(`details[data-id="${id}"]`);if(el)el.open=true;});
+  // timeline
+  document.getElementById("timeline").innerHTML=(d.timeline||[]).slice(0,26).map(e=>`<div class="tl ${e.kind}"><time>${hhmm(e.ts)}</time><span class="d"></span><span class="x">${e.kind==='tool'?cmdfmt(e.text):esc(e.text)} <span class="p">· ${esc(e.project)}</span></span></div>`).join("")||`<div class="empty">sem eventos recentes</div>`;
+  // concluídas
+  document.getElementById("finished").innerHTML=(d.finished||[]).length?d.finished.map(f=>`<div class="fin"><span class="rk">${f.overcore?'◆':(f.sub?'↳':'·')}</span><span class="t">${esc(f.title)}</span><span class="m">${dur(f.elapsed)} · ${hnum(f.tokens)}tok</span></div>`).join(""):`<div class="empty">nenhuma concluída ainda</div>`;
+  // ranking
+  document.getElementById("ranking").innerHTML=(d.ranking||[]).length?d.ranking.map((r,i)=>`<div class="fin"><span class="rk">${i+1}</span><span class="t">${r.overcore?'◆ ':''}${esc(r.title)}</span><span class="m">${dur(r.elapsed)}</span></div>`).join(""):`<div class="empty">sem dados de duração</div>`;
+}
+async function tick(){try{const r=await fetch("/live-data",{cache:"no-store"});render(await r.json());}catch(e){document.getElementById("upd").textContent="offline";}}
+setInterval(tick,2000);tick();
+</script>
+</body>
+</html>

@@ -26,7 +26,7 @@ topicos separados por linha `---`, linguagem profissional sem jargao interno, se
 impecavel. O roster abaixo e conhecimento de bastidor — nao e texto de abertura.
 
 *Skills:*
-- **Skills do hub (1.470+):** a cada tarefa, avalie se uma ajuda; descubra no indice
+- **Skills do hub (1.473):** a cada tarefa, avalie se uma ajuda; descubra no indice
   `docs/indices/skills_index.json` por palavra-chave e aplique. Diga discretamente quais usou.
 
 *Agentes e papeis do pipeline (ver `docs/ORQUESTRACAO.md` para o roster e o roteamento de modelos):*

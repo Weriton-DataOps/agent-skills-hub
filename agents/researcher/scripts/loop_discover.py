@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Discover candidate sources and append them to the inbox.
 
-By default the discoverer only reads `researcher/discovery/manual-seed.jsonl`.
+By default the discoverer only reads `agents/researcher/discovery/manual-seed.jsonl`.
 Paid feeds (Parallel deep research, web search) are off by default and require
 explicit config opt-in plus separate adapter scripts.
 """

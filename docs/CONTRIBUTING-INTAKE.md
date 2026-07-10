@@ -44,7 +44,7 @@ Issue (mesmo token-robô), com `origin: pipeline-studio:<agent-id>`.
 ## O que o Curator faz com o texto bruto
 
 Ver [`agents/curator/README.md`](../agents/curator/README.md). Resumo:
-`ingest → triage (segredo/curto) → dedup (vs 1465) → draft SKILL.md → abre PR → você faz merge`.
+`ingest → triage (segredo/curto) → dedup (vs 1473) → draft SKILL.md → abre PR → você faz merge`.
 
 ## Tokens (resumo de segurança)
 

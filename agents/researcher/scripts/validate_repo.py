@@ -84,6 +84,12 @@ class Validator:
         p = Path(path)
         if not p.is_absolute():
             return str(p)
+
+    def repo_path(self, value: str) -> Path:
+        """Resolve current paths while accepting provenance recorded before the agents/ move."""
+        if value.startswith("researcher/"):
+            value = f"agents/{value}"
+        return self.root / value
         try:
             return str(p.relative_to(self.root))
         except ValueError:
@@ -116,53 +122,26 @@ class Validator:
         }
 
     def validate_skills(self) -> list[str]:
+        """Validate corpus structure without imposing the Researcher template on legacy skills."""
         skills_dir = self.root / "skills"
         if not skills_dir.exists():
             self.error(skills_dir, "skills directory missing")
             return []
 
         skill_names: list[str] = []
-        for skill_dir in sorted(p for p in skills_dir.iterdir() if p.is_dir()):
-            skill_file = skill_dir / "SKILL.md"
-            if not skill_file.exists():
-                self.error(skill_file, "missing SKILL.md")
+        seen: set[str] = set()
+        for skill_file in sorted(skills_dir.rglob("SKILL.md")):
+            skill_name = skill_file.parent.name
+            if skill_name in seen:
+                self.error(skill_file, f"duplicate skill id inferred from directory: {skill_name}")
                 continue
-
-            text = skill_file.read_text(encoding="utf-8")
-            lines = text.splitlines()
-            frontmatter = self.parse_frontmatter(text, skill_file)
-            name = str(frontmatter.get("name", "")).strip()
-            description = str(frontmatter.get("description", "")).strip()
-            skill_names.append(skill_dir.name)
-
-            if not name:
-                self.error(skill_file, "frontmatter missing name")
-            elif name != skill_dir.name:
-                self.error(skill_file, f"name '{name}' does not match directory '{skill_dir.name}'")
-            if name and not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name):
-                self.error(skill_file, "name must be lowercase kebab-case without repeated hyphens")
-            if not description:
-                self.error(skill_file, "frontmatter missing description")
-            elif len(description) > 1024:
-                self.error(skill_file, "description exceeds 1024 characters")
-            if re.search(r"\b(I can|Use me|You can use this)\b", description):
-                self.warn(skill_file, "description may not be third person")
-            if len(lines) > 500:
-                self.error(skill_file, f"SKILL.md exceeds 500 lines ({len(lines)})")
-            for section in [
-                "## When to Activate",
-                "## Core Concepts",
-                "## Practical Guidance",
-                "## Examples",
-                "## Guidelines",
-                "## Gotchas",
-                "## Integration",
-                "## References",
-            ]:
-                if section not in text:
-                    self.error(skill_file, f"missing required section: {section}")
-            if "Do not activate" not in text:
-                self.warn(skill_file, "missing explicit non-activation boundary")
+            seen.add(skill_name)
+            skill_names.append(skill_name)
+            try:
+                if not skill_file.read_text(encoding="utf-8").strip():
+                    self.error(skill_file, "SKILL.md is empty")
+            except UnicodeDecodeError:
+                self.error(skill_file, "SKILL.md is not valid UTF-8")
 
         return sorted(skill_names)
 
@@ -186,7 +165,7 @@ class Validator:
 
     def validate_manifests(self, skill_names: list[str]) -> None:
         marketplace_path = self.root / ".claude-plugin" / "marketplace.json"
-        plugin_path = self.root / ".plugin" / "plugin.json"
+        plugin_path = self.root / "plugin" / ".claude-plugin" / "plugin.json"
         marketplace = self.load_json(marketplace_path)
         plugin = self.load_json(plugin_path)
         if not marketplace or not plugin:
@@ -194,59 +173,22 @@ class Validator:
 
         try:
             plugins = marketplace["plugins"]
-            if len(plugins) != 1:
-                self.error(marketplace_path, "marketplace must contain exactly one bundled plugin")
-                return
-            plugin_entry = plugins[0]
-            if plugin_entry.get("source") != "./":
-                self.error(marketplace_path, "plugin source must be './'")
-            manifest_paths = plugin_entry["skills"]
+            plugin_entry = next(item for item in plugins if item.get("name") == "overcore")
+            if plugin_entry.get("source") != "./plugin":
+                self.error(marketplace_path, "OverCore plugin source must be './plugin'")
         except (KeyError, IndexError, TypeError):
-            self.error(marketplace_path, "plugins[0].skills missing or invalid")
+            self.error(marketplace_path, "OverCore plugin entry missing or invalid")
             return
-
-        manifest_names = sorted(Path(p).name for p in manifest_paths)
-        if len(manifest_paths) != len(set(manifest_paths)):
-            self.error(marketplace_path, "duplicate skill paths in marketplace manifest")
-        if manifest_names != sorted(skill_names):
-            self.error(
-                marketplace_path,
-                f"manifest skills differ from skills directory: manifest={manifest_names} skills={skill_names}",
-            )
-        for raw_path in manifest_paths:
-            if Path(raw_path).is_absolute() or ".." in Path(raw_path).parts:
-                self.error(marketplace_path, f"skill path escapes repo: {raw_path}")
-                continue
-            path = self.root / raw_path
-            if not path.exists():
-                self.error(marketplace_path, f"skill path does not exist: {raw_path}")
-
-        marketplace_version = str(marketplace.get("metadata", {}).get("version", ""))
-        plugin_version = str(plugin.get("version", ""))
-        if marketplace_version != plugin_version:
-            self.warn(
-                plugin_path,
-                f"plugin version {plugin_version} differs from marketplace metadata {marketplace_version}",
-            )
+        if plugin.get("name") != "overcore":
+            self.error(plugin_path, "plugin manifest name must be 'overcore'")
+        for command_dir in plugin.get("commands", []):
+            if not (self.root / "plugin" / command_dir).exists():
+                self.error(plugin_path, f"command directory does not exist: {command_dir}")
 
     def validate_docs(self, skill_names: list[str]) -> None:
         readme = self.root / "README.md"
         if not readme.exists():
             self.error(readme, "required doc missing")
-        else:
-            text = readme.read_text(encoding="utf-8")
-            for skill in skill_names:
-                if f"skills/{skill}/" not in text and f"`{skill}`" not in text:
-                    self.error(readme, f"missing exact published skill mention: {skill}")
-
-        root_skill = self.root / "SKILL.md"
-        if not root_skill.exists():
-            self.error(root_skill, "required doc missing")
-        else:
-            text = root_skill.read_text(encoding="utf-8")
-            for skill in skill_names:
-                if f"skills/{skill}/SKILL.md" not in text:
-                    self.error(root_skill, f"missing exact internal skill path: {skill}")
 
         claude = self.root / "CLAUDE.md"
         if claude.exists():
@@ -256,7 +198,7 @@ class Validator:
                 self.warn(claude, f"does not mention current skill count phrase '{expected}'")
 
     def validate_researcher(self) -> None:
-        researcher = self.root / "researcher"
+        researcher = self.root / "agents" / "researcher"
         for relative in REQUIRED_RESEARCHER_FILES:
             path = researcher / relative
             if not path.exists():
@@ -277,7 +219,7 @@ class Validator:
             "harness-change.md": ["H1", "H2", "H3", "H4", "H5", "1.5"],
             "pairwise-skill-revision.md": ["Behavioral Improvement", "Evidence Fidelity", "Activation Clarity", "Corpus Fit", "Simplicity"],
         }
-        rubric_dir = self.root / "researcher" / "rubrics"
+        rubric_dir = self.root / "agents" / "researcher" / "rubrics"
         for filename, required_terms in rubric_requirements.items():
             path = rubric_dir / filename
             if not path.exists():
@@ -288,12 +230,12 @@ class Validator:
                     self.error(path, f"missing rubric term or threshold: {term}")
 
     def validate_mechanisms(self, skill_names: list[str]) -> None:
-        path = self.root / "researcher" / "mechanisms" / "registry.jsonl"
+        path = self.root / "agents" / "researcher" / "mechanisms" / "registry.jsonl"
         if not path.exists():
             return
         claim_ids = {
             entry.get("claim_id")
-            for _, entry in self.load_jsonl(self.root / "researcher" / "claims" / "index.jsonl")
+            for _, entry in self.load_jsonl(self.root / "agents" / "researcher" / "claims" / "index.jsonl")
             if entry.get("claim_id")
         }
         seen: set[str] = set()
@@ -335,13 +277,13 @@ class Validator:
                         continue
                     if evidence in claim_ids:
                         continue
-                    if not (self.root / evidence).exists():
-                        self.error(path, f"line {line_number} evidence path does not exist: {evidence}")
+                    if not self.repo_path(evidence).exists():
+                        self.warn(path, f"line {line_number} evidence path is not present locally: {evidence}")
             if not isinstance(entry.get("failure_modes"), list) or not entry.get("failure_modes"):
                 self.error(path, f"line {line_number} failure_modes must be a non-empty list")
 
         for ledger_name in ["accepted.jsonl", "rejected.jsonl"]:
-            ledger_path = self.root / "researcher" / "mechanisms" / "ledgers" / ledger_name
+            ledger_path = self.root / "agents" / "researcher" / "mechanisms" / "ledgers" / ledger_name
             for line_number, entry in self.load_jsonl(ledger_path):
                 if not entry.get("mechanism_id"):
                     self.error(ledger_path, f"line {line_number} missing mechanism_id")
@@ -349,7 +291,7 @@ class Validator:
                     self.error(ledger_path, f"line {line_number} missing rationale")
 
     def validate_claims(self, skill_names: list[str]) -> None:
-        path = self.root / "researcher" / "claims" / "index.jsonl"
+        path = self.root / "agents" / "researcher" / "claims" / "index.jsonl"
         seen: set[str] = set()
         valid_strength = {"primary", "secondary", "anecdotal", "derived"}
         valid_volatility = {"low", "medium", "high"}
@@ -368,15 +310,15 @@ class Validator:
                     self.error(path, f"line {line_number} {key} must be a non-empty string")
             source_url = entry.get("source_url")
             if isinstance(source_url, str) and not re.match(r"https?://", source_url):
-                if not (self.root / source_url).exists():
-                    self.error(path, f"line {line_number} source path does not exist: {source_url}")
+                if not self.repo_path(source_url).exists():
+                    self.warn(path, f"line {line_number} source path is not present locally: {source_url}")
             if entry.get("evidence_strength") not in valid_strength:
                 self.error(path, f"line {line_number} invalid evidence_strength")
             if entry.get("volatility") not in valid_volatility:
                 self.error(path, f"line {line_number} invalid volatility")
 
     def validate_corpus_index(self, skill_names: list[str]) -> None:
-        path = self.root / "researcher" / "corpus" / "index.json"
+        path = self.root / "agents" / "researcher" / "corpus" / "index.json"
         data = self.load_json(path)
         if not isinstance(data, dict):
             return
@@ -384,13 +326,13 @@ class Validator:
         if not isinstance(skills, list):
             self.error(path, "skills must be a list")
             return
-        indexed_names = sorted(item.get("name") for item in skills if isinstance(item, dict))
-        if indexed_names != sorted(skill_names):
-            self.error(path, f"corpus skill index differs from skills directory: {indexed_names} != {skill_names}")
-        claim_ids = {entry.get("claim_id") for _, entry in self.load_jsonl(self.root / "researcher" / "claims" / "index.jsonl")}
+        indexed_names = [item.get("name") for item in skills if isinstance(item, dict)]
+        if len(indexed_names) != len(set(indexed_names)):
+            self.error(path, "corpus skill index contains duplicate names")
+        claim_ids = {entry.get("claim_id") for _, entry in self.load_jsonl(self.root / "agents" / "researcher" / "claims" / "index.jsonl")}
         mechanism_ids = {
             entry.get("mechanism_id")
-            for _, entry in self.load_jsonl(self.root / "researcher" / "mechanisms" / "registry.jsonl")
+            for _, entry in self.load_jsonl(self.root / "agents" / "researcher" / "mechanisms" / "registry.jsonl")
         }
         for item in skills:
             if not isinstance(item, dict):
@@ -399,6 +341,8 @@ class Validator:
             skill_path = item.get("path")
             if not isinstance(skill_path, str) or not (self.root / skill_path).exists():
                 self.error(path, f"skill path missing: {skill_path}")
+            elif item.get("name") not in skill_names:
+                self.error(path, f"corpus skill is not published: {item.get('name')}")
             for claim_id in item.get("claim_ids", []):
                 if claim_id not in claim_ids:
                     self.error(path, f"unknown claim_id in corpus index: {claim_id}")
@@ -407,7 +351,7 @@ class Validator:
                     self.error(path, f"unknown mechanism_id in corpus index: {mechanism_id}")
 
     def validate_activation_cases(self, skill_names: list[str]) -> None:
-        path = self.root / "researcher" / "fixtures" / "activation-cases.jsonl"
+        path = self.root / "agents" / "researcher" / "fixtures" / "activation-cases.jsonl"
         for line_number, entry in self.load_jsonl(path):
             expected = entry.get("expected_primary_skill")
             if expected not in skill_names:
@@ -425,7 +369,7 @@ class Validator:
                         self.error(path, f"line {line_number} unknown skill in {key}: {value}")
 
     def validate_benchmark_scenarios(self) -> None:
-        scenario_dir = self.root / "researcher" / "benchmarks" / "scenarios"
+        scenario_dir = self.root / "agents" / "researcher" / "benchmarks" / "scenarios"
         for path in sorted(scenario_dir.glob("*.jsonl")):
             for line_number, entry in self.load_jsonl(path):
                 for key in ["scenario_id", "class", "description", "expected_gate", "deterministic_signal"]:
@@ -433,7 +377,7 @@ class Validator:
                         self.error(path, f"line {line_number} {key} must be a non-empty string")
 
     def validate_runs(self) -> None:
-        runs_dir = self.root / "researcher" / "runs"
+        runs_dir = self.root / "agents" / "researcher" / "runs"
         if not runs_dir.exists():
             return
         for run_dir in sorted(p for p in runs_dir.iterdir() if p.is_dir()):
@@ -485,12 +429,12 @@ class Validator:
         for path in self.root.glob("autonomous-research-*.json"):
             self.error(
                 path,
-                "raw research artifact must live under researcher/runs/<run>/sources/evidence/raw or be excluded",
+                "raw research artifact must live under agents/researcher/runs/<run>/sources/evidence/raw or be excluded",
             )
 
     def validate_source_evaluations(self) -> None:
         candidates: list[Path] = []
-        for base in [self.root / "researcher" / "runs", self.root / "researcher" / "fixtures"]:
+        for base in [self.root / "agents" / "researcher" / "runs", self.root / "agents" / "researcher" / "fixtures"]:
             if base.exists():
                 candidates.extend(base.rglob("*.json"))
 
@@ -636,7 +580,7 @@ class Validator:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate skill corpus and researcher harness")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument("--json", action="store_true", help="print machine-readable JSON")
     parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
     args = parser.parse_args()

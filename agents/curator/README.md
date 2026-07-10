@@ -6,7 +6,7 @@ descobre conhecimento **externo** (papers, posts), o Curator descobre conhecimen
 e os usuários do VS Code encontram no dia a dia e sobem como **texto bruto** via
 GitHub Issues (label `contribution`).
 
-Ele lê essas Issues, avalia com a rubric, deduplica contra as 1465 skills, rascunha
+Ele lê essas Issues, avalia com a rubric, deduplica contra as 1473 skills, rascunha
 um `SKILL.md` e **abre um PR**. **O merge é sempre humano — nenhum auto-merge.**
 
 Ver a arquitetura completa em [`docs/ORQUESTRACAO.md`](../../docs/ORQUESTRACAO.md).
@@ -46,7 +46,7 @@ Saída em `agents/curator/runs/<contrib_id>/`:
 - `CURATOR_GITHUB_REPO` — ex.: `Weriton-DataOps/agent-skills-hub` (ou `feeds.github_repo` no config)
 
 A rotina (Task Scheduler no Windows) roda `ingest_issues.py` + `loop_step.py`
-periodicamente. O `open_pr.py` (a construir) usa um token com escopo de PR para
+periodicamente. O `open_pr.py` usa um token com escopo de PR para
 abrir o PR — nunca faz merge.
 
 ## Onde o LLM entra

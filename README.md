@@ -3,7 +3,7 @@
 > **Orquestrador multi-agente + hub vivo de skills de desenvolvimento.**
 > O núcleo que fica acima de todos os agentes e unifica a inteligência deles num só padrão.
 
-O **OverCore** reúne uma biblioteca curada de **1465 skills** e **agentes**, e um ciclo
+O **OverCore** reúne uma biblioteca curada de **1473 skills** e **agentes**, e um ciclo
 que a mantém **viva**: cada bug resolvido, atalho ou jeito eficiente de trabalhar que um
 agente ou dev descobre pode virar uma skill-padrão, reutilizável por todo mundo.
 
@@ -46,7 +46,7 @@ Arquitetura completa em [`docs/ORQUESTRACAO.md`](docs/ORQUESTRACAO.md).
 ## Estrutura
 
 ```
-skills/            # 1465 skills; cada uma uma pasta com SKILL.md
+skills/            # 1473 skills; cada uma uma pasta com SKILL.md
 agents/
   researcher/      # agente de descoberta externa (papers, posts → skills)
   curator/         # agente de descoberta interna (contribuições → skills)  [o "OverCore Forge"]

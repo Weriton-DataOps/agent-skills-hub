@@ -17,10 +17,10 @@
   "human_review": {
     "park_on_verdicts": ["HUMAN_REVIEW", "REJECT"],
     "park_on_novelty": ["human_review", "likely_duplicate"],
-    "notification_file": "researcher/reports/parked-review.md"
+    "notification_file": "agents/researcher/reports/parked-review.md"
   },
   "feeds": {
-    "manual_seed": "researcher/discovery/manual-seed.jsonl",
+    "manual_seed": "agents/researcher/discovery/manual-seed.jsonl",
     "enable_parallel_deep_research": false,
     "enable_web_search": false
   },
