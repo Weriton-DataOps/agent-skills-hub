@@ -32474,5 +32474,885 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "2d-games",
+    "path": "skills/2d-games",
+    "category": "games",
+    "name": "2d-games",
+    "description": "2D game development principles. Sprites, tilemaps, physics, camera.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "3d-games",
+    "path": "skills/3d-games",
+    "category": "games",
+    "name": "3d-games",
+    "description": "3D game development principles. Rendering, shaders, physics, cameras.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "accessibility-compliance-accessibility-audit",
+    "path": "skills/accessibility-compliance-accessibility-audit",
+    "category": "design",
+    "name": "accessibility-compliance-accessibility-audit",
+    "description": "You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers, and provide remediation guidance.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "aws-compliance-checker",
+    "path": "skills/aws-compliance-checker",
+    "category": "security",
+    "name": "aws-compliance-checker",
+    "description": "Automated compliance checking against CIS, PCI-DSS, HIPAA, and SOC 2 benchmarks",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "aws-iam-best-practices",
+    "path": "skills/aws-iam-best-practices",
+    "category": "security",
+    "name": "aws-iam-best-practices",
+    "description": "IAM policy review, hardening, and least privilege implementation",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "aws-secrets-rotation",
+    "path": "skills/aws-secrets-rotation",
+    "category": "security",
+    "name": "aws-secrets-rotation",
+    "description": "Automate AWS secrets rotation for RDS, API keys, and credentials",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "aws-security-audit",
+    "path": "skills/aws-security-audit",
+    "category": "security",
+    "name": "aws-security-audit",
+    "description": "Comprehensive AWS security posture assessment using AWS CLI and security best practices",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "base",
+    "path": "skills/base",
+    "category": "content",
+    "name": "base",
+    "description": "Database management, forms, reports, and data operations with LibreOffice Base.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "book-sft-pipeline",
+    "path": "skills/book-sft-pipeline",
+    "category": "ai-ml",
+    "name": "book-sft-pipeline",
+    "description": "This skill should be used for book-to-SFT pipelines: ePub extraction, literary segmentation, author-voice dataset construction, style-transfer training, LoRA workflows, and model evaluation for voice replication.",
+    "risk": "unknown",
+    "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "brand-guidelines-community",
+    "path": "skills/brand-guidelines-community",
+    "category": "design",
+    "name": "brand-guidelines-community",
+    "description": "To access Anthropic's official brand identity and style resources, use this skill.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "calc",
+    "path": "skills/calc",
+    "category": "content",
+    "name": "calc",
+    "description": "Spreadsheet creation, format conversion (ODS/XLSX/CSV), formulas, data automation with LibreOffice Calc.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "comprehensive-research-agent",
+    "path": "skills/comprehensive-research-agent",
+    "category": "ai-ml",
+    "name": "comprehensive-research-agent",
+    "description": "Ensure thorough validation, error recovery, and transparent reasoning in research tasks with multiple tool calls",
+    "risk": "unknown",
+    "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "design-orchestration",
+    "path": "skills/design-orchestration",
+    "category": "design",
+    "name": "design-orchestration",
+    "description": "Orchestrates design workflows by routing work through brainstorming, multi-agent review, and execution readiness in the correct order.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "digital-brain-skill",
+    "path": "skills/digital-brain-skill",
+    "category": "workflow",
+    "name": "digital-brain-skill",
+    "description": "This skill should be used for personal operating-system workflows: content creation, voice consistency, relationship lookup, meeting preparation, weekly review, goal tracking, personal brand management, and network management.",
+    "risk": "unknown",
+    "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "draw",
+    "path": "skills/draw",
+    "category": "content",
+    "name": "draw",
+    "description": "Vector graphics and diagram creation, format conversion (ODG/SVG/PDF) with LibreOffice Draw.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "frontend-developer",
+    "path": "skills/frontend-developer",
+    "category": "web-development",
+    "name": "frontend-developer",
+    "description": "Build React components, implement responsive layouts, and handle client-side state management. Masters React 19, Next.js 15, and modern frontend architecture.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "frontend-mobile-development-component-scaffold",
+    "path": "skills/frontend-mobile-development-component-scaffold",
+    "category": "web-development",
+    "name": "frontend-mobile-development-component-scaffold",
+    "description": "You are a React component architecture expert specializing in scaffolding production-ready, accessible, and performant components. Generate complete component implementations with TypeScript, tests, s",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "frontend-ui-dark-ts",
+    "path": "skills/frontend-ui-dark-ts",
+    "category": "web-development",
+    "name": "frontend-ui-dark-ts",
+    "description": "A modern dark-themed React UI system using Tailwind CSS and Framer Motion. Designed for dashboards, admin panels, and data-rich applications with glassmorphism effects and tasteful animations.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "game-art",
+    "path": "skills/game-art",
+    "category": "games",
+    "name": "game-art",
+    "description": "Game art principles. Visual style selection, asset pipeline, animation workflow.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "game-audio",
+    "path": "skills/game-audio",
+    "category": "games",
+    "name": "game-audio",
+    "description": "Game audio principles. Sound design, music integration, adaptive audio systems.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "game-design",
+    "path": "skills/game-design",
+    "category": "games",
+    "name": "game-design",
+    "description": "Game design principles. GDD structure, balancing, player psychology, progression.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "iconsax-library",
+    "path": "skills/iconsax-library",
+    "category": "design",
+    "name": "iconsax-library",
+    "description": "Extensive icon library and AI-driven icon generation skill for premium UI/UX design.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "impress",
+    "path": "skills/impress",
+    "category": "content",
+    "name": "impress",
+    "description": "Presentation creation, format conversion (ODP/PPTX/PDF), slide automation with LibreOffice Impress.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "interleaved-thinking",
+    "path": "skills/interleaved-thinking",
+    "category": "ai-ml",
+    "name": "interleaved-thinking",
+    "description": "Debug and optimize AI agents by analyzing reasoning traces, context degradation, tool confusion, instruction drift, repeated task failures, and performance regressions.",
+    "risk": "unknown",
+    "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "magic-ui-generator",
+    "path": "skills/magic-ui-generator",
+    "category": "design",
+    "name": "magic-ui-generator",
+    "description": "Utilizes Magic by 21st.dev to generate, compare, and integrate multiple production-ready UI component variations.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "mobile-games",
+    "path": "skills/mobile-games",
+    "category": "games",
+    "name": "mobile-games",
+    "description": "Mobile game development principles. Touch input, battery, performance, app stores.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "multiplayer",
+    "path": "skills/multiplayer",
+    "category": "games",
+    "name": "multiplayer",
+    "description": "Multiplayer game development principles. Architecture, networking, synchronization.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "pc-games",
+    "path": "skills/pc-games",
+    "category": "games",
+    "name": "pc-games",
+    "description": "PC and console game development principles. Engine selection, platform features, optimization strategies.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "remotion",
+    "path": "skills/remotion",
+    "category": "design",
+    "name": "remotion",
+    "description": "Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "tailwind-design-system",
+    "path": "skills/tailwind-design-system",
+    "category": "design",
+    "name": "tailwind-design-system",
+    "description": "Build production-ready design systems with Tailwind CSS, including design tokens, component variants, responsive patterns, and accessibility.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "template",
+    "path": "skills/template",
+    "category": "meta",
+    "name": "template",
+    "description": "Template for creating new Agent Skills for context engineering. Use this template when adding new skills to the collection.",
+    "risk": "unknown",
+    "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "templates",
+    "path": "skills/templates",
+    "category": "web-development",
+    "name": "templates",
+    "description": "Project scaffolding templates for new applications. Use when creating new projects from scratch. Contains 12 templates for various tech stacks.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "ui-a11y",
+    "path": "skills/ui-a11y",
+    "category": "design",
+    "name": "ui-a11y",
+    "description": "Audit a StyleSeed-based component or page for WCAG 2.2 AA issues and apply practical accessibility fixes where the code makes them safe.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "ui-pattern",
+    "path": "skills/ui-pattern",
+    "category": "design",
+    "name": "ui-pattern",
+    "description": "Generate reusable UI patterns such as card sections, grids, lists, forms, and chart wrappers using StyleSeed Toss primitives.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "ui-skills",
+    "path": "skills/ui-skills",
+    "category": "design",
+    "name": "ui-skills",
+    "description": "Opinionated, evolving constraints to guide agents when building interfaces",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "ui-ux-designer",
+    "path": "skills/ui-ux-designer",
+    "category": "design",
+    "name": "ui-ux-designer",
+    "description": "Create interface designs, wireframes, and design systems. Masters user research, accessibility standards, and modern design tools.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "ui-visual-validator",
+    "path": "skills/ui-visual-validator",
+    "category": "design",
+    "name": "ui-visual-validator",
+    "description": "Rigorous visual validation expert specializing in UI testing, design system compliance, and accessibility verification.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "vr-ar",
+    "path": "skills/vr-ar",
+    "category": "games",
+    "name": "vr-ar",
+    "description": "VR/AR development principles. Comfort, interaction, performance requirements.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "web-games",
+    "path": "skills/web-games",
+    "category": "games",
+    "name": "web-games",
+    "description": "Web browser game development principles. Framework selection, WebGPU, optimization, PWA.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "writer",
+    "path": "skills/writer",
+    "category": "content",
+    "name": "writer",
+    "description": "Document creation, format conversion (ODT/DOCX/PDF), mail merge, and automation with LibreOffice Writer.",
+    "risk": "unknown",
+    "source": "antigravity-awesome-skills (MIT)",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
   }
 ]
