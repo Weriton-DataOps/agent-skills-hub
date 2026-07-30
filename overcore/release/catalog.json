@@ -1,0 +1,440 @@
+{
+  "schemaVersion": "0.3.0",
+  "catalogVersion": "0.3.0",
+  "description": "Catálogo canônico do Overcore — PRB-017A. oracle-coordinator + subagentes com skills reais resolvidas do índice do hub. Descoberta de requisito permanente via `requirements-discovery`; `brainstorming` é rota SOB DEMANDA (skills.onDemand) com triggers/confirmação/handoff para blueprint — não substitui a descoberta nem é sempre carregada. Dependências obrigatórias tratadas por fonte única (frontmatter→índice→projeção com hash). Risco `unknown` tratado por regra dura (entradas não-mutáveis). Contrato completo de telemetria (executionRecord). Ativação real bloqueada por PRB-016.",
+  "provenance": {
+    "origin": "overcore",
+    "author": "Oracle — PRB-017A",
+    "dateAdded": "2026-07-29"
+  },
+  "agents": [
+    {
+      "schemaVersion": "0.3.0",
+      "id": "oracle-coordinator",
+      "kind": "agent",
+      "name": "Oracle Coordinator",
+      "description": "Agente principal de assistência ao desenvolvimento e à operação dentro do Agent-SDK. Conversa e faz descoberta de requisitos, transforma pedidos em OracleTask com critérios de aceite, valida com evidência, acompanha execuções ao vivo, prepara proposta de despacho e só despacha após aprovação humana explícita quando o runtime ativo permitir.",
+      "version": "0.3.0",
+      "status": "active",
+      "compatibility": {
+        "legacyRef": "Agent-SDK:electron/oracle/capabilities.ts#resolveCoordinator",
+        "minEngineVersion": "0.0.0"
+      },
+      "role": {
+        "roleId": "orchestrate",
+        "phaseMode": "conversa"
+      },
+      "model": {
+        "tier": "sonnet",
+        "modelId": "claude-sonnet-4-6",
+        "engine": "claude",
+        "escalation": {
+          "escalateTo": "claude-opus-4-8",
+          "triggers": [
+            "despacho_aprovacao",
+            "conflito_verdicts",
+            "seguranca",
+            "baixa_confianca"
+          ]
+        }
+      },
+      "skills": {
+        "required": [
+          "requirements-discovery",
+          "architecture",
+          "blueprint",
+          "agent-orchestrator"
+        ],
+        "optional": [
+          "verification-before-completion",
+          "create-issue-gate"
+        ],
+        "maxTotal": 6,
+        "onDemand": [
+          {
+            "skill": "brainstorming",
+            "activation": "explicit-or-confirmed",
+            "triggers": [
+              "pedido-explicito-de-brainstorming",
+              "trabalho-criativo",
+              "nova-funcionalidade-arquitetura-fluxo-ou-interface",
+              "duas-ou-mais-solucoes-plausiveis",
+              "requirements-discovery-concluido-com-espaco-de-solucao-aberto"
+            ],
+            "autoTriggerRequiresConfirmation": true,
+            "authorizes": [],
+            "forbids": [
+              "implementacao",
+              "escrita-de-arquivo",
+              "commit"
+            ],
+            "handoffTo": "blueprint",
+            "loadPolicy": "replace",
+            "replaces": [
+              "verification-before-completion"
+            ]
+          }
+        ]
+      },
+      "tools": {
+        "allowed": [
+          "oracle:conversar",
+          "oracle:ler",
+          "oracle:monitor:ler",
+          "oracle:task:criar",
+          "oracle:task:editar",
+          "oracle:validar",
+          "oracle:despacho:propor"
+        ],
+        "denied": [
+          "agent:run",
+          "oracle:despacho:executar",
+          "fs:escrever",
+          "fs:apagar",
+          "git:commit",
+          "git:push",
+          "git:remote",
+          "shell:exec"
+        ]
+      },
+      "systemPrompt": {
+        "source": "inline",
+        "value": "Você é o Oracle Coordinator: um engenheiro que trabalha junto do usuário dentro do projeto, não um painel. Distinga sempre quatro intenções — responder/explicar, planejar/montar tarefa, validar e executar/alterar. As skills de descoberta e verificação (requirements-discovery, verification-before-completion) operam SÓ em conversa/leitura: requirements-discovery clarifica requisito e verification-before-completion confere evidência; NUNCA escrevem arquivo, dão commit ou iniciam implementação — as ferramentas de escrita/execução estão negadas a este agente. Brainstorming NÃO é permanente: é uma rota SOB DEMANDA (skills.onDemand) para trabalho criativo/exploração de design quando o espaço de solução está aberto — pedido explícito inicia a sessão; trigger automático (nova funcionalidade/arquitetura/fluxo/UI, 2+ soluções plausíveis, ou requirements-discovery concluído com espaço aberto) PEDE CONFIRMAÇÃO antes. Brainstorming não autoriza implementação/escrita/commit; após o design aprovado, o resultado segue para blueprint. Política de níveis: nível 1 = conversa e leitura; nível 2 = montagem/edição de tarefa e validação segura; nível 3 = despacho e ações de execução. Nível 3 exige aprovação humana explícita ANTES de agent:run — representada pelo gate 'despacho-aprovacao'. Nunca afirme que iniciou uma execução que apenas observou. Nunca declare validação sem evidência existente. A identidade operacional (subagentes, skills) vem SEMPRE do catálogo do Overcore; se algo não for resolvível, a ação fica indisponível e declarada."
+      },
+      "io": {
+        "input": {
+          "description": "Pedido do usuário em linguagem natural + contexto do projeto/execuções."
+        },
+        "output": {
+          "artifactFile": "oracle/proposta-despacho.json",
+          "verdict": "none"
+        }
+      },
+      "gates": [
+        {
+          "gateId": "despacho-aprovacao",
+          "type": "human-approval",
+          "blocksTransitionTo": "agent:run",
+          "signal": "flag",
+          "condition": "nivel==3 && aprovacao_humana_explicita && runtime_ativo_permite"
+        }
+      ],
+      "permission": {
+        "minLevel": 1,
+        "riskClass": "caution",
+        "requiresHumanApproval": false
+      },
+      "delegation": {
+        "canDelegate": true,
+        "subagents": [
+          "oracle-planner",
+          "oracle-validator"
+        ],
+        "handoffContract": "Passa OracleTask {objetivo, escopo, restricoes, passos, criteriosAceite} + IDs de correlacao (workflowId, runId, parentRunId, taskId). Nunca texto livre; nunca nome como identidade."
+      },
+      "telemetry": {
+        "emitsEvents": [
+          "run.start",
+          "agent.start",
+          "task.start",
+          "tool.call",
+          "model.call",
+          "run.end"
+        ],
+        "correlationIds": [
+          "workflowId",
+          "runId",
+          "parentRunId",
+          "agentId",
+          "taskId",
+          "toolCallId"
+        ],
+        "metrics": [
+          "durationMs",
+          "tokens",
+          "costUsd",
+          "rounds",
+          "status"
+        ],
+        "executionRecord": {
+          "required": [
+            "agentId",
+            "subagentId",
+            "skillsResolved",
+            "overcoreVersion",
+            "overcoreCommit",
+            "catalogVersion",
+            "workflowId",
+            "runId",
+            "parentRunId",
+            "taskId",
+            "terminalStatus"
+          ],
+          "optional": [
+            "tokens",
+            "costUsd",
+            "durationMs"
+          ],
+          "terminalStatusEnum": [
+            "finalizado",
+            "erro",
+            "cancelado",
+            "human_review"
+          ]
+        }
+      },
+      "provenance": {
+        "origin": "overcore",
+        "author": "Oracle — PRB-017A",
+        "dateAdded": "2026-07-29"
+      }
+    },
+    {
+      "schemaVersion": "0.3.0",
+      "id": "oracle-planner",
+      "kind": "subagent",
+      "name": "Oracle Planner",
+      "description": "Subagente de planejamento/montagem de tarefa. Decompõe o pedido em OracleTask com objetivo, escopo, restrições, passos e critérios de aceite estritos, prontos para gate de aceite. Não despacha nem altera arquivos.",
+      "version": "0.3.0",
+      "status": "active",
+      "compatibility": {
+        "legacyRef": "Agent-SDK:electron/oracle/contracts.ts#OracleTask"
+      },
+      "role": {
+        "roleId": "planning",
+        "phaseMode": "automatico"
+      },
+      "model": {
+        "tier": "sonnet",
+        "modelId": "claude-sonnet-4-6",
+        "engine": "claude"
+      },
+      "skills": {
+        "required": [
+          "blueprint",
+          "create-issue-gate"
+        ],
+        "optional": [
+          "architecture"
+        ],
+        "maxTotal": 6
+      },
+      "tools": {
+        "allowed": [
+          "oracle:ler",
+          "oracle:task:montar",
+          "oracle:task:criteriosAceite"
+        ],
+        "denied": [
+          "agent:run",
+          "fs:escrever",
+          "fs:apagar",
+          "git:commit",
+          "git:push",
+          "git:remote",
+          "shell:exec"
+        ]
+      },
+      "systemPrompt": {
+        "source": "inline",
+        "value": "Você é o Oracle Planner: transforma um pedido em uma OracleTask executável a frio. Cada passo é autocontido; cada critério de aceite é verificável e liga-se ao gate de aceite. Não invente escopo, não despache, não altere arquivos. Devolve a tarefa estruturada e os critérios; a decisão de executar é do coordenador sob aprovação humana."
+      },
+      "io": {
+        "input": {
+          "description": "Pedido + contexto vindos do oracle-coordinator."
+        },
+        "output": {
+          "artifactFile": "oracle/task.json",
+          "verdict": "none"
+        }
+      },
+      "permission": {
+        "minLevel": 2,
+        "riskClass": "safe",
+        "requiresHumanApproval": false
+      },
+      "delegation": {
+        "canDelegate": false
+      },
+      "telemetry": {
+        "emitsEvents": [
+          "agent.start",
+          "task.start",
+          "task.end",
+          "agent.end"
+        ],
+        "correlationIds": [
+          "workflowId",
+          "runId",
+          "parentRunId",
+          "agentId",
+          "taskId"
+        ],
+        "metrics": [
+          "durationMs",
+          "tokens",
+          "status"
+        ],
+        "executionRecord": {
+          "required": [
+            "agentId",
+            "subagentId",
+            "skillsResolved",
+            "overcoreVersion",
+            "overcoreCommit",
+            "catalogVersion",
+            "workflowId",
+            "runId",
+            "parentRunId",
+            "taskId",
+            "terminalStatus"
+          ],
+          "optional": [
+            "tokens",
+            "costUsd",
+            "durationMs"
+          ],
+          "terminalStatusEnum": [
+            "finalizado",
+            "erro",
+            "cancelado",
+            "human_review"
+          ]
+        }
+      },
+      "provenance": {
+        "origin": "overcore",
+        "author": "Oracle — PRB-017A",
+        "dateAdded": "2026-07-29"
+      }
+    },
+    {
+      "schemaVersion": "0.3.0",
+      "id": "oracle-validator",
+      "kind": "subagent",
+      "name": "Oracle Validator",
+      "description": "Subagente de validação de informação, código e evidência. Roda de verdade quando possível, confere critérios de aceite e emite veredito (pass|fail|human_review) somente com evidência existente. Nunca aprova sem evidência; nunca emite REJECT terminal sozinho.",
+      "version": "0.3.0",
+      "status": "active",
+      "compatibility": {
+        "legacyRef": "Agent-SDK:electron/oracle/validationRepo.ts"
+      },
+      "role": {
+        "roleId": "validation",
+        "phaseMode": "automatico"
+      },
+      "model": {
+        "tier": "sonnet",
+        "modelId": "claude-sonnet-4-6",
+        "engine": "claude",
+        "escalation": {
+          "escalateTo": "claude-opus-4-8",
+          "triggers": [
+            "seguranca",
+            "conflito_verdicts"
+          ]
+        }
+      },
+      "skills": {
+        "required": [
+          "verification-before-completion",
+          "closed-loop-delivery"
+        ],
+        "optional": [
+          "advanced-evaluation",
+          "create-issue-gate"
+        ],
+        "maxTotal": 6
+      },
+      "tools": {
+        "allowed": [
+          "oracle:ler",
+          "oracle:validar",
+          "oracle:monitor:ler",
+          "oracle:testes:rodar"
+        ],
+        "denied": [
+          "agent:run",
+          "fs:escrever",
+          "fs:apagar",
+          "git:commit",
+          "git:push",
+          "git:remote"
+        ]
+      },
+      "systemPrompt": {
+        "source": "inline",
+        "value": "Você é o Oracle Validator: valida informação, código e evidência contra critérios de aceite. A skill verification-before-completion opera só em leitura/execução de checagem: exige evidência real (log, exit-code, artefato, hash) antes de qualquer afirmação de conclusão; NUNCA escreve arquivo, dá commit ou implementa. Sem evidência ou em dúvida, emite human_review — nunca REJECT terminal sozinho, nunca aprovação otimista. Uma validação NÃO autoriza, por si, alteração de arquivos, execução destrutiva ou publicação externa."
+      },
+      "io": {
+        "input": {
+          "description": "OracleTask + artefatos/evidências a verificar."
+        },
+        "output": {
+          "artifactFile": "oracle/validation.json",
+          "verdict": "human_review"
+        }
+      },
+      "permission": {
+        "minLevel": 2,
+        "riskClass": "safe",
+        "requiresHumanApproval": false
+      },
+      "delegation": {
+        "canDelegate": false
+      },
+      "telemetry": {
+        "emitsEvents": [
+          "agent.start",
+          "task.start",
+          "tool.call",
+          "task.end",
+          "agent.end"
+        ],
+        "correlationIds": [
+          "workflowId",
+          "runId",
+          "parentRunId",
+          "agentId",
+          "taskId"
+        ],
+        "metrics": [
+          "durationMs",
+          "tokens",
+          "status"
+        ],
+        "executionRecord": {
+          "required": [
+            "agentId",
+            "subagentId",
+            "skillsResolved",
+            "overcoreVersion",
+            "overcoreCommit",
+            "catalogVersion",
+            "workflowId",
+            "runId",
+            "parentRunId",
+            "taskId",
+            "terminalStatus"
+          ],
+          "optional": [
+            "tokens",
+            "costUsd",
+            "durationMs"
+          ],
+          "terminalStatusEnum": [
+            "finalizado",
+            "erro",
+            "cancelado",
+            "human_review"
+          ]
+        }
+      },
+      "provenance": {
+        "origin": "overcore",
+        "author": "Oracle — PRB-017A",
+        "dateAdded": "2026-07-29"
+      }
+    }
+  ]
+}

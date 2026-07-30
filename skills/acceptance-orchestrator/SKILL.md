@@ -4,6 +4,7 @@ description: Use when a coding task should be driven end-to-end from issue intak
 risk: safe
 source: community
 date_added: "2026-03-12"
+requiredSubSkills: ["create-issue-gate", "closed-loop-delivery", "verification-before-completion"]
 ---
 
 # Acceptance Orchestrator

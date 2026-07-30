@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "0.3.0",
+  "generator": "gen_skill_dependencies.py",
+  "note": "AUTO-GERADO. Fonte única de verdade: campo `requiredSubSkills` no frontmatter de skills/<id>/SKILL.md (propagado ao skills_index.json pelo processo canônico do Hub). Regenere com `python gen_skill_dependencies.py`. O validador confere igualdade origem↔projeção e o SHA-256 de cada fonte; divergência falha fechado.",
+  "sources": {
+    "acceptance-orchestrator": {
+      "skillMd": "skills/acceptance-orchestrator/SKILL.md",
+      "skillMdSha256": "a405525771ac9ed646b2a2bed84a70cc800a8dc98327c2b3d39b70a4869aeeeb",
+      "requiredSubSkills": [
+        "create-issue-gate",
+        "closed-loop-delivery",
+        "verification-before-completion"
+      ]
+    }
+  }
+}

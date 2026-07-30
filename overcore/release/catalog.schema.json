@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://weriton-dataops.github.io/agent-skills-hub/schemas/catalog-0.3.0.json",
+  "title": "Overcore Catalog",
+  "description": "Catálogo único e determinístico do Overcore: envelope versionado que reúne as entradas canônicas (agentes/subagentes/papéis/gates/componentes de motor) que Pipeline Studio e Oracle resolvem em runtime. A entrada individual é `$defs.entry`, promovida a partir do schema proposto na Fase 1 e estendida em 0.2.0 com telemetry.executionRecord e em 0.3.0 com skills.onDemand (rotas de skill invocáveis sob demanda).",
+  "x-promotedFrom": "Oracle/arquitetura/schema-catalogo-overcore.schema.json (catalog-entry-0.1.0)",
+  "x-origin": "Fase 1 da unificação Agent-SDK × Overcore × Oracle — PRB-017A",
+  "x-changelog": "0.2.0: telemetry.executionRecord (contrato de execução futura). 0.3.0: skills.onDemand (rotas condicionais — ex.: brainstorming — com triggers, confirmação e handoff; NÃO contam no maxTotal). SEM compatibilidade fictícia com versões anteriores — consumidores exigem 0.3.0.",
+  "type": "object",
+  "required": ["schemaVersion", "catalogVersion", "provenance", "agents"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "0.3.0",
+      "description": "Versão do SCHEMA do catálogo (não do conteúdo). 0.3.0 adiciona skills.onDemand; compat verificada pelos consumidores (exigem 0.3.0)."
+    },
+    "catalogVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "SemVer do CONTEÚDO deste catálogo. Muda quando entradas são adicionadas/alteradas/removidas."
+    },
+    "description": { "type": "string" },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Origem/crédito do catálogo (mesma regra de marca d'água das skills).",
+      "properties": {
+        "origin": { "enum": ["pipeline-studio", "overcore", "human", "researcher", "curator", "legacy"] },
+        "author": { "type": "string" },
+        "dateAdded": { "type": "string" }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Entradas canônicas. A ORDEM é o índice determinístico (kebab-case ascendente por id).",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "$comment": "Promovido de Oracle/arquitetura/schema-catalogo-overcore.schema.json — catalog-entry-0.1.0, estendido em 0.2.0 com telemetry.executionRecord.",
+      "type": "object",
+      "required": ["schemaVersion", "id", "kind", "name", "version", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "0.3.0",
+          "description": "Versão do SCHEMA (não da entrada). Compat verificada pelos consumidores."
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Identificador estável, kebab-case, único no catálogo."
+        },
+        "kind": {
+          "enum": ["agent", "subagent", "role", "gate", "engine-component"],
+          "description": "agent=papel com identidade operacional; subagent=especialização instanciada por um agente; role=papel abstrato reutilizável; gate=política determinística; engine-component=fica no Agent-SDK, catalogado só para rastreio."
+        },
+        "name": { "type": "string", "description": "Nome legível." },
+        "description": { "type": "string", "description": "Quando/por que usar esta definição." },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "SemVer DESTA entrada. Muda quando prompt/tools/modelo/contrato mudam."
+        },
+        "status": {
+          "enum": ["draft", "active", "deprecated"],
+          "description": "Ciclo de vida da definição."
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Compatibilidade e migração.",
+          "properties": {
+            "supersedes": { "type": "array", "items": { "type": "string" } },
+            "legacyRef": { "type": "string" },
+            "minEngineVersion": { "type": "string" }
+          }
+        },
+        "role": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "roleId": { "type": "string" },
+            "stage": { "type": "integer", "minimum": 1 },
+            "phaseId": { "type": "string" },
+            "phaseMode": { "enum": ["conversa", "automatico", "loop"] }
+          }
+        },
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tier": { "enum": ["haiku", "sonnet", "opus", "fable", "codex-runtime"] },
+            "modelId": { "type": "string" },
+            "engine": { "enum": ["claude", "gemini", "openai", "local"], "default": "claude" },
+            "escalation": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "escalateTo": { "type": "string" },
+                "triggers": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "skills": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Skills resolvidas do hub (skills_index.json). required+optional contam no máximo N=6; onDemand NÃO conta (rotas condicionais).",
+          "properties": {
+            "required": { "type": "array", "items": { "type": "string" } },
+            "optional": { "type": "array", "items": { "type": "string" } },
+            "maxTotal": { "type": "integer", "default": 6, "maximum": 6 },
+            "onDemand": {
+              "type": "array",
+              "maxItems": 1,
+              "description": "Rotas de skill invocáveis SOB DEMANDA — não carregadas sempre, não contam no maxTotal. Máximo 1 rota por entrada nesta versão (exclusividade). Garantias exigidas via if/then abaixo (ausência é inválida — NÃO se apoia em default).",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["skill", "activation", "triggers"],
+                "properties": {
+                  "skill": { "type": "string", "description": "Skill id resolvível no índice." },
+                  "activation": {
+                    "enum": ["explicit-starts", "auto-requires-confirmation", "explicit-or-confirmed"],
+                    "description": "explicit-or-confirmed: pedido explícito inicia a sessão; trigger automático pede confirmação."
+                  },
+                  "triggers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 }, "description": "Condições que sugerem a rota (≥1, sem vazios, sem duplicatas)." },
+                  "autoTriggerRequiresConfirmation": { "type": "boolean" },
+                  "authorizes": { "type": "array", "items": { "type": "string" }, "description": "O que a rota autoriza (deve ser vazio para rotas conversacionais)." },
+                  "forbids": { "type": "array", "items": { "type": "string" }, "description": "No mínimo: implementacao, escrita-de-arquivo, commit." },
+                  "handoffTo": { "type": "string", "minLength": 1, "description": "Próximo passo após aprovação (ex.: blueprint)." },
+                  "loadPolicy": { "enum": ["replace", "add"], "description": "replace: substitui skills da base ao ativar (mantém ≤ maxTotal)." },
+                  "replaces": { "type": "array", "uniqueItems": true, "items": { "type": "string" }, "description": "Skills da PRÓPRIA entrada substituídas ao ativar a rota." }
+                },
+                "allOf": [
+                  {
+                    "if": { "properties": { "activation": { "enum": ["explicit-or-confirmed", "auto-requires-confirmation"] } } },
+                    "then": {
+                      "required": ["autoTriggerRequiresConfirmation", "triggers", "authorizes", "forbids", "handoffTo"],
+                      "properties": {
+                        "autoTriggerRequiresConfirmation": { "const": true },
+                        "authorizes": { "type": "array", "maxItems": 0 },
+                        "forbids": {
+                          "type": "array",
+                          "allOf": [
+                            { "contains": { "const": "implementacao" } },
+                            { "contains": { "const": "escrita-de-arquivo" } },
+                            { "contains": { "const": "commit" } }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "tools": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "allowed": { "type": "array", "items": { "type": "string" } },
+            "denied": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "systemPrompt": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source": { "enum": ["inline", "file", "preset"] },
+            "value": { "type": "string" },
+            "ref": { "type": "string" },
+            "append": { "type": "string" }
+          }
+        },
+        "io": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "input": { "type": "object" },
+            "output": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "artifactFile": { "type": "string" },
+                "schema": { "type": "object" },
+                "verdict": { "enum": ["pass", "fail", "unknown", "human_review", "none"] }
+              }
+            }
+          }
+        },
+        "gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["gateId", "type"],
+            "properties": {
+              "gateId": { "type": "string" },
+              "type": { "enum": ["human-approval", "deterministic", "verdict"] },
+              "blocksTransitionTo": { "type": "string" },
+              "signal": { "enum": ["file", "pr-comment", "flag", "auto"] },
+              "condition": { "type": "string" }
+            }
+          }
+        },
+        "permission": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "minLevel": { "type": "integer", "minimum": 1, "maximum": 3 },
+            "riskClass": { "enum": ["safe", "caution", "dangerous"] },
+            "requiresHumanApproval": { "type": "boolean", "default": false }
+          }
+        },
+        "delegation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "canDelegate": { "type": "boolean", "default": false },
+            "subagents": { "type": "array", "items": { "type": "string" } },
+            "handoffContract": { "type": "string" }
+          }
+        },
+        "telemetry": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "emitsEvents": { "type": "array", "items": { "type": "string" } },
+            "correlationIds": { "type": "array", "items": { "enum": ["workflowId", "runId", "parentRunId", "agentId", "taskId", "toolCallId", "processId"] } },
+            "metrics": { "type": "array", "items": { "enum": ["durationMs", "tokens", "costUsd", "cpu", "memory", "rounds", "status"] } },
+            "executionRecord": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Contrato COMPLETO do registro que uma futura execução deste agente/subagente deve gravar. NÃO é um evento simulado — é o schema do que será persistido. Nenhuma execução real é feita nesta rodada.",
+              "required": ["required", "terminalStatusEnum"],
+              "properties": {
+                "required": {
+                  "type": "array",
+                  "description": "Campos SEMPRE gravados por execução.",
+                  "items": { "enum": ["agentId", "subagentId", "skillsResolved", "overcoreVersion", "overcoreCommit", "catalogVersion", "workflowId", "runId", "parentRunId", "taskId", "terminalStatus"] }
+                },
+                "optional": {
+                  "type": "array",
+                  "description": "Campos gravados quando disponíveis.",
+                  "items": { "enum": ["tokens", "costUsd", "durationMs"] }
+                },
+                "terminalStatusEnum": {
+                  "type": "array",
+                  "description": "Valores possíveis do status terminal.",
+                  "items": { "enum": ["finalizado", "erro", "cancelado", "human_review"] }
+                }
+              }
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "origin": { "enum": ["pipeline-studio", "overcore", "human", "researcher", "curator", "legacy"] },
+            "author": { "type": "string" },
+            "dateAdded": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

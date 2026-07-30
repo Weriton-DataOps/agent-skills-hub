@@ -1,0 +1,38 @@
+{
+  "advanced-evaluation": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "agent-orchestrator": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "architecture": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "blueprint": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "brainstorming": {
+    "claudeSupported": true,
+    "risk": "unknown"
+  },
+  "closed-loop-delivery": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "create-issue-gate": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "requirements-discovery": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "verification-before-completion": {
+    "claudeSupported": true,
+    "risk": "unknown"
+  }
+}

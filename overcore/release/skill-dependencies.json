@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "0.3.0",
+  "generator": "gen_release.py",
+  "note": "Projeção PODADA para as skills do release + dependências transitivas. skillMdSha256 confere o SKILL.md incluído no release; divergência falha fechado na validação.",
+  "sources": {}
+}

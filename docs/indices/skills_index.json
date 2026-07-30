@@ -177,6 +177,7 @@
   },
   {
     "id": "acceptance-orchestrator",
+    "requiredSubSkills": ["create-issue-gate", "closed-loop-delivery", "verification-before-completion"],
     "path": "skills/acceptance-orchestrator",
     "category": "workflow",
     "name": "acceptance-orchestrator",
@@ -32506,6 +32507,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "requirements-discovery",
+    "path": "skills/requirements-discovery",
+    "category": "discovery",
+    "name": "requirements-discovery",
+    "description": "Descoberta de requisitos ESTRITAMENTE conversacional e segura \u2014 entender intencao, fazer perguntas, levantar restricoes, propor alternativas, consolidar requisitos e pedir aprovacao. NAO escreve arquivos, nao faz commit, nao executa codigo e nao inicia implementacao. Skill canonica do Overcore, reutilizavel pelo Oracle e pelo futuro Discovery do Pipeline.",
+    "risk": "safe",
+    "source": "overcore",
+    "date_added": "2026-07-29",
     "plugin": {
       "targets": {
         "codex": "supported",
