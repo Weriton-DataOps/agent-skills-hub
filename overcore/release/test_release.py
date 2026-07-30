@@ -57,7 +57,9 @@ def main():
     for root, dirs, fs in os.walk(HERE):
         dirs[:] = [d for d in dirs if d != "__pycache__"]
         for fn in fs:
-            if fn.endswith((".py", ".pyc")) or fn in ("manifest.json", "README.md"):
+            # Excluir o manifesto e arquivos NÃO-payload (docs/tooling/config do Git):
+            # .gitattributes fixa LF para os checksums baterem no Git — não é conteúdo do release.
+            if fn.endswith((".py", ".pyc")) or fn in ("manifest.json", "README.md", ".gitattributes"):
                 continue
             on_disk.add(os.path.relpath(os.path.join(root, fn), HERE).replace("\\", "/"))
     check(on_disk == set(decls), f"5) arquivos em disco == declarativo (extra: {on_disk - set(decls)})")
