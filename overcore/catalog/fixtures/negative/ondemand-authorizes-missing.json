@@ -1,0 +1,213 @@
+{
+  "schemaVersion": "0.3.0",
+  "catalogVersion": "0.3.0",
+  "provenance": {
+    "origin": "overcore",
+    "author": "fixture",
+    "dateAdded": "2026-07-29"
+  },
+  "agents": [
+    {
+      "schemaVersion": "0.3.0",
+      "id": "oracle-coordinator",
+      "kind": "agent",
+      "name": "Coord",
+      "version": "0.3.0",
+      "status": "draft",
+      "model": {
+        "tier": "sonnet",
+        "modelId": "claude-sonnet-4-6",
+        "engine": "claude"
+      },
+      "skills": {
+        "required": [
+          "architecture",
+          "blueprint"
+        ],
+        "optional": [],
+        "maxTotal": 6,
+        "onDemand": [
+          {
+            "skill": "brainstorming",
+            "activation": "explicit-or-confirmed",
+            "triggers": [
+              "pedido-explicito-de-brainstorming",
+              "trabalho-criativo"
+            ],
+            "autoTriggerRequiresConfirmation": true,
+            "forbids": [
+              "implementacao",
+              "escrita-de-arquivo",
+              "commit"
+            ],
+            "handoffTo": "blueprint"
+          }
+        ]
+      },
+      "tools": {
+        "allowed": [
+          "oracle:conversar",
+          "oracle:despacho:propor"
+        ],
+        "denied": [
+          "agent:run",
+          "git:push",
+          "fs:escrever"
+        ]
+      },
+      "gates": [
+        {
+          "gateId": "despacho-aprovacao",
+          "type": "human-approval",
+          "blocksTransitionTo": "agent:run",
+          "signal": "flag"
+        }
+      ],
+      "permission": {
+        "minLevel": 1,
+        "riskClass": "caution",
+        "requiresHumanApproval": false
+      },
+      "delegation": {
+        "canDelegate": true,
+        "subagents": [
+          "oracle-planner"
+        ],
+        "handoffContract": "OracleTask + ids"
+      },
+      "telemetry": {
+        "emitsEvents": [
+          "run.start"
+        ],
+        "correlationIds": [
+          "workflowId",
+          "runId",
+          "parentRunId",
+          "agentId",
+          "taskId",
+          "toolCallId"
+        ],
+        "metrics": [
+          "durationMs",
+          "status"
+        ],
+        "executionRecord": {
+          "required": [
+            "agentId",
+            "subagentId",
+            "skillsResolved",
+            "overcoreVersion",
+            "overcoreCommit",
+            "catalogVersion",
+            "workflowId",
+            "runId",
+            "parentRunId",
+            "taskId",
+            "terminalStatus"
+          ],
+          "optional": [
+            "tokens",
+            "costUsd",
+            "durationMs"
+          ],
+          "terminalStatusEnum": [
+            "finalizado",
+            "erro",
+            "cancelado",
+            "human_review"
+          ]
+        }
+      },
+      "provenance": {
+        "origin": "overcore",
+        "author": "fixture",
+        "dateAdded": "2026-07-29"
+      }
+    },
+    {
+      "schemaVersion": "0.3.0",
+      "id": "oracle-planner",
+      "kind": "subagent",
+      "name": "Planner",
+      "version": "0.3.0",
+      "status": "draft",
+      "model": {
+        "tier": "sonnet",
+        "modelId": "claude-sonnet-4-6",
+        "engine": "claude"
+      },
+      "skills": {
+        "required": [
+          "blueprint"
+        ],
+        "optional": [],
+        "maxTotal": 6
+      },
+      "tools": {
+        "allowed": [
+          "oracle:ler",
+          "oracle:task:montar"
+        ],
+        "denied": [
+          "agent:run",
+          "git:push"
+        ]
+      },
+      "permission": {
+        "minLevel": 2,
+        "riskClass": "safe",
+        "requiresHumanApproval": false
+      },
+      "delegation": {
+        "canDelegate": false
+      },
+      "telemetry": {
+        "emitsEvents": [
+          "agent.start"
+        ],
+        "correlationIds": [
+          "workflowId",
+          "runId",
+          "parentRunId",
+          "agentId",
+          "taskId"
+        ],
+        "metrics": [
+          "durationMs",
+          "status"
+        ],
+        "executionRecord": {
+          "required": [
+            "agentId",
+            "subagentId",
+            "skillsResolved",
+            "overcoreVersion",
+            "overcoreCommit",
+            "catalogVersion",
+            "workflowId",
+            "runId",
+            "parentRunId",
+            "taskId",
+            "terminalStatus"
+          ],
+          "optional": [
+            "tokens",
+            "costUsd",
+            "durationMs"
+          ],
+          "terminalStatusEnum": [
+            "finalizado",
+            "erro",
+            "cancelado",
+            "human_review"
+          ]
+        }
+      },
+      "provenance": {
+        "origin": "overcore",
+        "author": "fixture",
+        "dateAdded": "2026-07-29"
+      }
+    }
+  ]
+}

@@ -4,12 +4,12 @@
 
 ## Visão geral
 
-O **OverCore** é um sistema de orquestração multi-agente construído sobre um **hub público de skills** (1451 skills, cada uma com `SKILL.md` + frontmatter, indexadas em `docs/indices/skills_index.json` e agrupadas em `docs/indices/marketplace.json`). O hub é a única fonte de verdade. Dois consumidores leem o hub por fetch direto do repositório público: o **Pipeline Studio** (o orquestrador Agent-SDK do dono, que monta agentes em runtime) e o **VS Code** (skills do Claude Code expostas como comandos `/`). Qualquer agente do Pipeline ou usuário do VS Code que descubra um fix/atalho contribui **texto bruto** via GitHub Issues com label `contribution` — nunca toca no corpus. Um agente **Curator**, gêmeo iso-mórfico do `agents/researcher/` existente, roda na máquina do dono numa rotina, lê essas Issues, avalia com rubric, deduplica contra as 1451 skills, formata como `SKILL.md` e **abre um PR**. O dono — e só o dono — faz o merge, que re-distribui o índice para os dois consumidores. **Nenhum auto-merge em lugar nenhum.**
+O **OverCore** é um sistema de orquestração multi-agente construído sobre um **hub público de skills** (1473 skills, cada uma com `SKILL.md`, indexadas em `docs/indices/skills_index.json` e agrupadas em `docs/indices/marketplace.json`). O hub é a única fonte de verdade. Dois consumidores leem o hub por fetch direto do repositório público: o **Pipeline Studio** (o orquestrador Agent-SDK do dono, que monta agentes em runtime) e o **VS Code** (skills do Claude Code expostas como comandos `/`). Qualquer agente do Pipeline ou usuário do VS Code que descubra um fix/atalho contribui **texto bruto** via GitHub Issues com label `contribution` — nunca toca no corpus. Um agente **Curator**, gêmeo iso-mórfico do `agents/researcher/` existente, roda na máquina do dono numa rotina, lê essas Issues, avalia com rubric, deduplica contra as 1473 skills, formata como `SKILL.md` e **abre um PR**. O dono — e só o dono — faz o merge, que re-distribui o índice para os dois consumidores. **Nenhum auto-merge em lugar nenhum.**
 
 ```
                           ┌─────────────────────────────────────────────┐
                           │        HUB PÚBLICO (agent-skills-hub)         │
-                          │  skills/<id>/SKILL.md  (1451)                 │
+                          │  skills/<id>/SKILL.md  (1473)                 │
                           │  docs/indices/skills_index.json  (fonte de    │
                           │  verdade: target/risk/category por skill)     │
                           │  docs/indices/marketplace.json (bundles)      │
@@ -157,7 +157,7 @@ ingested → triaged → evaluated → deduped → drafted → indexed
 |---|---|---|
 | **C1 Acionável** | Diz o que fazer/quando/o que evitar, não só conhecimento de fundo | HUMAN_REVIEW |
 | **C2 Genérico/Reutilizável** | Vale fora do contexto onde o bug nasceu; segredos/caminhos/nomes internos → REJECT ou exige sanitização | REJECT / sanitização |
-| **C3 Não-Duplicado** | Passa no `dedup_check` contra as 1451 | REJECT (likely_duplicate) |
+| **C3 Não-Duplicado** | Passa no `dedup_check` contra as 1473 | REJECT (likely_duplicate) |
 | **C4 Seguro** | Sem credenciais, sem comando destrutivo não-gated; `risk` classificado `safe`/`caution`/`dangerous` | HUMAN_REVIEW / REJECT |
 | **C5 Auto-contido** | Texto suficiente para virar `SKILL.md` acionável sem ida-e-volta com o autor | HUMAN_REVIEW |
 
@@ -246,14 +246,28 @@ O crédito só é auditável se viver no **mesmo par `frontmatter` + `skills_ind
 - `contributed_via` — `issue_url`
 - `date_added` — **data do merge**
 
-`draft_skill.py` preenche a partir do registro do inbox; `update_index.py` copia para o índice. Para as 1451 skills existentes o campo fica **ausente / `legacy`** — não reescrever em massa. `validate_repo.py` ganha a checagem: se `origin ∈ {vscode-claude, pipeline-studio:*}`, então `author` e `contributed_via` são **obrigatórios**. Pós-merge, o robô fecha a Issue de origem com comentário (`promovido em <skill_id> via #<PR>`), fechando o loop de crédito de volta ao autor.
+`draft_skill.py` preenche a partir do registro do inbox; `update_index.py` copia para o índice. Para skills existentes sem proveniência registrada, o campo fica **ausente / `legacy`** — não reescrever em massa. `validate_repo.py` ganha a checagem: se `origin ∈ {vscode-claude, pipeline-studio:*}`, então `author` e `contributed_via` são **obrigatórios**. Pós-merge, o robô fecha a Issue de origem com comentário (`promovido em <skill_id> via #<PR>`), fechando o loop de crédito de volta ao autor.
+
+## Catálogo canônico do Oracle (`overcore/catalog/`)
+
+Fonte de verdade das entradas operacionais que **Pipeline Studio** e **Oracle** resolvem em runtime. O Agent-SDK **não** guarda cópia alternativa (nem do schema) — consome este catálogo por snapshot versionado no cache do Electron; **nunca** lê este working tree em produção. Layout: `catalog.schema.json` (JSON Schema Draft 2020-12; **`schemaVersion 0.3.0`** = 0.1.0 promovido da Fase 1 + 0.2.0 `telemetry.executionRecord` + 0.3.0 `skills.onDemand`), `catalog.json` (envelope `catalogVersion` + `agents[]` como índice determinístico), `skill-dependencies.json` (**derivado auto-gerado** por `gen_skill_dependencies.py`, com hashes das fontes), `validate_catalog.py` (schema + semântica + resolução índice/FS + sincronização de deps + segredos; `--suite`), `test_dep_sync.py` e `fixtures/`. Ver `overcore/catalog/README.md`.
+
+Entradas atuais (PRB-017A, todas `status: draft` — validáveis, mas ativação real bloqueada por PRB-016):
+
+| id | kind | tier | skills próprias (req + opt) | rota onDemand | delega |
+|---|---|---|---|---|---|
+| `oracle-coordinator` | agent | sonnet → opus | `requirements-discovery`, `architecture`, `blueprint`, `agent-orchestrator` (+ `verification-before-completion`, `create-issue-gate`) | `brainstorming` | `oracle-planner`, `oracle-validator` |
+| `oracle-planner` | subagent | sonnet | `blueprint`, `create-issue-gate` (+ `architecture`) | — | — |
+| `oracle-validator` | subagent | sonnet → opus | `verification-before-completion`, `closed-loop-delivery` (+ `advanced-evaluation`, `create-issue-gate`) | — | — |
+
+Cobertura: **descoberta de requisito** = `requirements-discovery` (skill canônica do Overcore, estritamente conversacional, `risk: safe`) + `architecture`; planejamento = `blueprint`; orquestração = `agent-orchestrator`; verificação = `verification-before-completion`; critérios de aceite = `create-issue-gate` + `closed-loop-delivery`. **`brainstorming` NÃO foi removida** — é a etapa criativa POSTERIOR à descoberta, oferecida como rota `skills.onDemand` (triggers: pedido explícito / trabalho criativo / nova funcionalidade-arquitetura-fluxo-UI / 2+ soluções plausíveis / requirements-discovery com espaço aberto; trigger automático pede confirmação; não autoriza implementação/escrita/commit; handoff para `blueprint`). Essas garantias são **obrigatórias** (ausência é inválida — schema `if/then` + validador + resolvedor falham fechado): `autoTriggerRequiresConfirmation:true`, `triggers` não-vazio/sem duplicatas, `authorizes:[]`, `forbids ⊇ {implementacao, escrita-de-arquivo, commit}`, `handoffTo` resolvível; máx. 1 rota por entrada. **Política de carga** (`loadPolicy:"replace"` + `replaces`): ativar a rota nunca ultrapassa `maxTotal` — conjunto efetivo = `(required+optional − replaces) + skill`; a rota canônica substitui `verification-before-completion` ⇒ efetivo 6. A composta `acceptance-orchestrator` é **evitada** (declara sub-skills obrigatórias) em favor de folhas.
+
+Regras que o validador **e** o resolvedor aplicam: **skills próprias** resolvidas do `skills_index.json` **e** com `skills/<id>/SKILL.md`, `targets.claude=supported`, **≤6** skills (rotas `onDemand` não contam, mas são validadas); **risco `unknown`/não-safe proibido em entrada mutável** (não escreve/commita/implementa silenciosamente); **dependências obrigatórias — fonte ÚNICA:** origem no frontmatter (`requiredSubSkills`) → propagada ao índice → projeção derivada com **hash**; `check_dep_sync` exige igualdade origem↔índice↔projeção e falha fechado em divergência; política de nível 3 nos CAMPOS (`agent:run`/`oracle:despacho:executar` em `tools.denied` + gate `human-approval`); correlação mínima de telemetria; **`telemetry.executionRecord` completo**. O consumidor aplica o **JSON Schema Draft 2020-12 completo** (schema do snapshot, via `@cfworker/json-schema`) e falha fechado. Build fiel: `npm run build` (corrigido — ver falso-verde BLG-003/PRB-018).
 
 ## O que falta construir
 
-- [ ] **`agents/curator/`** completo: árvore de diretórios espelhando o `researcher/` (orchestration, queue, runs, rubrics, templates, runbooks, scripts, ledgers).
-- [ ] **`orchestration/config.json`** do curator (budgets/intervals/human_review/gates/feeds/mode) + agendador (launchd/task-scheduler).
-- [ ] **Scripts do curator**: `ingest_issues.py`, `triage.py`, `dedup_check.py`, `draft_skill.py`, `update_index.py`, `open_pr.py`, `loop_{common,step,discover,daily,status}.py`, `validate_run.py`.
-- [ ] **`rubrics/promotion.md`** (gates C1–C5 + scoring) + `dedup.md` + `safety.md`.
+- [x] **`agents/curator/`**: árvore base, configuração, rubricas e scripts estão presentes.
+- [ ] **Agendamento operacional** do Curator (Task Scheduler/launchd) configurado no ambiente do mantenedor.
 - [ ] **`templates/`**: `skill-draft.md`, `contribution-evaluation.json`, `dedup-report.json`, `pr-body.md`.
 - [ ] **`runbooks/`**: `continuous-operation.md`, `pr-readiness.md`, `ingest-issues.md`.
 - [ ] **Extensão do schema** do `skills_index.json` e do frontmatter para os campos de crédito (`origin`, `author`, `contributed_via`).

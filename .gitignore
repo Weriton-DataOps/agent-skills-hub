@@ -35,3 +35,10 @@ contributions/processed/
 # nunca versionar segredos
 **/.env
 !**/.env.example
+
+# monitor OverCore — dados/log de runtime (por máquina; o código sobe, os dados não)
+overcore-monitor/eventos.jsonl
+overcore-monitor/web.log
+
+# cópias locais do showcase servidas em localhost (baixadas do próprio repo — circular)
+overcore-site/

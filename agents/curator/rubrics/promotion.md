@@ -14,7 +14,7 @@
 |---|---|---|
 | **C1 · Acionável** | Diz **o que fazer, quando e o que evitar** — não é só conhecimento de fundo. | HUMAN_REVIEW |
 | **C2 · Genérico/Reutilizável** | Vale **fora** do contexto onde o bug nasceu. Nomes internos / caminhos / segredos → sanitizar ou REJECT. | REJECT / sanitização |
-| **C3 · Não-Duplicado** | Passa no `dedup_check` contra as 1465 skills. | REJECT (com ponteiro para a skill existente) |
+| **C3 · Não-Duplicado** | Passa no `dedup_check` contra as 1473 skills. | REJECT (com ponteiro para a skill existente) |
 | **C4 · Seguro** | Sem credenciais, sem comando destrutivo não-gated. `risk` classificado `safe`/`caution`/`dangerous`. | HUMAN_REVIEW / REJECT |
 | **C5 · Auto-contido** | Texto suficiente para virar `SKILL.md` acionável **sem** ida-e-volta com o autor. | HUMAN_REVIEW |
 

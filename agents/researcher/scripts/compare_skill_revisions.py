@@ -107,7 +107,7 @@ def main() -> int:
         "candidate_b": b,
         "section_delta": section_delta,
         "deterministic_recommendation": recommendation,
-        "note": "Use researcher/rubrics/pairwise-skill-revision.md for final semantic judgment.",
+        "note": "Use agents/researcher/rubrics/pairwise-skill-revision.md for final semantic judgment.",
     }
     if args.json:
         print(json.dumps(result, indent=2))

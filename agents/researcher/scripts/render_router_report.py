@@ -10,10 +10,10 @@ Reads per-run JSON files produced by runRouter.ts and emits:
   - Per-rep consistency check (within-prompt-model)
 
 Usage:
-  python3 researcher/scripts/render_router_report.py \
-      --results researcher/benchmarks/router/results/<date>-<seed> \
-      --fixture researcher/benchmarks/router/prompts.jsonl \
-      --output researcher/benchmarks/router/results-published/<date>.md
+  python3 agents/researcher/scripts/render_router_report.py \
+      --results agents/researcher/benchmarks/router/results/<date>-<seed> \
+      --fixture agents/researcher/benchmarks/router/prompts.jsonl \
+      --output agents/researcher/benchmarks/router/results-published/<date>.md
 
 The output is committed; raw per-run JSONs stay gitignored.
 """
@@ -233,7 +233,7 @@ def render(summary: dict[str, dict[str, Any]], confusion: dict[str, dict[str, in
     lines.append("Reproduce these numbers exactly with:")
     lines.append("")
     lines.append("```bash")
-    lines.append("cd researcher/benchmarks/sdk-runner")
+    lines.append("cd agents/researcher/benchmarks/sdk-runner")
     lines.append("npm install")
     lines.append("export CURSOR_API_KEY=<your-key>")
     lines.append(

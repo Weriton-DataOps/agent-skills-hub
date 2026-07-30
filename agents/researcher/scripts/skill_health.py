@@ -5,7 +5,7 @@ Produces a quality score per skill plus a corpus aggregate. Catches drift before
 users notice: missing sections, stale claims, dead internal links, weak gotchas.
 
 Run with no arguments for the default report. Use --json for machine output.
-Output is written to researcher/reports/skill-health.json by default and can be
+Output is written to agents/researcher/reports/skill-health.json by default and can be
 piped into the daily snapshot for longitudinal trend tracking.
 
 This script is intentionally deterministic. It does not call any LLM and does
@@ -25,13 +25,13 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 SKILLS_DIR = ROOT / "skills"
-CLAIMS_FILE = ROOT / "researcher" / "claims" / "index.jsonl"
-MECHANISMS_FILE = ROOT / "researcher" / "mechanisms" / "registry.jsonl"
-ACTIVATION_FILE = ROOT / "researcher" / "fixtures" / "activation-cases.jsonl"
-DEFAULT_OUTPUT = ROOT / "researcher" / "reports" / "skill-health.json"
-HISTORY_FILE = ROOT / "researcher" / "reports" / "skill-health-history.jsonl"
+CLAIMS_FILE = ROOT / "agents" / "researcher" / "claims" / "index.jsonl"
+MECHANISMS_FILE = ROOT / "agents" / "researcher" / "mechanisms" / "registry.jsonl"
+ACTIVATION_FILE = ROOT / "agents" / "researcher" / "fixtures" / "activation-cases.jsonl"
+DEFAULT_OUTPUT = ROOT / "agents" / "researcher" / "reports" / "skill-health.json"
+HISTORY_FILE = ROOT / "agents" / "researcher" / "reports" / "skill-health-history.jsonl"
 
 REQUIRED_SECTIONS = [
     "## When to Activate",

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>◆ OverCore · Monitor</title>
+<style>
+  :root{
+    --bg:#08080c;--panel:#12121b;--panel2:#161622;--line:#23233340;--line2:#2b2b3d;
+    --txt:#e7e7f0;--dim:#8a8a99;--dim2:#5c5c6e;--oc:#c07bff;--oc-glow:#c07bff55;
+    --mono:ui-monospace,"JetBrains Mono",Consolas,monospace;
+    --green:#4ade80;--cyan:#38bdf8;--yellow:#facc15;--red:#f87171;--blue:#818cf8;--bgreen:#86efac;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(1300px 800px at 15% -10%,#16121f,var(--bg) 55%);
+       color:var(--txt);font:13.5px/1.5 "Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .mono{font-family:var(--mono)}
+  header{position:sticky;top:0;z-index:9;padding:16px 24px 13px;background:#0a0a10ee;border-bottom:1px solid var(--line2);backdrop-filter:blur(6px)}
+  .brandrow{display:flex;align-items:center;gap:14px}
+  .brand{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .brand .dia{color:var(--oc);filter:drop-shadow(0 0 6px var(--oc-glow))}
+  .brand small{color:var(--dim);font-weight:500}
+  .nav{display:flex;gap:6px;margin-left:2px}
+  .nav a{font:600 11px var(--mono);color:var(--dim);padding:4px 10px;border:1px solid var(--line2);border-radius:7px;text-decoration:none}
+  .nav a.on{color:var(--oc);border-color:#6a3fb0;background:#2a114733}
+  .date{margin-left:auto;text-align:right;font:600 15px var(--mono);color:#dcdce8}
+  .date small{display:block;color:var(--dim2);font-size:10px;font-weight:500}
+  .tiles{display:flex;margin-top:13px}
+  .tile{flex:1;text-align:center;padding:2px 6px;border-right:1px solid var(--line)}
+  .tile:last-child{border-right:0}
+  .tile .v{font:700 22px var(--mono)}.tile .l{font-size:10px;color:var(--dim2);letter-spacing:.6px;margin-top:2px}
+
+  main{padding:18px 20px 34px;display:flex;gap:16px;overflow-x:auto;align-items:flex-start}
+  .col{background:var(--panel);border:1px solid var(--line2);border-radius:14px;width:440px;min-width:440px;flex:none;overflow:hidden}
+  .col.oc{border-color:#6a3fb0;box-shadow:inset 0 0 60px #c07bff08}
+  .chead{padding:14px 16px;border-bottom:1px solid var(--line)}
+  .chead .top{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px}
+  .chead .ocbadge{font:700 9px var(--mono);color:var(--oc);border:1px solid #6a3fb0;background:#2a1147;border-radius:4px;padding:2px 6px}
+  .chead .sess{margin-left:auto;font:600 11px var(--mono);color:var(--dim2)}
+  .chead .spend{display:flex;align-items:center;gap:10px;margin-top:9px;font:700 15px var(--mono);color:var(--oc)}
+  .chead .spend .bar{flex:1;height:6px;border-radius:3px;background:#1c1c28;overflow:hidden}
+  .chead .spend .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--oc),#7c5cff)}
+  .cbody{padding:14px 16px;display:flex;flex-direction:column;gap:15px}
+  .seclbl{font:700 10px var(--mono);color:var(--dim2);letter-spacing:.8px;margin-bottom:7px}
+
+  /* EXECUTANDO AGORA */
+  .now{background:var(--panel2);border:1px solid #2b6a45;border-radius:11px;padding:13px 14px}
+  .now.oc{border-color:#7a4fc0;background:linear-gradient(180deg,#1a1226,#161622)}
+  .now .nh{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px}
+  .now .nh .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 9px #4ade80cc;animation:pulse 1.2s infinite;flex:none}
+  .odot{width:9px;height:9px;border-radius:50%;background:#3a3a48;flex:none}
+  .now .cmd{margin-top:9px;font:12.5px var(--mono);color:#cdd0dc;background:#0d0d14;border:1px solid var(--line2);border-radius:7px;padding:8px 10px;word-break:break-word}
+  .now .cmd .tool{color:var(--yellow);font-weight:700}
+  .now .cmd .sk{color:var(--oc);font-weight:700}
+  .now .ns{margin-top:8px;font:600 11.5px var(--mono);color:var(--dim)}
+  .parado{color:var(--dim2);font-size:12.5px;font-style:italic;padding:6px 2px}
+
+  /* AÇÕES RECENTES (comandos ao vivo) */
+  .rec{display:flex;gap:9px;font:11.5px var(--mono);padding:5px 0;color:var(--dim);border-bottom:1px solid #1a1a2433}
+  .rec time{color:var(--dim2);flex:none;width:40px;padding-top:1px}
+  .rec .rk{flex:none;width:16px;text-align:center;padding-top:1px}
+  .rec .lb{flex:1;color:#c6c6d6;word-break:break-word}
+  .rec.skill .lb{color:var(--oc)} .rec.agente .lb{color:var(--cyan)}
+  .rec .lb b{color:var(--yellow);font-weight:700}
+
+  /* AGENTES INVOCADOS + acoes */
+  .agent{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .agent.oc{border-color:#5a3f8f}
+  .agh{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13px}
+  .agh .agt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .agh .role{font:700 8.5px var(--mono);padding:1px 5px;border-radius:4px;background:#0e2233;color:var(--cyan);border:1px solid #1e3a5f}
+  .agm{margin-top:5px;font:600 11px var(--mono);color:var(--dim)}
+  .agtools{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+  .tchip{font:600 10px var(--mono);padding:2px 6px;border-radius:5px;background:#191926;color:#b9b9cc;border:1px solid var(--line2)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font:600 11px var(--mono);padding:3px 8px;border-radius:5px;background:#2a1147;color:var(--oc);border:1px solid #6a3fb0}
+  .empty{color:var(--dim2);font-size:11.5px;font-style:italic}
+  ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#26263a;border-radius:6px}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brandrow">
+    <div class="brand"><span class="dia">◆</span> OverCore <small>· Monitor — por projeto, ao vivo</small></div>
+    <nav class="nav"><a href="/" class="on">▦ por projeto</a><a href="/exec">⚡ execução</a></nav>
+    <div class="date"><span id="date">—</span><small id="upd">atualizando…</small></div>
+  </div>
+  <div class="tiles" id="tiles"></div>
+</header>
+<main id="cols"></main>
+<script>
+const esc=s=>(s==null?"":String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function hnum(n){if(n==null)return "0";n=+n;const u=["","k","M","B"];let i=0;while(Math.abs(n)>=1000&&i<3){n/=1000;i++;}return (i?n.toFixed(1):n.toFixed(0))+u[i];}
+const hhmm=ts=>ts?new Date(ts*1000).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):"--:--";
+function tile(v,l){return `<div class="tile"><div class="v mono">${v}</div><div class="l">${l}</div></div>`;}
+const recIcon=k=>k==="skill"?"⚡":k==="agente"?"🤖":"›";
+// destaca o nome da ferramenta (1a palavra) no comando
+function cmdfmt(label){const m=String(label).match(/^(\S+)\s*(.*)$/);return m?`<b>${esc(m[1])}</b> ${esc(m[2])}`:esc(label);}
+
+function projCol(p, maxTok){
+  const oc=p.overcore; let body="";
+  // EXECUTANDO AGORA
+  body += `<div><div class="seclbl" style="color:${p.active.length?'var(--green)':'var(--dim2)'}">● EXECUTANDO AGORA</div>`;
+  if(p.active.length){
+    body += p.active.map(a=>`<div class="now ${a.overcore?'oc':''}" style="margin-bottom:8px">
+      <div class="nh"><span class="dot"></span>${a.overcore?'<span class="dia">◆</span>':''}<span class="t">${a.sub?'↳ ':''}${esc(a.title)}</span></div>
+      <div class="cmd"><span class="tool">${esc(a.tool||'—')}</span>${a.skill?' <span class="sk">/'+esc(a.skill)+'</span>':''} ${esc(a.action||'')}</div>
+      <div class="ns">${a.turns} turnos · ${hnum(a.tokens)} tokens · ${esc(a.model)}</div></div>`).join("");
+  } else body += `<div class="parado">parado — nada executando agora</div>`;
+  body += `</div>`;
+  // AÇÕES RECENTES (comandos ao vivo)
+  if(p.recent && p.recent.length){
+    body += `<div><div class="seclbl">AÇÕES / COMANDOS RECENTES</div>`+
+      p.recent.map(r=>`<div class="rec ${r.kind}"><time>${hhmm(r.ts)}</time><span class="rk">${recIcon(r.kind)}</span><span class="lb">${r.kind==='tool'?cmdfmt(r.label):esc(r.label)}</span></div>`).join("")+`</div>`;
+  }
+  // AGENTES INVOCADOS + acoes de cada um
+  if(p.agents_detail && p.agents_detail.length){
+    body += `<div><div class="seclbl">AGENTES INVOCADOS · ${p.agents_detail.length}</div>`+
+      p.agents_detail.map(a=>`<div class="agent ${a.overcore?'oc':''}">
+        <div class="agh">${a.active?'<span class="dot"></span>':'<span class="odot"></span>'}${a.overcore?'<span class="dia">◆</span>':''}<span class="agt">${a.sub?'↳ ':''}${esc(a.title)}</span>${a.sub?'<span class="role">SUBAGENTE</span>':''}</div>
+        <div class="agm">${a.turns} turnos · ${hnum(a.tokens)} tokens · ${esc(a.model)}${a.skills.length?' · '+a.skills.map(s=>'/'+esc(s)).join(' '):''}</div>
+        ${a.tools.length?`<div class="agtools">`+a.tools.map(([t,c])=>`<span class="tchip">${esc(t)}${c>1?' ×'+c:''}</span>`).join("")+`</div>`:''}
+      </div>`).join("")+`</div>`;
+  }
+  // SKILLS
+  body += `<div><div class="seclbl">SKILLS USADAS</div>`+
+    (p.skills&&p.skills.length ? `<div class="chips">`+p.skills.map(([s,c])=>`<span class="chip">${esc(s)}${c>1?' ×'+c:''}</span>`).join("")+`</div>` : `<div class="empty">nenhuma skill /comando</div>`)+`</div>`;
+
+  return `<div class="col ${oc?'oc':''}">
+    <div class="chead">
+      <div class="top">${oc?'<span class="dia">◆</span>':''}${esc(p.name)}${oc?'<span class="ocbadge">OVERCORE</span>':''}<span class="sess">${p.sessions} sess.</span></div>
+      <div class="spend">${hnum(p.tokens)} tokens<div class="bar"><i style="width:${Math.round(p.tokens/maxTok*100)}%"></i></div></div>
+    </div>
+    <div class="cbody">${body}</div>
+  </div>`;
+}
+
+function render(d){
+  if(d.error){document.getElementById("cols").innerHTML=`<div class="empty" style="padding:30px">erro: ${esc(d.error)}</div>`;return;}
+  if(d.loading){document.getElementById("upd").textContent="carregando…";return;}
+  document.getElementById("date").textContent="hoje · "+d.date;
+  document.getElementById("upd").textContent="atualizado "+new Date().toLocaleTimeString("pt-BR",{hour12:false});
+  const t=d.totals, nAtivos=d.projects.reduce((s,p)=>s+p.active.length,0);
+  document.getElementById("tiles").innerHTML=
+    tile(t.projetos,"PROJETOS")+tile(nAtivos,"EXECUTANDO")+tile(t.sessoes,"SESSÕES")+
+    tile(t.subagentes,"SUBAGENTES")+tile(t.tools,"AÇÕES")+tile(hnum(t.tokens),"TOKENS (TOTAL)");
+  const maxTok=Math.max(1,...d.projects.map(p=>p.tokens));
+  document.getElementById("cols").innerHTML = d.projects.length
+    ? d.projects.map(p=>projCol(p,maxTok)).join("")
+    : `<div class="empty" style="padding:30px">nenhum projeto com atividade hoje</div>`;
+}
+async function tick(){try{const r=await fetch("/day",{cache:"no-store"});render(await r.json());}catch(e){document.getElementById("upd").textContent="offline";}}
+setInterval(tick,4000);tick();
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# Release consumido pelo atualizador do Studio: LF FIXO (independente de core.autocrlf) para
+# que os checksums do manifesto batam byte-a-byte com os blobs do Git em qualquer maquina.
+* text eol=lf

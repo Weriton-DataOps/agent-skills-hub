@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 STOPWORDS = {
     "the",
     "and",
@@ -130,7 +130,7 @@ def main() -> int:
     parser.add_argument(
         "--cases",
         type=Path,
-        default=ROOT / "researcher" / "fixtures" / "activation-cases.jsonl",
+        default=ROOT / "agents" / "researcher" / "fixtures" / "activation-cases.jsonl",
     )
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()

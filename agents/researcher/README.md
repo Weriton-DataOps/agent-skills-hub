@@ -69,13 +69,13 @@ discover -> triage -> evaluate -> extract -> map -> draft -> validate -> prepare
 ## Local Commands
 
 ```bash
-python researcher/scripts/validate_repo.py
-python researcher/scripts/validate_run.py --run-dir researcher/runs/<run-id>
-python researcher/scripts/research_loop.py init --title "Source title" --url "https://example.com/source"
-python researcher/scripts/novelty_check.py --file researcher/fixtures/skill-proposals/harness-engineering-proposal.md
-python researcher/scripts/compare_skill_revisions.py skills/evaluation/SKILL.md skills/advanced-evaluation/SKILL.md
-python researcher/scripts/check_activation_cases.py
-python researcher/scripts/run_benchmarks.py
+python agents/researcher/scripts/validate_repo.py
+python agents/researcher/scripts/validate_run.py --run-dir agents/researcher/runs/<run-id>
+python agents/researcher/scripts/research_loop.py init --title "Source title" --url "https://example.com/source"
+python agents/researcher/scripts/novelty_check.py --file agents/researcher/fixtures/skill-proposals/harness-engineering-proposal.md
+python agents/researcher/scripts/compare_skill_revisions.py skills/evaluation/SKILL.md skills/advanced-evaluation/SKILL.md
+python agents/researcher/scripts/check_activation_cases.py
+python agents/researcher/scripts/run_benchmarks.py
 ```
 
 ## Current Published Research Skills
