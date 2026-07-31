@@ -42,7 +42,14 @@ SKILLS_INDEX = os.path.join(HUB_ROOT, "docs", "indices", "skills_index.json")
 OUT = HERE
 
 # publishedAt FIXO (epoch) — determinismo. Não usar relógio.
-RELEASE_PUBLISHED_AT = 1785196800  # 2026-07-29T00:00:00Z
+RELEASE_PUBLISHED_AT = 1785456000  # 2026-07-31T00:00:00Z — release candidate 0.4.0 (19 agentes do Pipeline)
+RELEASE_VERSION = "0.4.0"
+RELEASE_CHANGELOG = (
+    "OverCore 0.4.0: adiciona os 19 agentes canônicos do Pipeline "
+    "(discovery, prd-generator, prd-validator, prd-completo, tech-decisions, spec-generation, spec-enricher, "
+    "planner, sprint-validator, coder, evaluator, design-studio, safegate, acceptance-review, intake, harness, "
+    "database, security, code-quality) ao lado do oracle-coordinator e subagentes; catálogo promovido a active."
+)
 MANIFEST_FORMAT_VERSION = "1.0.0"
 CHANNEL = "stable"
 MIN_STUDIO_VERSION = "0.1.0"
@@ -167,7 +174,7 @@ def build_manifest(files, channel=CHANNEL):
     manifest = {
         "manifestFormatVersion": MANIFEST_FORMAT_VERSION,
         "name": "overcore",
-        "version": "0.3.0",
+        "version": RELEASE_VERSION,
         "channel": channel,
         "minStudioVersion": MIN_STUDIO_VERSION,
         "catalog": "catalog.json",
@@ -177,7 +184,7 @@ def build_manifest(files, channel=CHANNEL):
         "declarative": declarative,
         "executable": [],
         "checksums": {p: checksums[p] for p in declarative},
-        "changelog": "PRB-016: primeiro release consumível — catálogo 0.3.0 promovido a active.",
+        "changelog": RELEASE_CHANGELOG,
         "publishedAt": RELEASE_PUBLISHED_AT,
     }
     return manifest

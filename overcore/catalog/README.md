@@ -24,11 +24,14 @@ overcore/catalog/
 
 - **schemaVersion** (`0.3.0`): 0.1.0 (promovido da Fase 1) → 0.2.0 (+`telemetry.executionRecord`)
   → **0.3.0** (+`skills.onDemand`). **Sem compatibilidade fictícia** — consumidores exigem 0.3.0.
-- **catalogVersion** (`0.3.0`): versão do conteúdo. **version** (por entrada): SemVer da definição.
+- **catalogVersion** (`0.4.0`): versão do conteúdo (0.3.0 → **0.4.0** com a inclusão dos 19 agentes
+  canônicos do Pipeline Studio). **version** (por entrada): SemVer da definição, independente do catálogo.
 
 `agents[]` em ordem kebab ascendente por `id` é o índice determinístico.
 
-## Entradas atuais (PRB-017A)
+## Entradas atuais (22 no total — 3 Oracle + 19 Pipeline)
+
+### Núcleo Oracle (PRB-017A)
 
 | id | kind | modelo | skills obrigatórias | opcionais | rota onDemand | delega |
 |---|---|---|---|---|---|---|
@@ -36,7 +39,19 @@ overcore/catalog/
 | `oracle-planner` | subagent | sonnet | blueprint, create-issue-gate | architecture | — | — |
 | `oracle-validator` | subagent | sonnet→opus | verification-before-completion, closed-loop-delivery | advanced-evaluation, create-issue-gate | — | — |
 
-Cobertura: **descoberta de requisito** → `requirements-discovery` (skill canônica do Overcore,
+### 19 agentes canônicos do Pipeline Studio (PRB-021-B)
+
+Migrados das definições reais do Pipeline (`src/agents/definitions.ts`) para o formato canônico
+(role/phase/mode, model/engine, tools, gates verdict/harness, permissão, telemetria completa,
+delegação e `compatibility.legacyRef`). `kind: agent`, `provenance.origin: pipeline-studio`. Skills
+recuradas para o pool elegível `safe` + `claude-supported` (ver o relatório de validação local):
+
+`discovery` · `prd-generator` · `prd-validator` · `prd-completo` · `tech-decisions` ·
+`spec-generation` · `spec-enricher` · `planner` · `sprint-validator` · `coder` · `evaluator` ·
+`design-studio` · `safegate` · `acceptance-review` · `intake` · `harness` · `database` · `security` ·
+`code-quality`. Índice `agents[]` em ordem kebab ascendente por `id` (determinístico).
+
+Cobertura do núcleo Oracle: **descoberta de requisito** → `requirements-discovery` (skill canônica do Overcore,
 estritamente conversacional, `risk: safe`) + `architecture`; **planejamento** → `blueprint`;
 **orquestração** → `agent-orchestrator`; **verificação** → `verification-before-completion`;
 **critérios de aceite** → `create-issue-gate` + `closed-loop-delivery`.
@@ -126,6 +141,12 @@ monta o snapshot copiando os **arquivos reais do hub**.
 
 ## Estado (honesto)
 
-`status: draft` em todas as entradas: validável, mas ativação real bloqueada por **PRB-016** (sem
-`<userData>/overcore/active.json`, sem resolução de produção). Conversa e despacho indisponíveis no
-runtime real. Próximo passo: PRB-016.
+**PRB-016 concluída** — o release consumível existe e é validado: `overcore/release/` traz o
+`manifest.json` (v0.4.0), o `catalog.json` **promovido a `active`**, `skills-meta.json`,
+`skill-dependencies.json`, os `SKILL.md` materializados e os checksums SHA-256. O `gen_release.py`
+promove `draft → active` na cópia de release; no **catálogo-fonte** as entradas seguem `draft` por
+design (staging canônico) — não é bloqueio.
+
+A ativação no Studio real depende de **publicar** a branch `feat/pipeline-agents-catalog` e ativar o
+novo SHA via `overcore:check` → preflight → activate. Essa etapa (PRB-021-B) permanece **local e
+pendente** nesta rodada — não bloqueada pela PRB-016. Nada foi publicado, mesclado ou ativado.

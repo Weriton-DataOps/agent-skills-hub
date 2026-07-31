@@ -1,9 +1,10 @@
-# Overcore — Release candidate (PRB-016)
+# Overcore — Release candidate 0.4.0
 
-Snapshot **consumível pelo Studio**: o atualizador do Agent-SDK baixa este diretório por SHA de
-commit exato, valida integralmente (manifesto, checksums, schema, resolução) e o instala no cache
-versionado (`<userData>/overcore/versions/<sha>/`). Gerado de forma **determinística** a partir do
-catálogo canônico (`overcore/catalog/`).
+Snapshot **consumível pelo Studio** (versão **0.4.0** — inclui os 19 agentes canônicos do Pipeline
+Studio ao lado do oracle-coordinator e subagentes): o atualizador do Agent-SDK baixa este diretório
+por SHA de commit exato, valida integralmente (manifesto, checksums, schema, resolução) e o instala
+no cache versionado (`<userData>/overcore/versions/<sha>/`). Gerado de forma **determinística** a
+partir do catálogo canônico (`overcore/catalog/`).
 
 ## Conteúdo
 
@@ -18,7 +19,8 @@ skills/<id>/SKILL.md      cada SKILL.md referenciado pelo catálogo
 
 ## Manifesto
 
-- `manifestFormatVersion`, `name`, `version` (0.3.0), `channel`, `minStudioVersion`;
+- `manifestFormatVersion` (1.0.0), `name`, `version` (**0.4.0**), `channel`, `minStudioVersion` (0.1.0);
+- `changelog`: nota do release (0.4.0 = inclusão dos 19 agentes do Pipeline);
 - `catalog`/`catalogSchema`/`dependencies`/`skillsIndex`: caminhos relativos;
 - `declarative[]`: todos os arquivos; `executable[]`: **vazio** (rejeitado na ativação);
 - `checksums`: SHA-256 de **cada** arquivo declarativo (o manifesto **não** entra na própria tabela);
@@ -41,9 +43,11 @@ não altera o catálogo de desenvolvimento.
 
 ## Publicação
 
-Este release ainda **não está no remoto**. O atualizador só o consome quando o commit que o contém
-existir no ref configurado (`stable → main`), em `overcore/release/manifest.json`. Até lá, a ativação
-real fica gated (`canActivate=false`). Ver `Oracle/arquitetura/REGISTRO_PROBLEMAS.md` (PRB-016).
+Este release ainda **não está no remoto** — a publicação da branch `feat/pipeline-agents-catalog` é
+uma etapa local pendente (**PRB-021-B**), não um bloqueio da PRB-016. O atualizador só o consome
+quando o commit que o contém existir no ref configurado (`stable → main`), em
+`overcore/release/manifest.json`. Até lá, a ativação real fica gated (`canActivate=false`). Ver
+`Oracle/arquitetura/REGISTRO_PROBLEMAS.md` (PRB-021-B).
 
 ## Projeção de dependências podada (2026-07-30)
 
