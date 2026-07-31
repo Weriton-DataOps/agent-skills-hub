@@ -62,5 +62,5 @@
     "skills/verification-before-completion/SKILL.md": "ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"
   },
   "changelog": "OverCore 0.4.0: adiciona os 19 agentes canônicos do Pipeline (discovery, prd-generator, prd-validator, prd-completo, tech-decisions, spec-generation, spec-enricher, planner, sprint-validator, coder, evaluator, design-studio, safegate, acceptance-review, intake, harness, database, security, code-quality) ao lado do oracle-coordinator e subagentes; catálogo promovido a active.",
-  "publishedAt": 1785369600
+  "publishedAt": 1785456000
 }

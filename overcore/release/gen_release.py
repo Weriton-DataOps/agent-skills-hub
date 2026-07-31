@@ -42,7 +42,7 @@ SKILLS_INDEX = os.path.join(HUB_ROOT, "docs", "indices", "skills_index.json")
 OUT = HERE
 
 # publishedAt FIXO (epoch) — determinismo. Não usar relógio.
-RELEASE_PUBLISHED_AT = 1785369600  # 2026-07-31T00:00:00Z — release candidate 0.4.0 (19 agentes do Pipeline)
+RELEASE_PUBLISHED_AT = 1785456000  # 2026-07-31T00:00:00Z — release candidate 0.4.0 (19 agentes do Pipeline)
 RELEASE_VERSION = "0.4.0"
 RELEASE_CHANGELOG = (
     "OverCore 0.4.0: adiciona os 19 agentes canônicos do Pipeline "
