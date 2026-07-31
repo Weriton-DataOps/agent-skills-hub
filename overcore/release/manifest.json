@@ -1,7 +1,7 @@
 {
   "manifestFormatVersion": "1.0.0",
   "name": "overcore",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "channel": "stable",
   "minStudioVersion": "0.1.0",
   "catalog": "catalog.json",
@@ -36,7 +36,7 @@
   ],
   "executable": [],
   "checksums": {
-    "catalog.json": "38a26021b24acd0f0c23adbc89643506d98e3f104c17c975297667cb30f19708",
+    "catalog.json": "6191d298e250e746220781f539420d19d6f5bb09948cb57ad86d58e0aa2788ad",
     "catalog.schema.json": "a24fe3415f112c8eb58138316966baaa0a5c126f48f8855ddfd25b3514374a03",
     "skill-dependencies.json": "72c49e210d7a55c5da8d8254feca6ee2f5ea4e11432b832768b87f8f5f6f0b38",
     "skills-meta.json": "9d897de107b939e78b2a0d5cf55064ec1ecbbec4568d9a4fa8a58cb1711e6196",
@@ -61,6 +61,6 @@
     "skills/safegate-exposicao-externa/SKILL.md": "4f9e6300335e6c6d1dc4d0ff04638a9774c6b4f69a2d243e5b0a21e848e1cf86",
     "skills/verification-before-completion/SKILL.md": "ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"
   },
-  "changelog": "PRB-016: primeiro release consumível — catálogo 0.3.0 promovido a active.",
-  "publishedAt": 1785196800
+  "changelog": "OverCore 0.4.0: adiciona os 19 agentes canônicos do Pipeline (discovery, prd-generator, prd-validator, prd-completo, tech-decisions, spec-generation, spec-enricher, planner, sprint-validator, coder, evaluator, design-studio, safegate, acceptance-review, intake, harness, database, security, code-quality) ao lado do oracle-coordinator e subagentes; catálogo promovido a active.",
+  "publishedAt": 1785369600
 }

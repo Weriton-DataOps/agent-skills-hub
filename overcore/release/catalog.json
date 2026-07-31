@@ -1,7 +1,7 @@
 {
   "schemaVersion": "0.3.0",
   "catalogVersion": "0.4.0",
-  "description": "Catálogo canônico do Overcore — PRB-017A. oracle-coordinator + subagentes com skills reais resolvidas do índice do hub. Descoberta de requisito permanente via `requirements-discovery`; `brainstorming` é rota SOB DEMANDA (skills.onDemand) com triggers/confirmação/handoff para blueprint — não substitui a descoberta nem é sempre carregada. Dependências obrigatórias tratadas por fonte única (frontmatter→índice→projeção com hash). Risco `unknown` tratado por regra dura (entradas não-mutáveis). Contrato completo de telemetria (executionRecord). Ativação real bloqueada por PRB-016.",
+  "description": "Catálogo canônico do Overcore (catalogVersion 0.4.0). oracle-coordinator + subagentes (oracle-planner, oracle-validator) e os 19 agentes canônicos do Pipeline Studio (discovery, prd-generator, prd-validator, prd-completo, tech-decisions, spec-generation, spec-enricher, planner, sprint-validator, coder, evaluator, design-studio, safegate, acceptance-review, intake, harness, database, security, code-quality) com skills reais resolvidas do índice do hub. Descoberta de requisito permanente via `requirements-discovery`; `brainstorming` é rota SOB DEMANDA (skills.onDemand) com triggers/confirmação/handoff para blueprint — não substitui a descoberta nem é sempre carregada. Dependências obrigatórias tratadas por fonte única (frontmatter→índice→projeção com hash). Risco `unknown` tratado por regra dura (entradas não-mutáveis). Contrato completo de telemetria (executionRecord).",
   "provenance": {
     "origin": "overcore",
     "author": "Oracle — PRB-017A",
