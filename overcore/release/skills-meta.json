@@ -7,6 +7,10 @@
     "claudeSupported": true,
     "risk": "safe"
   },
+  "api-security-testing": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
   "architecture": {
     "claudeSupported": true,
     "risk": "safe"
@@ -19,6 +23,10 @@
     "claudeSupported": true,
     "risk": "unknown"
   },
+  "clean-code": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
   "closed-loop-delivery": {
     "claudeSupported": true,
     "risk": "safe"
@@ -27,7 +35,43 @@
     "claudeSupported": true,
     "risk": "safe"
   },
+  "database": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "database-design": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "design-critique": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "design-md": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "design-taste-frontend": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "evaluation": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
   "requirements-discovery": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "safegate-arquitetura": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "safegate-dev-seguro": {
+    "claudeSupported": true,
+    "risk": "safe"
+  },
+  "safegate-exposicao-externa": {
     "claudeSupported": true,
     "risk": "safe"
   },
